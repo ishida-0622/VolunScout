@@ -1,0 +1,43 @@
+name: 新規タスク
+description: 新規タスク用issueを作成する
+title: "[task]: "
+labels: ["task"]
+body:
+  - type: textarea
+    id: purpose
+    attributes:
+      label: 目的
+      description: このissueの目的を記入してください。
+      placeholder:
+    validations:
+      required: true
+  - type: textarea
+    id: task_list
+    attributes:
+      label: タスクリスト
+      description: 細かいタスクに分解して書き出す
+      value: |
+        + [ ] task01
+        + [ ] task02
+    validations:
+      required: false
+  - type: textarea
+    id: definition_of_done
+    attributes:
+      label: Doneの定義
+      description: issueをcloseする条件
+    validations:
+      required: true
+  - type: textarea
+    id: reference
+    attributes:
+      label: 参考
+      description: 関連するissueやPR
+    validations:
+      required: false
+  - type: textarea
+    id: free
+    attributes:
+      label: 自由入力欄
+    validations:
+      required: false

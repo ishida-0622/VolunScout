@@ -1,0 +1,53 @@
+name: 不具合報告
+description: File a bug report
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: 概要
+      description: 発生したバグについて教えてください
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: |
+        以下、任意記入欄
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: 再現手順
+      description: バグの再現方法
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: false
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: 期待した動作
+    validations:
+      required: false
+  - type: dropdown
+    id: browsers
+    attributes:
+      label: 使用したブラウザ
+      multiple: true
+      options:
+        - Chrome
+        - Microsoft Edge
+        - Safari
+        - Firefox
+  - type: textarea
+    id: logs
+    attributes:
+      label: ログ
+      description: 関連するログの出力をコピーしてペーストしてください。
+      render: shell
+  - type: textarea
+    id: other
+    attributes:
+      label: その他
