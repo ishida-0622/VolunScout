@@ -1,0 +1,18 @@
+[package]
+name = "read-api-server"
+version = "0.0.1"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+sqlx = { workspace = true, default-features = false, features = [
+  "macros",
+  "mysql",
+  "chrono",
+  "runtime-tokio-rustls",
+] }
+dotenv = "0.15.0"
+tokio = { workspace = true, features = ["full"] }
+async-graphql = { workspace = true, features = ["chrono"] }
+async-graphql-axum = { workspace = true }

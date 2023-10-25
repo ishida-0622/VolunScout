@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+  db:
+    image: mysql:8.1.0
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: nachi
+      MYSQL_DATABASE: volunscout
+      MYSQL_USER: volunscout
+      MYSQL_PASSWORD: tuocsnulov
+    restart: always
+    # tty: true
+    # sdtdin_open: true

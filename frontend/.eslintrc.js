@@ -9,26 +9,25 @@ module.exports = {
   },
   extends: [
     "eslint:recommended",
-    // TypeScriptでない場合は削除
     "plugin:@typescript-eslint/recommended",
-    // TypeScriptでない場合は削除
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
-    // React, Next.jsでない場合は削除
     "plugin:react/recommended",
     "plugin:eslint-plugin-import/recommended",
-    // Next.jsでない場合は削除
     "next/core-web-vitals",
     "prettier",
   ],
-  // TypeScriptでない場合は削除
   parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaVersion: "latest",
-    // TypeScriptでない場合は削除
     project: path.resolve(__dirname, "./tsconfig.json"),
     sourceType: "module",
   },
-  ignorePatterns: ["/.eslintrc.js", "package-lock.json", "package.json"],
+  ignorePatterns: [
+    "/.eslintrc.js",
+    "package-lock.json",
+    "package.json",
+    "src/__generated__/**/*",
+  ],
   plugins: ["import", "unused-imports"],
   rules: {
     "unused-imports/no-unused-imports": "error",
@@ -103,5 +102,6 @@ module.exports = {
     "prefer-arrow-callback": "error",
     "prefer-const": "error",
     "prefer-template": "error",
+    "import/no-unresolved": "off",
   },
 };

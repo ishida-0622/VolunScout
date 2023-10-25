@@ -1,0 +1,20 @@
+[package]
+name = "write-api-server"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+async-graphql = { workspace = true, features = ["chrono"] }
+async-graphql-axum = { workspace = true }
+dotenv = "0.15.0"
+lambda_runtime = "0.8.1"
+tokio = { workspace = true, features = ["full"] }
+serde_json = { workspace = true }
+sqlx = { workspace = true, default-features = false, features = [
+  "macros",
+  "mysql",
+  "chrono",
+  "runtime-tokio-rustls",
+] }
+
+domain = { path = "../../domain" }
