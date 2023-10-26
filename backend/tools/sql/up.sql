@@ -90,7 +90,6 @@ CREATE TABLE IF NOT EXISTS `participant_region`
   PRIMARY KEY (`uid`, `rid`)
 );
 
-
 CREATE TABLE IF NOT EXISTS `volunteer_region`
 (
   `vid` CHAR(26) NOT NULL,
