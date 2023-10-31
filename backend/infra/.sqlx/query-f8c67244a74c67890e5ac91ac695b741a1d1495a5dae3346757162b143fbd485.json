@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "UPDATE participant_account SET is_deleted = true, deleted_at = ? WHERE uid = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": []
+  },
+  "hash": "f8c67244a74c67890e5ac91ac695b741a1d1495a5dae3346757162b143fbd485"
+}

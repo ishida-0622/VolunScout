@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "INSERT INTO group_account (gid, name, furigana, phone, address, contents) VALUES (?, ?, ?, ?, ?, ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 6
+    },
+    "nullable": []
+  },
+  "hash": "491d9c794c2e5ddd3ea848d4227e7515c9aef934fac33cd4615662681c27cdc6"
+}

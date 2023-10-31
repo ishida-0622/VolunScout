@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "INSERT INTO participant_account (uid, name, furigana, gender, birthday, phone, profile) VALUES (?, ?, ?, ?, ?, ?, ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 7
+    },
+    "nullable": []
+  },
+  "hash": "0613ec2dabe2945a2395c95a37190a7ed8c649d54bd61f51d25253efc697848b"
+}
