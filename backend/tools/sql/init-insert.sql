@@ -1,4 +1,4 @@
-INSERT INTO participant VALUES (
+INSERT INTO participant_account VALUES (
   "1234567890123456789012345678",
   "ken",
   "ken",
@@ -8,4 +8,16 @@ INSERT INTO participant VALUES (
   "ken",
   DEFAULT,
   NULL
+);
+
+INSERT INTO group_account VALUES (
+  "8765432109876543210987654321",
+  "ken",
+  "ken",
+  "08012345678",
+  "Tokyo",
+  "Hello",
+  DEFAULT,
+  NULL,
+  DEFAULT
 );
