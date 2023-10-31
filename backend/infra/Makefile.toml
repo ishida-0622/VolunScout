@@ -1,0 +1,9 @@
+[tasks.sqlx-prepare]
+description = "Prepare sqlx"
+command = "cargo"
+args = [
+  "sqlx",
+  "prepare",
+  "-D",
+  "mysql://volunscout:tuocsnulov@127.0.0.1/volunscout",
+]
