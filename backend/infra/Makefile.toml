@@ -5,5 +5,5 @@ args = [
   "sqlx",
   "prepare",
   "-D",
-  "mysql://volunscout:tuocsnulov@127.0.0.1/volunscout",
+  "mysql://volunscout:volunscout@127.0.0.1/volunscout",
 ]
