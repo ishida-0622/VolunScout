@@ -87,10 +87,10 @@
         "ordinal": 8,
         "name": "deleted_at",
         "type_info": {
-          "type": "Date",
+          "type": "Datetime",
           "flags": "BINARY",
           "char_set": 63,
-          "max_size": 10
+          "max_size": 19
         }
       }
     ],

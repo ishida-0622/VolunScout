@@ -1,0 +1,25 @@
+{
+  "db_name": "MySQL",
+  "query": "\n            SELECT rid FROM participant_region WHERE uid = ?\n            ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "rid",
+        "type_info": {
+          "type": "Tiny",
+          "flags": "NOT_NULL | PRIMARY_KEY | NO_DEFAULT_VALUE",
+          "char_set": 63,
+          "max_size": 4
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "0cfd565194a881839000b46d4adb0c69d49e961db2f3544d71d61db1cd3e7fda"
+}
