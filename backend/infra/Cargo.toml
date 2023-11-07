@@ -16,4 +16,5 @@ sqlx = { workspace = true, default-features = false, features = [
   "mysql",
   "chrono",
   "runtime-tokio-rustls",
+  "bigdecimal",
 ] }

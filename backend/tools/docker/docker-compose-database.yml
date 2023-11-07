@@ -1,3 +1,5 @@
+# ローカル環境で使用するDB
+
 version: "3.9"
 
 services:
@@ -9,7 +11,5 @@ services:
       MYSQL_ROOT_PASSWORD: nachi
       MYSQL_DATABASE: volunscout
       MYSQL_USER: volunscout
-      MYSQL_PASSWORD: tuocsnulov
+      MYSQL_PASSWORD: volunscout
     restart: always
-    # tty: true
-    # sdtdin_open: true

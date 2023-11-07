@@ -2,7 +2,6 @@
 
 members = [
   "domain",
-  "usecase",
   "infra",
   "applications/read-api-server",
   "applications/write-api-server",

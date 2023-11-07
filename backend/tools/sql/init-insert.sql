@@ -1,5 +1,5 @@
 INSERT INTO participant_account VALUES (
-  "1234567890123456789012345678",
+  "participant_account000000000",
   "ken",
   "ken",
   0,
@@ -11,7 +11,7 @@ INSERT INTO participant_account VALUES (
 );
 
 INSERT INTO group_account VALUES (
-  "8765432109876543210987654321",
+  "group_account000000000000000",
   "ken",
   "ken",
   "08012345678",
@@ -20,4 +20,66 @@ INSERT INTO group_account VALUES (
   DEFAULT,
   NULL,
   DEFAULT
+);
+
+INSERT INTO volunteer VALUES (
+  "volunteer00000000000000000",
+  "group_account000000000000000",
+  "Hello",
+  10,
+  NOW(),
+  1,
+  NOW(),
+  1,
+  false,
+  DEFAULT,
+  NULL,
+  NOW()
+);
+
+INSERT INTO volunteer VALUES (
+  "volunteer11111111111111111",
+  "group_account000000000000000",
+  "World",
+  10,
+  NOW(),
+  0,
+  NOW(),
+  0,
+  false,
+  DEFAULT,
+  NULL,
+  NOW()
+);
+
+INSERT INTO volunteer_region VALUES (
+  "volunteer00000000000000000",
+  1
+);
+
+INSERT INTO volunteer_region VALUES (
+  "volunteer00000000000000000",
+  2
+);
+
+INSERT INTO volunteer_region VALUES (
+  "volunteer11111111111111111",
+  3
+);
+
+INSERT INTO volunteer_region VALUES (
+  "volunteer11111111111111111",
+  4
+);
+
+INSERT INTO favorite VALUES (
+  "participant_account000000000",
+  "volunteer00000000000000000",
+  NOW()
+);
+
+INSERT INTO favorite VALUES (
+  "participant_account000000000",
+  "volunteer11111111111111111",
+  NOW()
 );
