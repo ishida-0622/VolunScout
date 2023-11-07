@@ -166,4 +166,10 @@ pub trait ParticipantsUserRepository {
 
     /// 参加者のお気に入りを取得する
     async fn find_favorite_by_id(&self, pid: &UserId) -> Result<Vec<Volunteer>>;
+
+    /// 参加者の活動履歴を取得する
+    async fn find_activity_by_id(&self, pid: &UserId) -> Result<Vec<Volunteer>>;
+
+    /// 参加者の予定を取得する
+    async fn find_scheduled_activity_by_id(&self, pid: &UserId) -> Result<Vec<Volunteer>>;
 }
