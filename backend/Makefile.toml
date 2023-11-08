@@ -1,0 +1,5 @@
+[tasks.export-openapi]
+workspace = false
+script = """
+cargo run -p write-api-server --bin export-openapi-yaml > ..\\frontend\\schemas\\openapi.yaml
+"""

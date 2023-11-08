@@ -6,13 +6,14 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+anyhow = { workspace = true }
+async-graphql = { workspace = true, features = ["chrono"] }
+async-graphql-axum = { workspace = true }
+dotenv = "0.15.0"
 sqlx = { workspace = true, default-features = false, features = [
   "macros",
   "mysql",
   "chrono",
   "runtime-tokio-rustls",
 ] }
-dotenv = "0.15.0"
 tokio = { workspace = true, features = ["full"] }
-async-graphql = { workspace = true, features = ["chrono"] }
-async-graphql-axum = { workspace = true }
