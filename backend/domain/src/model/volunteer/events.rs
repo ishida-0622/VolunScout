@@ -2,7 +2,7 @@ use chrono::{DateTime, NaiveDate, Utc};
 use serde::{Deserialize, Serialize};
 
 use super::VolunteerId;
-use crate::model::user_account::UserId;
+use crate::model::user_account::user_id::UserId;
 
 pub enum VolunteerEvent {
     /// ボランティアが作成された

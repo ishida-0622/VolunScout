@@ -1,7 +1,8 @@
 use serde::{Deserialize, Serialize};
 
 use crate::model::user_account::{
-    user_name::UserName, user_name_furigana::UserNameFurigana, user_phone::UserPhone, UserId,
+    user_id::UserId, user_name::UserName, user_name_furigana::UserNameFurigana,
+    user_phone::UserPhone,
 };
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

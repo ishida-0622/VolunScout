@@ -6,7 +6,7 @@ use chrono::{DateTime, NaiveDate, Utc};
 use serde::{Deserialize, Serialize};
 use ulid_generator_rs::{ULIDGenerator, ULID};
 
-use crate::model::{terms::Terms, user_account::UserId};
+use crate::model::{terms::Terms, user_account::user_id::UserId};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Volunteer {

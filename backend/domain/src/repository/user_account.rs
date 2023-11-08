@@ -8,7 +8,8 @@ use crate::model::{
     gender::Gender,
     region::Region,
     user_account::{
-        user_name::UserName, user_name_furigana::UserNameFurigana, user_phone::UserPhone, UserId,
+        user_id::UserId, user_name::UserName, user_name_furigana::UserNameFurigana,
+        user_phone::UserPhone,
     },
     volunteer::Volunteer,
 };
@@ -63,7 +64,7 @@ impl GroupAccount {
 }
 
 #[async_trait]
-pub trait GroupUserRepository {
+pub trait GroupUserRepository: Send + Sync {
     /// 団体アカウントを作成する
     async fn create(
         &self,

@@ -4,7 +4,7 @@ use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use ulid_generator_rs::{ULIDGenerator, ULID};
 
-use crate::model::{user_account::UserId, volunteer::VolunteerId};
+use crate::model::{user_account::user_id::UserId, volunteer::VolunteerId};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Scout {

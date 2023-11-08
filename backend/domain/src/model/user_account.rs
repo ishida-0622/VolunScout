@@ -1,3 +1,4 @@
+pub mod user_id;
 pub mod user_name;
 pub mod user_name_furigana;
 pub mod user_phone;
@@ -5,7 +6,10 @@ pub mod user_phone;
 use chrono::NaiveDate;
 use serde::{Deserialize, Serialize};
 
-use self::{user_name::UserName, user_name_furigana::UserNameFurigana, user_phone::UserPhone};
+use self::{
+    user_id::UserId, user_name::UserName, user_name_furigana::UserNameFurigana,
+    user_phone::UserPhone,
+};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct User {
@@ -29,28 +33,6 @@ impl User {
             is_deleted: false,
             deleted_on: None,
         }
-    }
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct UserId(pub String);
-
-#[derive(Debug)]
-pub struct InvalidUserIdLengthError;
-
-impl UserId {
-    pub fn new(uid: &str) -> Result<UserId, InvalidUserIdLengthError> {
-        if uid.len() != 28 {
-            Err(InvalidUserIdLengthError)
-        } else {
-            Ok(UserId(uid.to_string()))
-        }
-    }
-}
-
-impl std::fmt::Display for UserId {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{}", self.0)
     }
 }
 

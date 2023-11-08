@@ -4,7 +4,8 @@ use chrono::Utc;
 use sqlx::MySqlPool;
 
 use domain::model::user_account::{
-    user_name::UserName, user_name_furigana::UserNameFurigana, user_phone::UserPhone, UserId,
+    user_id::UserId, user_name::UserName, user_name_furigana::UserNameFurigana,
+    user_phone::UserPhone,
 };
 use domain::repository::user_account::{GroupAccount, GroupUserRepository};
 

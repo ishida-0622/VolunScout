@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use super::ScoutId;
-use crate::model::user_account::UserId;
+use crate::model::user_account::user_id::UserId;
 use crate::model::volunteer::VolunteerId;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

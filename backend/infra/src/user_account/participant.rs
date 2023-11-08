@@ -9,7 +9,8 @@ use domain::model::{
     gender::Gender,
     region::Region,
     user_account::{
-        user_name::UserName, user_name_furigana::UserNameFurigana, user_phone::UserPhone, UserId,
+        user_id::UserId, user_name::UserName, user_name_furigana::UserNameFurigana,
+        user_phone::UserPhone,
     },
     volunteer::Volunteer,
 };

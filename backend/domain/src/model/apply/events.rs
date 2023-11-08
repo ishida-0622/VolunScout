@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use super::ApplyId;
-use crate::model::{user_account::UserId, volunteer::VolunteerId};
+use crate::model::{user_account::user_id::UserId, volunteer::VolunteerId};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum ApplyEvent {
