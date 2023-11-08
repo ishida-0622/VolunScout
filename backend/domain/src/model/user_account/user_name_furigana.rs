@@ -1,3 +1,4 @@
+use anyhow::Result;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
@@ -13,7 +14,7 @@ pub enum UserNameFuriganaError {
 }
 
 impl UserNameFurigana {
-    pub fn new(furigana: &str) -> Result<UserNameFurigana, UserNameFuriganaError> {
+    pub fn new(furigana: &str) -> Result<UserNameFurigana> {
         if furigana.is_empty() {
             Err(UserNameFuriganaError::Empty.into())
         } else if furigana.len() > 50 {
@@ -27,6 +28,14 @@ impl UserNameFurigana {
 impl std::fmt::Display for UserNameFurigana {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "{}", self.0)
+    }
+}
+
+impl std::str::FromStr for UserNameFurigana {
+    type Err = anyhow::Error;
+
+    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
+        Self::new(s)
     }
 }
 
