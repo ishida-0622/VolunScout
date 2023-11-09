@@ -17,3 +17,5 @@ sqlx = { workspace = true, default-features = false, features = [
   "runtime-tokio-rustls",
 ] }
 tokio = { workspace = true, features = ["full"] }
+
+infra = { path = "../../infra" }

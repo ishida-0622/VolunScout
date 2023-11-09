@@ -1622,6 +1622,7 @@ dependencies = [
  "async-graphql",
  "async-graphql-axum",
  "dotenv",
+ "infra",
  "sqlx",
  "tokio",
 ]

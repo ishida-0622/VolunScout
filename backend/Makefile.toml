@@ -1,5 +1,25 @@
 [tasks.export-openapi]
+description = "Write API Server: OpenAPI定義内容をエクスポートします"
 workspace = false
 script = """
+if exist ..\\frontend\\schemas\\openapi.yaml del ..\\frontend\\schemas\\openapi.yaml /q
+if not exist ..\\frontend\\schemas mkdir ..\\frontend\\schemas
 cargo run -p write-api-server --bin export-openapi-yaml > ..\\frontend\\schemas\\openapi.yaml
+"""
+
+[tasks.export-sdl]
+description = "Read API Server: GraphQLのSDLをエクスポートします"
+workspace = false
+script = """
+if exist ..\\frontend\\schemas\\schema.graphql del ..\\frontend\\schemas\\schema.graphql /q
+if not exist ..\\frontend\\schemas mkdir ..\\frontend\\schemas
+cargo run -p read-api-server --bin export-sdl > ..\\frontend\\schemas\\schema.graphql
+"""
+
+[tasks.export-all]
+description = "OpenAPI定義とGraphQLのSDLをエクスポートします"
+workspace = false
+script = """
+cargo make export-openapi
+cargo make export-sdl
 """

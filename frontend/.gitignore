@@ -36,3 +36,6 @@ next-env.d.ts
 
 # Grapgql
 /src/__generated__
+
+# OpenAPI
+/schemas/
