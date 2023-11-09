@@ -14,6 +14,7 @@ use crate::model::{
     volunteer::Volunteer,
 };
 
+// Read server で返す型. GraphQLのスキーマに対応する
 /// 団体アカウントリードモデル
 #[derive(SimpleObject)]
 pub struct GroupAccount {
@@ -126,7 +127,7 @@ pub struct ParticipantAccount {
 }
 
 #[async_trait]
-pub trait ParticipantsUserRepository {
+pub trait ParticipantsUserRepository: Send + Sync {
     /// 参加者アカウントを作成する
     async fn create(
         &self,
