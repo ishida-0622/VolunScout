@@ -16,18 +16,18 @@ use domain::model::{
 };
 use domain::repository::user_account::{ParticipantAccount, ParticipantsUserRepository};
 
-pub struct ParticipantsAccountImpl {
+pub struct ParticipantAccountImpl {
     pool: MySqlPool,
 }
 
-impl ParticipantsAccountImpl {
+impl ParticipantAccountImpl {
     pub fn new(pool: MySqlPool) -> Self {
         Self { pool }
     }
 }
 
 #[async_trait]
-impl ParticipantsUserRepository for ParticipantsAccountImpl {
+impl ParticipantsUserRepository for ParticipantAccountImpl {
     async fn create(
         &self,
         pid: UserId,
