@@ -11,8 +11,10 @@ async-graphql = { workspace = true, features = ["chrono"] }
 async-trait = { workspace = true }
 axum = { workspace = true }
 chrono = { workspace = true }
+dotenv = { workspace = true }
 domain = { path = "../domain" }
 futures = { workspace = true }
+lambda_http = { workspace = true }
 log = { workspace = true }
 redis = { workspace = true, features = ["tokio-comp"] }
 serde = { workspace = true }
