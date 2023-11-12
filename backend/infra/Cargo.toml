@@ -8,11 +8,11 @@ edition = "2021"
 [dependencies]
 anyhow = { workspace = true }
 async-graphql = { workspace = true, features = ["chrono"] }
+async-graphql-axum = { workspace = true }
 async-trait = { workspace = true }
 axum = { workspace = true }
 chrono = { workspace = true }
 dotenv = { workspace = true }
-domain = { path = "../domain" }
 futures = { workspace = true }
 lambda_http = { workspace = true }
 log = { workspace = true }
@@ -25,4 +25,8 @@ sqlx = { workspace = true, default-features = false, features = [
   "runtime-tokio-rustls",
   "bigdecimal",
 ] }
+tokio = { workspace = true }
+tower-http = { workspace = true, features = ["fs"] }
 utoipa = { waorkspace = true }
+
+domain = { path = "../domain" }
