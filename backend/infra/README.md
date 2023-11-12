@@ -4,4 +4,6 @@
 
 SQL 実装の部分では Read と Write を分けていませんが, Read Server と Write Server が異なるため本来は分けるのが望ましいです
 
-[resolvers](./src/resolvers.rs) が Read Server, [controllers](./src/controllers.rs) が Write Server で使用されます
+[resolvers](./src/resolvers.rs) で GraphQL のクエリを定義しています
+
+[controllers](./src/controllers.rs) でエンドポイントなどを定義しています
