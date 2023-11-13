@@ -6,7 +6,7 @@ use anyhow::Result;
 use dotenv::dotenv;
 use sqlx::MySqlPool;
 
-use infra::controllers::read_server::create_router;
+use query_infrastructure::controllers::create_router;
 
 #[tokio::main]
 async fn main() -> Result<()> {

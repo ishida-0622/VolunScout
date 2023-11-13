@@ -1,6 +1,6 @@
 use anyhow::Result;
 
-use infra::resolvers::create_schema_builder;
+use query_infrastructure::resolvers::create_schema_builder;
 
 #[tokio::main]
 async fn main() -> Result<()> {

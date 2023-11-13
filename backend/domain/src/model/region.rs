@@ -1,4 +1,6 @@
+use anyhow::Result;
 use serde::{Deserialize, Serialize};
+use thiserror::Error;
 
 use crate::consts::region::{RegionMap, REGIONS};
 
@@ -7,17 +9,20 @@ pub struct Region {
     region: String,
 }
 
-#[derive(Debug)]
-pub struct RegionNotFoundError;
+#[derive(Error, Debug)]
+pub enum RegionError {
+    #[error("region not found")]
+    NotFound,
+}
 
 impl Region {
-    pub fn new(region: String) -> Result<Region, RegionNotFoundError> {
+    pub fn new(region: String) -> Result<Region> {
         for r in REGIONS {
             if r == &region {
                 return Ok(Region { region });
             }
         }
-        Err(RegionNotFoundError)
+        Err(RegionError::NotFound.into())
     }
 
     pub fn to_uint(&self) -> u8 {
@@ -30,5 +35,13 @@ impl Region {
 impl std::fmt::Display for Region {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", &self.region)
+    }
+}
+
+impl std::str::FromStr for Region {
+    type Err = anyhow::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Region::new(s.to_string())
     }
 }

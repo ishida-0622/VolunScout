@@ -2,7 +2,10 @@
 
 members = [
   "domain",
-  "infra",
+  "command/repository",
+  "command/infrastructure",
+  "query/repository",
+  "query/infrastructure",
   "applications/read-api-server",
   "applications/write-api-server",
 ]

@@ -1,5 +1,6 @@
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
+use thiserror::Error;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum Gender {
@@ -8,8 +9,11 @@ pub enum Gender {
     Other = 2,
 }
 
-#[derive(Debug)]
-pub struct GenderNotFoundError;
+#[derive(Error, Debug)]
+pub enum GenderError {
+    #[error("gender not found")]
+    NotFound,
+}
 
 impl std::fmt::Display for Gender {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -22,11 +26,11 @@ impl std::fmt::Display for Gender {
     }
 }
 
-pub fn gender_from_i8(arg: &i8) -> Result<Gender, GenderNotFoundError> {
+pub fn gender_from_i8(arg: &i8) -> Result<Gender> {
     match arg {
         0 => Ok(Gender::Male),
         1 => Ok(Gender::Female),
         2 => Ok(Gender::Other),
-        _ => Err(GenderNotFoundError),
+        _ => Err(GenderError::NotFound.into()),
     }
 }

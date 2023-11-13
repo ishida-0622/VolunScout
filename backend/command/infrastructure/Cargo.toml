@@ -1,0 +1,22 @@
+[package]
+name = "command-infrastructure"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = { workspase = true }
+async-trait = { workspase = true }
+axum = { workspase = true }
+chrono = { workspase = true }
+futures = { workspase = true }
+lambda_http = { workspase = true }
+log = { workspase = true }
+serde = { workspase = true }
+sqlx = { workspase = true }
+tokio = { workspase = true }
+utoipa = { workspase = true }
+
+domain = { path = "../../domain" }
+command-repository = { path = "../repository" }

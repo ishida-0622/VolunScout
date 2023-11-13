@@ -19,4 +19,4 @@ sqlx = { workspace = true, default-features = false, features = [
 ] }
 tokio = { workspace = true, features = ["full"] }
 
-infra = { path = "../../infra" }
+query-infrastructure = { path = "../../query/infrastructure" }

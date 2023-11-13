@@ -7,7 +7,7 @@ use utoipa::OpenApi;
 use utoipa_swagger_ui::SwaggerUi;
 use write_api_server::ApiDoc;
 
-use infra::controllers::write_server::create_router;
+use command_infrastructure::controllers::create_router;
 
 #[tokio::main]
 async fn main() -> Result<(), Error> {
