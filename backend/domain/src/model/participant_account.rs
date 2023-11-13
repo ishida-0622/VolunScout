@@ -1,5 +1,3 @@
-pub mod events;
-
 use chrono::NaiveDate;
 use serde::{Deserialize, Serialize};
 

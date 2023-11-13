@@ -1,5 +1,3 @@
-pub mod events;
-
 use serde::{Deserialize, Serialize};
 
 use crate::model::user_account::User;

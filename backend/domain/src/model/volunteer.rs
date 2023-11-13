@@ -1,5 +1,3 @@
-pub mod events;
-
 use std::str::FromStr;
 
 use chrono::{DateTime, NaiveDate, Utc};

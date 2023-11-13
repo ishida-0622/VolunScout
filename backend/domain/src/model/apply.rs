@@ -1,5 +1,3 @@
-pub mod events;
-
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use ulid_generator_rs::{ULIDGenerator, ULID};
