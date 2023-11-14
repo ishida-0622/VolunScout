@@ -10,6 +10,8 @@ AWS Lambda 上で動きます. 少し書き換えれば EC2 でも動きます
 
 ## ビルド
 
+Docker が起動されている事が前提です. 起動方法は [こちら](../../README.md)
+
 ```bash
 cargo lambda build --release -p write-api-server --bin write-api-server
 ```
