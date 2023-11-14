@@ -23,3 +23,24 @@ script = """
 cargo make export-openapi
 cargo make export-sdl
 """
+
+[tasks.build-write-server]
+description = "Write API Serverをビルドします"
+workspace = false
+script = """
+cargo lambda build --release -p write-api-server --bin write-api-server
+"""
+
+[tasks.build-read-server]
+description = "Read API Serverをビルドします"
+workspace = false
+script = """
+cargo build --release -p read-api-server --bin read-api-server
+"""
+
+[tasks.run-read-server]
+description = "Read API Serverを実行します"
+workspace = false
+script = """
+cargo run -p read-api-server --bin read-api-server
+"""

@@ -11,12 +11,7 @@ async-graphql = { workspace = true, features = ["chrono"] }
 async-graphql-axum = { workspace = true }
 axum = { workspace = true }
 dotenv = "0.15.0"
-sqlx = { workspace = true, default-features = false, features = [
-  "macros",
-  "mysql",
-  "chrono",
-  "runtime-tokio-rustls",
-] }
+sqlx = { workspace = true }
 tokio = { workspace = true, features = ["full"] }
 
 query-infrastructure = { path = "../../query/infrastructure" }

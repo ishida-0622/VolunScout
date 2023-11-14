@@ -4,14 +4,8 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-anyhow = { workspace = true, features = ["backtrace"] }
-async-graphql = { workspace = true, features = ["chrono"] }
-async-trait = { workspace = true }
+anyhow = { workspace = true }
 chrono = { workspace = true, features = ["serde"] }
-downcast-rs = { workspace = true }
-log = { workspace = true }
-once_cell = { workspace = true }
 serde = { workspace = true }
-serde_json = { workspace = true }
 thiserror = { workspace = true }
-ulid-generator-rs = { workspace = true, features = ["uuid", "serde"] }
+ulid-generator-rs = { workspace = true, features = ["serde"] }
