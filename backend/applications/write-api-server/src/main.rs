@@ -1,13 +1,15 @@
+use std::env;
+
 use axum::Router;
 use dotenv::dotenv;
 use lambda_http::{run, Body, Error};
 use sqlx::{MySql, MySqlPool, Pool};
-use std::env;
 use utoipa::OpenApi;
 use utoipa_swagger_ui::SwaggerUi;
-use write_api_server::ApiDoc;
 
 use command_infrastructure::controllers::create_router;
+
+use write_api_server::ApiDoc;
 
 #[tokio::main]
 async fn main() -> Result<(), Error> {
