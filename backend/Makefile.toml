@@ -31,6 +31,13 @@ script = """
 cargo lambda build --release -p write-api-server --bin write-api-server
 """
 
+[tasks.run-write-server]
+description = "Write API Serverを実行します"
+workspace = false
+script = """
+cargo run -p write-api-server --bin write-api-server
+"""
+
 [tasks.build-read-server]
 description = "Read API Serverをビルドします"
 workspace = false
