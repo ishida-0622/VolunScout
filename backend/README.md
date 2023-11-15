@@ -20,7 +20,7 @@
 
 ### Docker 関連
 
-各種ツールのセットアップは [こちら](./tools/README.md)
+各種ツールのセットアップは [こちら](./tools/README.md).
 
 #### MySQL の起動
 

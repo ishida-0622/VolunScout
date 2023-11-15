@@ -1,10 +1,10 @@
 ## 概要
 
-Docker の起動やテーブル作成などをなんやかんやしてくれます
+Docker の起動やテーブル作成などをなんやかんやしてくれます.
 
-Docker, MySQL, Make for Windows がインストールされている前提です
+Docker, MySQL, Make for Windows がインストールされている前提です.
 
-なお, Windows 環境でのみ動作確認済みです
+なお, Windows10 環境でのみ動作確認済みです.
 
 ### 各種ツールのインストールリンク
 

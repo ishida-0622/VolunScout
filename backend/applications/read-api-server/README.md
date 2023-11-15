@@ -1,16 +1,14 @@
 # read-api-server
 
-Read API Server です
+Read API Server です.
 
-EC2 上で動かすことを想定しています. ローカルでも動きます
+EC2 上で動かすことを想定しています. ローカルでも動きます.
 
-実体は [query-infrastructure](../../query/infrastructure) にあります
+実体は [query-infrastructure](../../query/infrastructure) にあります.
 
 ## 実行確認
 
-Docker 上で MySQL が起動していることが前提です. 起動方法は [こちら](../../README.md)
-
-サーバー起動
+Docker 上で MySQL が起動していることが前提です. 起動方法は [こちら](../../README.md).
 
 ```bash
 # /backend
