@@ -32,12 +32,14 @@ impl Region {
     }
 }
 
+// Displayを実装することで, to_string()で文字列に変換できるようになる
 impl std::fmt::Display for Region {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", &self.region)
     }
 }
 
+// FromStrを実装することで, from_str()で文字列から変換できるようになる
 impl std::str::FromStr for Region {
     type Err = anyhow::Error;
 

@@ -38,6 +38,7 @@ impl Apply {
     }
 }
 
+// Displayを実装することで, to_string()で文字列に変換できるようになる
 impl std::fmt::Display for ApplyId {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "{}", self.0.to_string())

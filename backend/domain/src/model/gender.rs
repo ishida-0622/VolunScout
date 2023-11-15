@@ -15,6 +15,7 @@ pub enum GenderError {
     NotFound,
 }
 
+// Displayを実装することで, to_string()で文字列に変換できるようになる
 impl std::fmt::Display for Gender {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let gender = match self {

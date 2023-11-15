@@ -25,12 +25,14 @@ impl UserId {
     }
 }
 
+// Displayを実装することで, to_string()で文字列に変換できるようになる
 impl std::fmt::Display for UserId {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "{}", self.0)
     }
 }
 
+// FromStrを実装することで, from_str()で文字列から変換できるようになる
 impl std::str::FromStr for UserId {
     type Err = anyhow::Error;
 
