@@ -1,4 +1,8 @@
-use std::env;
+use std::{
+    env,
+    net::{IpAddr, SocketAddr},
+    str::FromStr,
+};
 
 use axum::Router;
 use dotenv::dotenv;
@@ -19,8 +23,20 @@ async fn main() -> Result<(), Error> {
 
     let pool: Pool<MySql> = MySqlPool::connect(&database_url).await.unwrap();
 
-    let app: Router<(), Body> = create_router(pool)
+    // AWS Lambda上で動かす場合
+    // let app: Router<(), Body> = create_router(pool)
+    //     .merge(SwaggerUi::new("/swagger-ui").url("/api-docs/openapi.json", ApiDoc::openapi()));
+
+    // run(app).await
+
+    // ローカル上で動かす場合
+    let app = create_router(pool)
         .merge(SwaggerUi::new("/swagger-ui").url("/api-docs/openapi.json", ApiDoc::openapi()));
 
-    run(app).await
+    let socket_addr = SocketAddr::new(IpAddr::from_str("0.0.0.0").unwrap(), 18081);
+
+    axum::Server::bind(&socket_addr)
+        .serve(app.into_make_service())
+        .await?;
+    Ok(())
 }

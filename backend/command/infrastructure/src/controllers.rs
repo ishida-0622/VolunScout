@@ -700,7 +700,10 @@ impl Endpoints {
     }
 }
 
-pub fn create_router(pool: MySqlPool) -> Router<(), Body> {
+// ローカルで動かすときはこっち
+pub fn create_router(pool: MySqlPool) -> Router {
+    // Lambdaで動かすときはこっち
+    // pub fn create_router(pool: MySqlPool) -> Router<(), Body> {
     let state: Arc<RwLock<AppState>> = Arc::new(RwLock::new(AppState::new(pool)));
 
     let router = Router::new()
