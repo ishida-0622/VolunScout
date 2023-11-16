@@ -8,16 +8,20 @@ use crate::model::{terms::Terms, user_account::user_id::UserId};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Volunteer {
-    pub id: VolunteerId,
+    pub vid: VolunteerId,
     pub gid: UserId,
+    pub message: String,
     pub overview: String,
     pub people_num: u32,
-    pub as_group: bool,
+    pub place: String,
     pub start_at: DateTime<Utc>,
-    pub start_day: i8,
     pub finish_at: DateTime<Utc>,
-    pub finish_day: i8,
     pub deadline_on: NaiveDate,
+    pub as_group: bool,
+    pub is_deleted: bool,
+    pub deleted_on: DateTime<Utc>,
+    pub registerd_at: DateTime<Utc>,
+    pub updated_at: DateTime<Utc>,
     pub terms: Terms,
 }
 
@@ -32,36 +36,44 @@ impl VolunteerId {
     }
 
     pub fn from_str(value: &str) -> VolunteerId {
-        let id = ULID::from_str(&value).unwrap();
-        VolunteerId(id)
+        let vid = ULID::from_str(&value).unwrap();
+        VolunteerId(vid)
     }
 }
 
 impl Volunteer {
     pub fn new(
         gid: UserId,
+        message: String,
         overview: String,
         people_num: u32,
-        as_group: bool,
+        place: String,
         start_at: DateTime<Utc>,
-        start_day: i8,
         finish_at: DateTime<Utc>,
-        finish_day: i8,
         deadline_on: NaiveDate,
+        as_group: bool,
+        is_deleted: bool,
+        deleted_on: DateTime<Utc>,
+        registerd_at: DateTime<Utc>,
+        updated_at: DateTime<Utc>,
         terms: Terms,
     ) -> Volunteer {
-        let id: VolunteerId = VolunteerId::new();
+        let vid: VolunteerId = VolunteerId::new();
         Volunteer {
-            id,
+            vid,
             gid,
+            message,
             overview,
             people_num,
-            as_group,
+            place,
             start_at,
-            start_day,
             finish_at,
-            finish_day,
             deadline_on,
+            as_group,
+            is_deleted,
+            deleted_on,
+            registerd_at,
+            updated_at,
             terms,
         }
     }
