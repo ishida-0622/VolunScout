@@ -10,6 +10,7 @@ use crate::model::{terms::Terms, user_account::user_id::UserId};
 pub struct Volunteer {
     pub vid: VolunteerId,
     pub gid: UserId,
+    pub title: String,
     pub message: String,
     pub overview: String,
     pub people_num: u32,
@@ -44,6 +45,7 @@ impl VolunteerId {
 impl Volunteer {
     pub fn new(
         gid: UserId,
+        title: String,
         message: String,
         overview: String,
         people_num: u32,
@@ -62,6 +64,7 @@ impl Volunteer {
         Volunteer {
             vid,
             gid,
+            title,
             message,
             overview,
             people_num,
