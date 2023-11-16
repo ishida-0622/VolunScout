@@ -22,16 +22,19 @@ use domain::model::{
 
 use crate::user_account::{group::GroupAccountImpl, participant::ParticipantAccountImpl};
 
+/// 失敗時のAPIレスポンスのボディを表す構造体
 #[derive(Debug, Serialize, Deserialize, ToSchema)]
 pub struct WriteApiResponseFailureBody {
     pub message: String,
 }
 
+/// 成功時のAPIレスポンスのボディを表す構造体
 #[derive(Debug, Serialize, Deserialize, ToSchema)]
 pub struct WriteApiResponseSuccessBody {
     pub message: String,
 }
 
+/// グループアカウントの作成時のリクエストボディを表す構造体
 #[derive(Debug, Serialize, Deserialize, ToSchema)]
 pub struct CreateGroupAccountRequestBody {
     #[schema(required = true)]
@@ -48,6 +51,7 @@ pub struct CreateGroupAccountRequestBody {
     pub contents: String,
 }
 
+/// グループアカウントの更新時のリクエストボディを表す構造体
 #[derive(Debug, Serialize, Deserialize, ToSchema)]
 pub struct UpdateGroupAccountRequestBody {
     #[schema(required = true)]
@@ -64,12 +68,14 @@ pub struct UpdateGroupAccountRequestBody {
     pub contents: String,
 }
 
+/// グループアカウントの削除時のリクエストボディを表す構造体
 #[derive(Debug, Serialize, Deserialize, ToSchema)]
 pub struct DeleteGroupAccountRequestBody {
     #[schema(required = true)]
     pub gid: String,
 }
 
+/// 参加者アカウントの作成時のリクエストボディを表す構造体
 #[derive(Debug, Serialize, Deserialize, ToSchema)]
 pub struct CreateParticipantAccountRequestBody {
     #[schema(required = true)]
@@ -90,6 +96,7 @@ pub struct CreateParticipantAccountRequestBody {
     pub profile: String,
 }
 
+/// 参加者アカウントの更新時のリクエストボディを表す構造体
 #[derive(Debug, Serialize, Deserialize, ToSchema)]
 pub struct UpdateParticipantAccountRequestBody {
     #[schema(required = true)]
@@ -110,12 +117,14 @@ pub struct UpdateParticipantAccountRequestBody {
     pub profile: String,
 }
 
+/// 参加者アカウントの削除時のリクエストボディを表す構造体
 #[derive(Debug, Serialize, Deserialize, ToSchema)]
 pub struct DeleteParticipantAccountRequestBody {
     #[schema(required = true)]
     pub pid: String,
 }
 
+/// アプリケーションの状態を表す構造体
 pub struct AppState {
     group_account_repository: GroupAccountImpl,
     participant_account_repository: ParticipantAccountImpl,
@@ -130,6 +139,7 @@ impl AppState {
     }
 }
 
+/// アプリケーションの状態を保持するための型エイリアス
 pub type AppData = Arc<RwLock<AppState>>;
 
 #[utoipa::path(
@@ -678,6 +688,7 @@ async fn delete_participant_account(
     }
 }
 
+/// APIエンドポイントを表す列挙型
 pub enum Endpoints {
     CreateGroupAccount,
     UpdateGroupAccount,
@@ -700,9 +711,9 @@ impl Endpoints {
     }
 }
 
-// ローカルで動かすときはこっち
+/// [Router] を生成する関数
 pub fn create_router(pool: MySqlPool) -> Router {
-    // Lambdaで動かすときはこっち
+    // Lambdaで動かす場合
     // pub fn create_router(pool: MySqlPool) -> Router<(), Body> {
     let state: Arc<RwLock<AppState>> = Arc::new(RwLock::new(AppState::new(pool)));
 

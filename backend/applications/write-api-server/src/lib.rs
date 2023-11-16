@@ -1,5 +1,4 @@
 use utoipa::OpenApi;
-use utoipa_swagger_ui::SwaggerUi;
 
 use command_infrastructure::controllers;
 
