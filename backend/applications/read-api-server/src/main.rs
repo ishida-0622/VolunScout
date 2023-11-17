@@ -54,7 +54,8 @@ fn create_cors_layer(app_settings: &AppSettings) -> CorsLayer {
 
     // CORSレイヤーを作成し、設定に基づいて許可されたオリジン、ヘッダー、メソッドを設定
     CorsLayer::new()
-        .allow_origin(allow_origins)
+        // TODO: なんかうまくいかないからAnyにしてる
+        .allow_origin(Any)
         .allow_headers(Any)
         .allow_methods(Any)
 }
