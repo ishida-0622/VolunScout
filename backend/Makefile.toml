@@ -20,8 +20,8 @@ cargo run -p read-api-server --bin export-sdl > ..\\frontend\\schemas\\schema.gr
 description = "OpenAPI定義とGraphQLのSDLをエクスポートします"
 workspace = false
 script = """
-cargo make export-openapi
-cargo make export-sdl
+makers export-openapi
+makers export-sdl
 """
 
 [tasks.build-write-server]
