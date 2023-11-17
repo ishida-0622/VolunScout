@@ -51,4 +51,7 @@ pub trait ParticipantUserRepository: Send + Sync {
 
     /// 参加者の予定を取得する
     async fn find_scheduled_activity_by_id(&self, pid: &UserId) -> Result<Vec<Volunteer>>;
+
+    /// 参加者が存在するか確認する
+    async fn exists(&self, pid: &UserId) -> Result<bool>;
 }
