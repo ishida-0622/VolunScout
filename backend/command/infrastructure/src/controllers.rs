@@ -88,7 +88,7 @@ pub struct CreateParticipantAccountRequestBody {
     pub phone: String,
     #[schema(required = true)]
     pub gender: i8,
-    #[schema(required = true)]
+    #[schema(required = true, value_type = String, example = "2002-06-22")]
     pub birthday: NaiveDate,
     #[schema(required = true)]
     pub region: Vec<String>,
@@ -109,7 +109,7 @@ pub struct UpdateParticipantAccountRequestBody {
     pub phone: String,
     #[schema(required = true)]
     pub gender: i8,
-    #[schema(required = true)]
+    #[schema(required = true, value_type = String, example = "2002-06-22")]
     pub birthday: NaiveDate,
     #[schema(required = true)]
     pub region: Vec<String>,
