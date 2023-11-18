@@ -14,6 +14,7 @@ futures = { workspase = true }
 lambda_http = { workspase = true }
 log = { workspase = true }
 serde = { workspase = true }
+serde_json = { workspase = true }
 sqlx = { workspase = true }
 tokio = { workspase = true }
 utoipa = { workspase = true }
