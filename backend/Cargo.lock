@@ -444,6 +444,7 @@ dependencies = [
  "lambda_http",
  "log",
  "serde",
+ "serde_json",
  "sqlx",
  "tokio",
  "utoipa",
@@ -3143,14 +3144,17 @@ dependencies = [
 name = "write-api-server"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "axum",
  "command-infrastructure",
+ "config",
  "domain",
  "dotenv",
  "lambda_http",
  "serde",
  "sqlx",
  "tokio",
+ "tower-http",
  "utoipa",
  "utoipa-redoc",
  "utoipa-swagger-ui",

@@ -19,9 +19,9 @@ pub struct AppSettings {
     pub api: ApiSettings, // アプリケーション内のAPI設定
 }
 
-// アプリケーション設定を読み込む関数
+/// アプリケーション設定を読み込む関数
 pub fn load_app_config() -> Result<AppSettings> {
-    // Configオブジェクトを構築し、設定ファイルを読み込む
+    // Configオブジェクトを構築し, 設定ファイルを読み込む
     let config: Config = Config::builder()
         .add_source(File::with_name("config/read-api-server").required(false))
         .build()?;

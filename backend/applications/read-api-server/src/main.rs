@@ -44,7 +44,7 @@ async fn main() -> Result<()> {
 
 /// CORS (Cross-Origin Resource Sharing) レイヤーを作成する関数
 fn create_cors_layer(app_settings: &AppSettings) -> CorsLayer {
-    // 設定から許可するオリジンを取得し、それをHeaderValueに変換
+    // 設定から許可するオリジンを取得し, それをHeaderValueに変換
     let allow_origins: Vec<HeaderValue> = app_settings
         .api
         .allow_origins
@@ -52,7 +52,7 @@ fn create_cors_layer(app_settings: &AppSettings) -> CorsLayer {
         .map(|origin| origin.parse().unwrap())
         .collect::<Vec<_>>();
 
-    // CORSレイヤーを作成し、設定に基づいて許可されたオリジン、ヘッダー、メソッドを設定
+    // CORSレイヤーを作成し, 設定に基づいて許可されたオリジン, ヘッダー, メソッドを設定
     CorsLayer::new()
         // TODO: なんかうまくいかないからAnyにしてる
         .allow_origin(Any)

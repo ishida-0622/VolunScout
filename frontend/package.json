@@ -5,6 +5,7 @@
   "scripts": {
     "compile": "graphql-codegen",
     "watch": "graphql-codegen -w",
+    "generate": "openapi-generator-cli generate -g typescript-axios -i ./schemas/openapi.yaml -o ./src/__generated__/command",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -29,6 +30,7 @@
     "@graphql-codegen/client-preset": "^4.1.0",
     "@graphql-codegen/typescript": "^4.0.1",
     "@graphql-codegen/typescript-resolvers": "^4.0.1",
+    "@openapitools/openapi-generator-cli": "^2.7.0",
     "@types/jest": "^29.5.5",
     "@types/node": "^20",
     "@types/react": "^18",
