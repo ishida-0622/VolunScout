@@ -51,3 +51,11 @@ workspace = false
 script = """
 cargo run -p read-api-server --bin read-api-server
 """
+
+[tasks.build-all]
+description = "Write API ServerとRead API Serverをビルドします"
+workspace = false
+script = """
+makers build-write-server
+makers build-read-server
+"""
