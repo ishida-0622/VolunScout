@@ -21,6 +21,9 @@ use command_infrastructure::controllers;
         controllers::CreateParticipantAccountRequestBody,
         controllers::UpdateParticipantAccountRequestBody,
         controllers::DeleteParticipantAccountRequestBody,
-    ))
+    )),
+    tags(
+        (name = "write-api-server", description = "Write API Server")
+    )
 )]
 pub struct ApiDoc;
