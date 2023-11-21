@@ -25,8 +25,6 @@ pub trait VolunteerRepository: Send + Sync {
         finish_at: DateTime<Utc>,
         deadline_on: NaiveDate,
         as_group: bool,
-        registerd_at: DateTime<Utc>,
-        updated_at: DateTime<Utc>,
         terms: Terms,
     ) -> Result<()>;
 
@@ -34,7 +32,6 @@ pub trait VolunteerRepository: Send + Sync {
     async fn update(
         &self,
         vid: VolunteerId,
-        gid: UserId,
         title: String,
         message: String,
         overview: String,
@@ -44,10 +41,9 @@ pub trait VolunteerRepository: Send + Sync {
         finish_at: DateTime<Utc>,
         deadline_on: NaiveDate,
         as_group: bool,
-        updated_at: DateTime<Utc>,
         terms: Terms,
     ) -> Result<()>;
 
     /// ボランティアを削除する
-    async fn delete(&self, vid: VolunteerId, deleted_at: DateTime<Utc>) -> Result<()>;
+    async fn delete(&self, vid: VolunteerId) -> Result<()>;
 }
