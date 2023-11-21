@@ -9,17 +9,27 @@ use redis::Client;
 use sqlx::MySqlPool;
 
 use domain::model::user_account::user_id::UserId;
-use query_repository::user_account::group::{GroupAccount, GroupUserRepository};
+use query_repository::user_account::{
+    group::{GroupAccount, GroupUserRepository},
+    participant::{ParticipantAccount, ParticipantUserRepository},
+};
 
-use crate::user_account::group::GroupAccountImpl;
+use crate::user_account::{group::GroupAccountImpl, participant::ParticipantAccountImpl};
 
 pub struct ServiceContext {
     group_account_dao: Arc<dyn GroupUserRepository>,
+    participant_account_dao: Arc<dyn ParticipantUserRepository>,
 }
 
 impl ServiceContext {
-    pub fn new(group_account_dao: Arc<dyn GroupUserRepository>) -> Self {
-        Self { group_account_dao }
+    pub fn new(
+        group_account_dao: Arc<dyn GroupUserRepository>,
+        participant_account_dao: Arc<dyn ParticipantUserRepository>,
+    ) -> Self {
+        Self {
+            group_account_dao,
+            participant_account_dao,
+        }
     }
 }
 
@@ -80,6 +90,69 @@ impl QueryRoot {
 
         Ok(group_accounts)
     }
+
+    /// 指定されたuidのアカウント情報を取得する
+    ///
+    /// ## 引数
+    /// - `uid` - uid
+    ///
+    /// ## 返り値
+    /// - `ParticipantAccount` - 参加者アカウント情報
+    async fn get_participant_account<'ctx>(
+        &self,
+        ctx: &Context<'ctx>,
+        uid: String,
+    ) -> Result<ParticipantAccount> {
+        let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
+        let uid: UserId = UserId::new(&uid).unwrap();
+        let participant_account: ParticipantAccount =
+            ctx.participant_account_dao.find_by_id(&uid).await?;
+
+        Ok(participant_account)
+    }
+
+    /// 複数指定されたuidのアカウント情報を取得する
+    ///
+    /// ## 引数
+    /// - `uids` - uidの配列
+    ///
+    /// ## 返り値
+    /// - `Vec<ParticipantAccount>` - 参加者アカウント情報の配列
+    async fn get_participant_accounts<'ctx>(
+        &self,
+        ctx: &Context<'ctx>,
+        uids: Vec<String>,
+    ) -> Result<Vec<ParticipantAccount>> {
+        let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
+        let uids: Vec<UserId> = uids
+            .iter()
+            .map(|uid| UserId::from_str(uid).unwrap())
+            .collect();
+
+        let participant_accounts: Vec<ParticipantAccount> =
+            ctx.participant_account_dao.find_by_ids(&uids).await?;
+
+        Ok(participant_accounts)
+    }
+
+    /// 参加者アカウントの存在チェックをする
+    ///
+    /// ## 引数
+    /// - `uid` - uid
+    ///
+    /// ## 返り値
+    /// - `bool` - 存在する場合はtrue
+    async fn exists_participant_account<'ctx>(
+        &self,
+        ctx: &Context<'ctx>,
+        uid: String,
+    ) -> Result<bool> {
+        let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
+        let uid: UserId = UserId::new(&uid).unwrap();
+        let exists: bool = ctx.participant_account_dao.exists(&uid).await?;
+
+        Ok(exists)
+    }
 }
 
 pub struct SubscriptionRoot;
@@ -104,8 +177,12 @@ pub fn create_schema_builder() -> SchemaBuilder<QueryRoot, EmptyMutation, Subscr
 
 pub fn create_schema(pool: MySqlPool) -> ApiSchema {
     let group_account_dao: GroupAccountImpl = GroupAccountImpl::new(pool.clone());
+    let participant_account_dao: ParticipantAccountImpl = ParticipantAccountImpl::new(pool.clone());
 
-    let ctx: ServiceContext = ServiceContext::new(Arc::new(group_account_dao));
+    let ctx: ServiceContext = ServiceContext::new(
+        Arc::new(group_account_dao),
+        Arc::new(participant_account_dao),
+    );
 
     create_schema_builder().data(ctx).finish()
 }

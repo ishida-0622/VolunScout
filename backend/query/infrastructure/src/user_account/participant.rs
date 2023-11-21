@@ -80,4 +80,17 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
     async fn find_scheduled_activity_by_id(&self, pid: &UserId) -> Result<Vec<Volunteer>> {
         todo!()
     }
+
+    async fn exists(&self, pid: &UserId) -> Result<bool> {
+        let response = sqlx::query!(
+            r#"
+            SELECT EXISTS(SELECT * FROM participant_account WHERE uid = ?) AS exist
+            "#,
+            pid.to_string()
+        )
+        .fetch_one(&self.pool)
+        .await?;
+
+        Ok(response.exist == 1)
+    }
 }

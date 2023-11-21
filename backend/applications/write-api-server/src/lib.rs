@@ -1,5 +1,4 @@
 use utoipa::OpenApi;
-use utoipa_swagger_ui::SwaggerUi;
 
 use command_infrastructure::controllers;
 
@@ -22,6 +21,9 @@ use command_infrastructure::controllers;
         controllers::CreateParticipantAccountRequestBody,
         controllers::UpdateParticipantAccountRequestBody,
         controllers::DeleteParticipantAccountRequestBody,
-    ))
+    )),
+    tags(
+        (name = "write-api-server", description = "Write API Server")
+    )
 )]
 pub struct ApiDoc;

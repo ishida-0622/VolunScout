@@ -1,0 +1,23 @@
+[tasks.generate-openapi]
+script = """
+if exist .\\src\\__generated__\\command rd .\\src\\__generated__\\command /s /q
+if not exist .\\src\\__generated__\\command mkdir .\\src\\__generated__\\command
+docker run --rm \
+  -v %CD%:/local \
+  openapitools/openapi-generator-cli generate \
+  -i /local/schemas/openapi.yaml \
+  -g typescript-axios \
+  -o /local/src/__generated__/command/
+"""
+
+[tasks.generate-openapi.linux]
+script = """
+rm -rf ./src/__generated__/command
+mkdir -p ./src/__generated__/command
+docker run --rm \
+  -v ${PWD}:/local \
+  openapitools/openapi-generator-cli generate \
+  -i /local/schemas/openapi.yaml \
+  -g typescript-axios \
+  -o /local/src/__generated__/command/
+"""

@@ -16,29 +16,15 @@ thiserror = "1.0.44"
 async-graphql = "6.0.1"
 async-graphql-axum = "6.0.1"
 async-trait = "0.1.72"
-aws-config = "0.55.1"
-aws_lambda_events = { vesrion = "0.10.0", default-features = false }
 axum = "0.6.18"
-backtrace = "0.3.67"
 chrono = "0.4.*"
 config = "0.13.1"
-derive-new = "0.5.9"
 dotenv = "0.15.0"
-downcast-rs = "1.2.0"
-env_logger = "0.10.0"
 futures = "0.3"
-http = "0.2.4"
-hyper = "0.14.26"
-itertools = "0.11.0"
 lambda_http = "0.8.3"
-log = "0.4.19"
-num = "0.4.1"
-once_cell = "1.18.0"
-openssl = { version = "0.10.55", features = ["vendored"] }
+# log = "0.4.19"
 redis = "0.23.0"
 serde = "1.0"
-serde_json = "1.0"
-simple_logger = "4.1.0"
 sqlx = { version = "0.7.1", default-features = false, features = [
   "macros",
   "mysql",
@@ -46,14 +32,5 @@ sqlx = { version = "0.7.1", default-features = false, features = [
   "runtime-tokio-rustls",
 ] }
 tokio = "1"
-tower = "0.4.12"
 tower-http = "0.4.3"
-tracing = "0.1.37"
-tracing-log = "0.1.1"
-tracing-subscriber = { version = "0.3.16", default-features = false }
 ulid-generator-rs = "0.0.88"
-
-mime = "0.3.16"
-refinery = { version = "0.8", features = ["mysql"] }
-refinery-core = "0.8"
-testcontainers = "0.14.0"

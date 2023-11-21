@@ -4,10 +4,13 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-axum = { workspace = true }
+anyhow = { workspace = true }
+axum = { workspace = true, features = ["headers"] }
+config = { workspace = true }
 dotenv = { workspace = true }
 lambda_http = { workspace = true }
 tokio = { workspace = true, features = ["full"] }
+tower-http = { workspace = true, features = ["cors"] }
 serde = { workspace = true }
 sqlx = { workspace = true }
 utoipa = { version = "3.4.4", features = ["axum_extras", "yaml"] }

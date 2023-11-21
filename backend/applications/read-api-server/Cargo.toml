@@ -10,8 +10,11 @@ anyhow = { workspace = true }
 async-graphql = { workspace = true, features = ["chrono"] }
 async-graphql-axum = { workspace = true }
 axum = { workspace = true }
+config = { workspace = true }
 dotenv = "0.15.0"
 sqlx = { workspace = true }
+serde = { workspace = true }
 tokio = { workspace = true, features = ["full"] }
+tower-http = { workspace = true, features = ["cors"] }
 
 query-infrastructure = { path = "../../query/infrastructure" }
