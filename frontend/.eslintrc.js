@@ -27,6 +27,7 @@ module.exports = {
     "package-lock.json",
     "package.json",
     "src/__generated__/**/*",
+    "src/**/*.css.d.ts",
   ],
   plugins: ["import", "unused-imports"],
   rules: {
@@ -93,7 +94,15 @@ module.exports = {
     yoda: "error",
     semi: "error",
     "init-declarations": "error",
-    "no-unused-vars": "error",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        argsIgnorePattern: "^_",
+        varsIgnorePattern: "^_",
+        caughtErrorsIgnorePattern: "^_",
+        destructuredArrayIgnorePattern: "^_",
+      },
+    ],
     "no-use-before-define": "error",
     camelcase: "error",
     "no-const-assign": "error",
@@ -103,5 +112,6 @@ module.exports = {
     "prefer-const": "error",
     "prefer-template": "error",
     "import/no-unresolved": "off",
+    "@typescript-eslint/no-misused-promises": "warn",
   },
 };
