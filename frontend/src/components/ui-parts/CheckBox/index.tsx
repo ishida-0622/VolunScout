@@ -28,8 +28,8 @@ export const CheckBox = ({
   }, initialState);
 
   return (
-    <label className={joinClassnames(styles.base, className)} {...props}>
-      <input type="checkbox" checked={state} onChange={toggle} />
+    <label className={joinClassnames(styles.base, className)}>
+      <input type="checkbox" checked={state} onChange={toggle} {...props} />
       {label}
     </label>
   );
