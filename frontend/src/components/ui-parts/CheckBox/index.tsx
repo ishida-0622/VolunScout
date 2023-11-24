@@ -1,0 +1,36 @@
+import { useReducer } from "react";
+
+import styles from "./index.module.css";
+
+import { joinClassnames } from "@/components/ui-parts/@joinClassnames";
+
+type Props = {
+  label: string;
+  initialState?: boolean;
+  onChange?: (_: boolean) => void;
+  className?: string;
+};
+
+const noop = (_: boolean) => {};
+
+export const CheckBox = ({
+  label,
+  initialState = false,
+  onChange = noop,
+  className,
+  ...props
+}: Props) => {
+  const [state, toggle] = useReducer((state) => {
+    // MEMO: Reducer 内部は純粋な処理の必要があるので、副作用の可能性を考慮して next tick に処理をずらす
+    setTimeout(() => onChange(!state));
+
+    return !state;
+  }, initialState);
+
+  return (
+    <label className={joinClassnames(styles.base, className)} {...props}>
+      <input type="checkbox" checked={state} onChange={toggle} />
+      {label}
+    </label>
+  );
+};
