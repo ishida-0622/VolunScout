@@ -41,6 +41,13 @@ impl VolunteerId {
         VolunteerId(vid)
     }
 }
+// Displayを実装することで, to_string()で文字列に変換できるようになる
+impl std::fmt::Display for VolunteerId {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "{}", self.0)
+    }
+}
+
 
 impl Volunteer {
     pub fn new(
