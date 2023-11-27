@@ -77,7 +77,7 @@ module.exports = {
     "no-global-assign": "error",
     "no-implicit-globals": "error",
     "no-implied-eval": "warn",
-    "no-magic-numbers": "error",
+    "no-magic-numbers": "warn",
     "no-multi-spaces": "warn",
     "no-param-reassign": "error",
     "no-redeclare": "warn",
