@@ -2,7 +2,7 @@ import { useReducer } from "react";
 
 import styles from "./index.module.css";
 
-import { joinClassnames } from "@/components/ui-parts/@joinClassnames";
+import { joinClassnames } from "@/components/@joinClassnames";
 
 type Props = {
   label: string;
