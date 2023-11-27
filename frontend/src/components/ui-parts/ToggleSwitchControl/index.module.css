@@ -1,0 +1,39 @@
+.base {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.base input {
+  display: none;
+}
+
+.base input + span {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+  background-color: var(--color-gray);
+  border-radius: 10px;
+  transition: background-color 0.3s;
+}
+
+.base input:checked + span {
+  background-color: var(--color-light-green);
+}
+
+.base input + span:before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  background-color: var(--color-white);
+  border-radius: 50%;
+  transition: transform 0.3s;
+}
+
+.base input:checked + span:before {
+  transform: translateX(20px);
+}
