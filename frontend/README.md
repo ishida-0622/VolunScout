@@ -41,5 +41,5 @@ npm run generate-graphql-w # 変更を監視
 # /frontend
 npm run generate-openapi
 # or
-cargo run generate-openapi # Docker image が必要
+cargo make generate-openapi # Docker image が必要
 ```
