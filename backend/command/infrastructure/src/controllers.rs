@@ -11,6 +11,7 @@ use utoipa::ToSchema;
 use lambda_http::Body;
 
 use crate::user_account::{group::GroupAccountImpl, participant::ParticipantAccountImpl};
+use crate::activities::volunteer::VolunteerImpl;
 // use crate::activities::volunteer::VolunteerImpl;
 /// 失敗時のAPIレスポンスのボディを表す構造体
 #[derive(Debug, Serialize, Deserialize, ToSchema)]
@@ -29,6 +30,7 @@ pub struct WriteApiResponseSuccessBody {
 pub struct AppState {
     group_account_repository: GroupAccountImpl,
     participant_account_repository: ParticipantAccountImpl,
+    volunteer_repository: VolunteerImpl
 }
 
 impl AppState {
@@ -36,6 +38,7 @@ impl AppState {
         Self {
             group_account_repository: GroupAccountImpl::new(pool.clone()),
             participant_account_repository: ParticipantAccountImpl::new(pool.clone()),
+            volunteer_repository: VolunteerImpl::new(pool.clone())
         }
     }
 }
@@ -51,6 +54,9 @@ pub enum Endpoints {
     CreateParticipantAccount,
     UpdateParticipantAccount,
     DeleteParticipantAccount,
+    CreateVolunteer,
+    UpdateVolunteer,
+    DeleteVolunteer
 }
 
 impl Endpoints {
@@ -62,6 +68,9 @@ impl Endpoints {
             Endpoints::CreateParticipantAccount => "/participant-account/create",
             Endpoints::UpdateParticipantAccount => "/participant-account/update",
             Endpoints::DeleteParticipantAccount => "/participant-account/delete",
+            Endpoints::CreateVolunteer => "/volunteer/create",
+            Endpoints::UpdateVolunteer => "/volunteer/update",
+            Endpoints::DeleteVolunteer => "/volunteer/delete",
         }
     }
 }
@@ -96,6 +105,18 @@ pub fn create_router(pool: MySqlPool) -> Router {
         .route(
             Endpoints::DeleteParticipantAccount.as_str(),
             post(participant::delete_participant_account),
+        )
+        .route(
+            Endpoints::CreateVolunteer.as_str(),
+            post(volunteer::create_volunteer),
+        )
+        .route(
+            Endpoints::UpdateVolunteer.as_str(),
+            post(volunteer::update_volunteer),
+        )
+        .route(
+            Endpoints::DeleteVolunteer.as_str(),
+            post(volunteer::delete_volunteer),
         )
         .with_state(state);
 

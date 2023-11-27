@@ -20,6 +20,7 @@ impl VolunteerImpl {
     }
 }
 
+// TODO:termsも他テーブルに関連してSQLを実装する
 #[async_trait]
 impl VolunteerRepository for VolunteerImpl {
     async fn create(
