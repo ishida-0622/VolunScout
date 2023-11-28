@@ -1,10 +1,53 @@
 .base {
+  /* 何もスタイルが定義されていません */
 }
 
 .participant {
-  background-color: var(--color-green);
+  background-color: var(--color-participant-theme);
+  text-align: center;
 }
 
 .group {
-  background-color: var(--color-blue);
+  background-color: var(--color-group-theme);
+}
+
+.headerContent {
+  display: flex; /* Flexboxを使用して子要素を横並びにします */
+  align-items: center; /* 縦方向の中央寄せ */
+  justify-content: space-between; /* 子要素を両端に配置します */
+  color: white;
+  font-size: 20px;
+}
+
+/* 画像のスタイルを調整する場合はこちらに追加してください */
+.headerContent img {
+  margin-right: 10px; /* 画像とテキストの間隔を調整 */
+  height: 100%; /* ヘッダーの高さに合わせる */
+}
+
+/* テキストとボタンのスタイルを調整する場合はこちらに追加してください */
+.headerContent div {
+  display: flex; /* テキストとボタンを横並びにするために追加 */
+  flex-direction: row; /* テキストとボタンを水平に配置 */
+  align-items: center; /* 縦方向の中央寄せ */
+}
+
+/* SignInButton（ボタン）のスタイルを調整する場合はこちらに追加してください */
+.headerContent button {
+  margin-left: 10px; /* ボタンとテキストの間隔を調整 */
+  height: 100%; /* ヘッダーの高さに合わせる */
+  width: auto; /* ボタンの横幅を内容に合わせる */
+  background-color: var(--color-red); /* ボタンの背景色 */
+  border: none; /* ボーダーをなくす */
+  color: white; /* ボタン内のテキスト色を白に変更 */
+  color: inherit; /* テキスト色を継承する */
+  border-left: 1px solid #fff; /* ボタンと他の要素との境界線を作成 */
+  padding-left: 10px; /* 境界線とボタンの内容との間隔を調整 */
+
+  /* ボタンのサイズを変更するプロパティ */
+  min-width: 150px; /* 最小幅を指定 */
+  max-width: 200px; /* 最大幅を指定 */
+  /* width: 150px; といった具体的なサイズ指定も可能 */
+  height: 100px;
+  /* height: 50px; といった具体的なサイズ指定も可能 */
 }

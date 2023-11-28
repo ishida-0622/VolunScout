@@ -16,14 +16,21 @@ export const Header = ({ accountType, className }: Props) => {
       className={joinClassnames(
         styles.base,
         accountType === "participant" ? styles.participant : styles.group,
-        className
+        className,
       )}
     >
-      <div>
-        <Image src={"/icon.svg"} alt="Icon" width={100} height={100} />
-        <h1>VolunScout</h1>
+      {/* Flexboxを使用して横並びにする */}
+      <div className={styles.headerContent}>
+        <div>
+          <Image src={"/icon.svg"} alt="Icon" width={100} height={100} />
+        </div>
+        <div>
+          <h1>VolunScout</h1>
+        </div>
+        <div>
+          <SignInButton />
+        </div>
       </div>
-      <SignInButton />
     </header>
   );
 };
