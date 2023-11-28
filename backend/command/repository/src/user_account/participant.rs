@@ -3,8 +3,10 @@ use async_trait::async_trait;
 use chrono::NaiveDate;
 
 use domain::model::{
+    condition::Condition,
     gender::Gender,
     region::Region,
+    theme::Theme,
     user_account::{
         user_id::UserId, user_name::UserName, user_name_furigana::UserNameFurigana,
         user_phone::UserPhone,
@@ -22,8 +24,12 @@ pub trait ParticipantUserRepository: Send + Sync {
         phone: UserPhone,
         gender: Gender,
         birthday: NaiveDate,
-        region: Vec<Region>,
+        regions: Vec<Region>,
         profile: String,
+        themes: Vec<Theme>,
+        themes_required: Vec<Theme>,
+        conditions: Vec<Condition>,
+        conditions_required: Vec<Condition>,
     ) -> Result<()>;
 
     /// 参加者アカウントを更新する
@@ -35,8 +41,12 @@ pub trait ParticipantUserRepository: Send + Sync {
         phone: UserPhone,
         gender: Gender,
         birthday: NaiveDate,
-        region: Vec<Region>,
+        regions: Vec<Region>,
         profile: String,
+        theme: Vec<Theme>,
+        theme_required: Vec<Theme>,
+        conditions: Vec<Condition>,
+        conditions_required: Vec<Condition>,
     ) -> Result<()>;
 
     /// 参加者アカウントを削除する
