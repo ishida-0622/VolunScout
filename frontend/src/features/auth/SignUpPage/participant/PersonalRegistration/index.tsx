@@ -2,7 +2,7 @@
 
 import { useForm, type SubmitHandler } from "react-hook-form";
 
-import type { FormValues } from ".";
+import type { FormValues } from "..";
 
 type Personal = Pick<
   FormValues,

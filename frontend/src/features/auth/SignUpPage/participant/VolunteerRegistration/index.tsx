@@ -2,7 +2,7 @@
 
 import { useForm, type SubmitHandler } from "react-hook-form";
 
-import type { FormValues } from ".";
+import type { FormValues } from "..";
 
 import { CheckBoxControl } from "@/components/ui-parts/CheckBoxControl";
 import { ToggleSwitchControl } from "@/components/ui-parts/ToggleSwitchControl";

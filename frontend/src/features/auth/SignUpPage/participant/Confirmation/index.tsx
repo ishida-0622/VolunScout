@@ -2,7 +2,7 @@ import Router from "next/router";
 import { useRef } from "react";
 
 import type { CreateParticipantAccountRequestBody } from "@/__generated__/command";
-import type { FormValues } from ".";
+import type { FormValues } from "..";
 
 import { apiClient } from "@/api/command";
 import { CheckBox } from "@/components/ui-parts/CheckBox";
