@@ -43,8 +43,8 @@ pub trait ParticipantUserRepository: Send + Sync {
         birthday: NaiveDate,
         regions: Vec<Region>,
         profile: String,
-        theme: Vec<Theme>,
-        theme_required: Vec<Theme>,
+        themes: Vec<Theme>,
+        themes_required: Vec<Theme>,
         conditions: Vec<Condition>,
         conditions_required: Vec<Condition>,
     ) -> Result<()>;
