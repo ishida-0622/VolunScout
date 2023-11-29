@@ -36,7 +36,6 @@ export const Confirmation = ({ values, prevPage }: Props) => {
     if (!uid) {
       throw new Error("uid is null");
     }
-    // TODO:バックエンド未完成
     const body: CreateParticipantAccountRequestBody = {
       birthday: values.birthday,
       furigana: values.furigana,
