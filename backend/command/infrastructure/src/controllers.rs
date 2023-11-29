@@ -1,10 +1,11 @@
-use std::{str::FromStr, sync::Arc};
+pub mod group;
+pub mod participant;
+pub mod volunteer;
 
-use axum::{extract::State, http::StatusCode, response::IntoResponse, routing::post, Json, Router};
-use chrono::NaiveDate;
-use lambda_http::Body;
+use axum::{routing::post, Router};
 use serde::{Deserialize, Serialize};
 use sqlx::MySqlPool;
+use std::sync::Arc;
 use tokio::sync::RwLock;
 use utoipa::ToSchema;
 
@@ -21,9 +22,11 @@ use domain::model::{
         user_phone::UserPhone,
     },
 };
+use lambda_http::Body;
 
+use crate::activities::volunteer::VolunteerImpl;
 use crate::user_account::{group::GroupAccountImpl, participant::ParticipantAccountImpl};
-
+// use crate::activities::volunteer::VolunteerImpl;
 /// 失敗時のAPIレスポンスのボディを表す構造体
 #[derive(Debug, Serialize, Deserialize, ToSchema)]
 pub struct WriteApiResponseFailureBody {
@@ -146,6 +149,7 @@ pub struct DeleteParticipantAccountRequestBody {
 pub struct AppState {
     group_account_repository: GroupAccountImpl,
     participant_account_repository: ParticipantAccountImpl,
+    volunteer_repository: VolunteerImpl,
 }
 
 impl AppState {
@@ -153,6 +157,7 @@ impl AppState {
         Self {
             group_account_repository: GroupAccountImpl::new(pool.clone()),
             participant_account_repository: ParticipantAccountImpl::new(pool.clone()),
+            volunteer_repository: VolunteerImpl::new(pool.clone()),
         }
     }
 }
@@ -780,6 +785,9 @@ pub enum Endpoints {
     CreateParticipantAccount,
     UpdateParticipantAccount,
     DeleteParticipantAccount,
+    CreateVolunteer,
+    UpdateVolunteer,
+    DeleteVolunteer,
 }
 
 impl Endpoints {
@@ -791,11 +799,13 @@ impl Endpoints {
             Endpoints::CreateParticipantAccount => "/participant-account/create",
             Endpoints::UpdateParticipantAccount => "/participant-account/update",
             Endpoints::DeleteParticipantAccount => "/participant-account/delete",
+            Endpoints::CreateVolunteer => "/volunteer/create",
+            Endpoints::UpdateVolunteer => "/volunteer/update",
+            Endpoints::DeleteVolunteer => "/volunteer/delete",
         }
     }
 }
 
-/// [Router] を生成する関数
 pub fn create_router(pool: MySqlPool) -> Router {
     // Lambdaで動かす場合
     // pub fn create_router(pool: MySqlPool) -> Router<(), Body> {
@@ -804,27 +814,39 @@ pub fn create_router(pool: MySqlPool) -> Router {
     let router = Router::new()
         .route(
             Endpoints::CreateGroupAccount.as_str(),
-            post(create_group_account),
+            post(group::create_group_account),
         )
         .route(
             Endpoints::UpdateGroupAccount.as_str(),
-            post(update_group_account),
+            post(group::update_group_account),
         )
         .route(
             Endpoints::DeleteGroupAccount.as_str(),
-            post(delete_group_account),
+            post(group::delete_group_account),
         )
         .route(
             Endpoints::CreateParticipantAccount.as_str(),
-            post(create_participant_account),
+            post(participant::create_participant_account),
         )
         .route(
             Endpoints::UpdateParticipantAccount.as_str(),
-            post(update_participant_account),
+            post(participant::update_participant_account),
         )
         .route(
             Endpoints::DeleteParticipantAccount.as_str(),
-            post(delete_participant_account),
+            post(participant::delete_participant_account),
+        )
+        .route(
+            Endpoints::CreateVolunteer.as_str(),
+            post(volunteer::create_volunteer),
+        )
+        .route(
+            Endpoints::UpdateVolunteer.as_str(),
+            post(volunteer::update_volunteer),
+        )
+        .route(
+            Endpoints::DeleteVolunteer.as_str(),
+            post(volunteer::delete_volunteer),
         )
         .with_state(state);
 

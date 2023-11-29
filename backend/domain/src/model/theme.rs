@@ -1,23 +1,28 @@
+use anyhow::Result;
 use serde::{Deserialize, Serialize};
+use thiserror::Error;
 
 use crate::consts::themes::{ThemeMap, THEMES, THEMES_PREFIX};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Theme {
-    pub theme: String,
+    theme: String,
 }
 
-#[derive(Debug)]
-pub struct ThemeNotFoundError;
+#[derive(Error, Debug)]
+pub enum ThemeError {
+    #[error("theme not found")]
+    NotFound,
+}
 
 impl Theme {
-    pub fn new(theme: String) -> Result<Theme, ThemeNotFoundError> {
+    pub fn new(theme: String) -> Result<Theme> {
         for t in THEMES {
             if t == &theme {
                 return Ok(Theme { theme });
             }
         }
-        Err(ThemeNotFoundError)
+        Err(ThemeError::NotFound.into())
     }
 
     pub fn to_id(&self) -> String {
@@ -45,7 +50,7 @@ impl std::fmt::Display for Theme {
 
 // FromStrを実装することで, from_str()で文字列から変換できるようになる
 impl std::str::FromStr for Theme {
-    type Err = ThemeNotFoundError;
+    type Err = anyhow::Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         Theme::new(s.to_string())
