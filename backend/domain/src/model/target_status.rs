@@ -17,8 +17,8 @@ pub enum TargetStatusError {
 
 impl TargetStatus {
     pub fn new(target_status: String) -> Result<TargetStatus> {
-        for r in TARGET_STATUSES {
-            if r == &target_status {
+        for t in TARGET_STATUSES {
+            if t == &target_status {
                 return Ok(TargetStatus { target_status });
             }
         }

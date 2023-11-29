@@ -17,8 +17,8 @@ pub enum ThemeError {
 
 impl Theme {
     pub fn new(theme: String) -> Result<Theme> {
-        for r in THEMES {
-            if r == &theme {
+        for t in THEMES {
+            if t == &theme {
                 return Ok(Theme { theme });
             }
         }
