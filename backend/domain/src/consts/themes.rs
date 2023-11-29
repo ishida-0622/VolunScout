@@ -16,7 +16,7 @@ pub const THEMES: [&str; 10] = [
 #[derive(Debug, Clone)]
 pub struct ThemeMap {
     pub themes_index_to_theme: HashMap<usize, String>,
-    pub themes_theme_to_index: HashMap<String, usize>,
+    pub themes_name_to_index: HashMap<String, usize>,
 }
 
 impl ThemeMap {
@@ -26,14 +26,14 @@ impl ThemeMap {
             .enumerate()
             .map(|(index, theme)| (index, theme.to_string()))
             .collect::<HashMap<usize, String>>();
-        let themes_theme_to_index: HashMap<String, usize> = THEMES
+        let themes_name_to_index: HashMap<String, usize> = THEMES
             .iter()
             .enumerate()
             .map(|(index, theme)| (theme.to_string(), index))
             .collect::<HashMap<String, usize>>();
         ThemeMap {
             themes_index_to_theme,
-            themes_theme_to_index,
+            themes_name_to_index,
         }
     }
 }
