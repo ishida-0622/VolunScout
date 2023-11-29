@@ -35,3 +35,19 @@ impl Theme {
         id.replace(THEMES_PREFIX, "")
     }
 }
+
+// Displayを実装することで, to_string()で文字列に変換できるようになる
+impl std::fmt::Display for Theme {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", &self.theme)
+    }
+}
+
+// FromStrを実装することで, from_str()で文字列から変換できるようになる
+impl std::str::FromStr for Theme {
+    type Err = ThemeNotFoundError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Theme::new(s.to_string())
+    }
+}
