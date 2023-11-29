@@ -1,18 +1,18 @@
-pub mod volunteer;
 pub mod group;
 pub mod participant;
+pub mod volunteer;
 
-use std::sync::Arc;
 use axum::{routing::post, Router};
+use lambda_http::Body;
 use serde::{Deserialize, Serialize};
 use sqlx::MySqlPool;
+use std::sync::Arc;
 use tokio::sync::RwLock;
 use utoipa::ToSchema;
-use lambda_http::Body;
 
-use crate::user_account::{group::GroupAccountImpl, participant::ParticipantAccountImpl};
 use crate::activities::volunteer::VolunteerImpl;
-// use crate::activities::volunteer::VolunteerImpl;
+use crate::user_account::{group::GroupAccountImpl, participant::ParticipantAccountImpl};
+
 /// 失敗時のAPIレスポンスのボディを表す構造体
 #[derive(Debug, Serialize, Deserialize, ToSchema)]
 pub struct WriteApiResponseFailureBody {
@@ -25,12 +25,11 @@ pub struct WriteApiResponseSuccessBody {
     pub message: String,
 }
 
-
 /// アプリケーションの状態を表す構造体
 pub struct AppState {
     group_account_repository: GroupAccountImpl,
     participant_account_repository: ParticipantAccountImpl,
-    volunteer_repository: VolunteerImpl
+    volunteer_repository: VolunteerImpl,
 }
 
 impl AppState {
@@ -38,7 +37,7 @@ impl AppState {
         Self {
             group_account_repository: GroupAccountImpl::new(pool.clone()),
             participant_account_repository: ParticipantAccountImpl::new(pool.clone()),
-            volunteer_repository: VolunteerImpl::new(pool.clone())
+            volunteer_repository: VolunteerImpl::new(pool.clone()),
         }
     }
 }
@@ -56,7 +55,7 @@ pub enum Endpoints {
     DeleteParticipantAccount,
     CreateVolunteer,
     UpdateVolunteer,
-    DeleteVolunteer
+    DeleteVolunteer,
 }
 
 impl Endpoints {
@@ -74,7 +73,6 @@ impl Endpoints {
         }
     }
 }
-
 
 pub fn create_router(pool: MySqlPool) -> Router {
     // Lambdaで動かす場合

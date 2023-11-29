@@ -13,27 +13,29 @@ pub const THEMES: [&str; 10] = [
     "その他",
 ];
 
+pub const THEMES_PREFIX: &str = "theme_";
+
 #[derive(Debug, Clone)]
 pub struct ThemeMap {
-    pub themes_index_to_theme: HashMap<usize, String>,
-    pub themes_name_to_index: HashMap<String, usize>,
+    pub themes_id_to_name: HashMap<String, String>,
+    pub themes_name_to_id: HashMap<String, String>,
 }
 
 impl ThemeMap {
     pub fn new() -> ThemeMap {
-        let themes_index_to_theme: HashMap<usize, String> = THEMES
+        let themes_id_to_name: HashMap<String, String> = THEMES
             .iter()
             .enumerate()
-            .map(|(index, theme)| (index, theme.to_string()))
-            .collect::<HashMap<usize, String>>();
-        let themes_name_to_index: HashMap<String, usize> = THEMES
+            .map(|(index, theme)| (format!("{}{}", THEMES_PREFIX, index), theme.to_string()))
+            .collect();
+        let themes_name_to_id: HashMap<String, String> = THEMES
             .iter()
             .enumerate()
-            .map(|(index, theme)| (theme.to_string(), index))
-            .collect::<HashMap<String, usize>>();
+            .map(|(index, theme)| (theme.to_string(), format!("{}{}", THEMES_PREFIX, index)))
+            .collect();
         ThemeMap {
-            themes_index_to_theme,
-            themes_name_to_index,
+            themes_id_to_name,
+            themes_name_to_id,
         }
     }
 }

@@ -104,7 +104,7 @@ module.exports = {
       },
     ],
     "no-use-before-define": "error",
-    camelcase: "error",
+    camelcase: "warn",
     "no-const-assign": "error",
     "no-duplicate-imports": "error",
     "no-var": "error",

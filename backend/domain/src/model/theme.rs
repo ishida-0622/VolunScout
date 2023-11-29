@@ -2,7 +2,7 @@ use anyhow::Result;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
-use crate::consts::themes::{THEMES, ThemeMap};
+use crate::consts::themes::{ThemeMap, THEMES, THEMES_PREFIX};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Theme {
@@ -25,10 +25,19 @@ impl Theme {
         Err(ThemeError::NotFound.into())
     }
 
-    pub fn to_uint(&self) -> u8 {
+    pub fn to_id(&self) -> String {
         let theme_map: ThemeMap = ThemeMap::new();
-        let index: &usize = theme_map.themes_name_to_index.get(&self.theme).unwrap();
-        *index as u8
+        let id = theme_map.themes_name_to_id.get(&self.theme).unwrap();
+        id.to_string()
+    }
+
+    /// IDからprefixを除いたIDを取得する
+    ///
+    /// 例: theme_0 -> 0
+    pub fn remove_prefix(&self) -> String {
+        let theme_map: ThemeMap = ThemeMap::new();
+        let id = theme_map.themes_name_to_id.get(&self.theme).unwrap();
+        id.replace(THEMES_PREFIX, "")
     }
 }
 

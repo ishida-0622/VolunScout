@@ -106,7 +106,7 @@ CREATE TABLE IF NOT EXISTS `volunteer_region`
 CREATE TABLE IF NOT EXISTS `participant_element`
 (
   `uid` CHAR(28) NOT NULL,
-  `eid` TINYINT NOT NULL,
+  `eid` VARCHAR(255) NOT NULL,
   `is_need` BOOLEAN NOT NULL DEFAULT false,
   PRIMARY KEY (`uid`, `eid`)
 );
