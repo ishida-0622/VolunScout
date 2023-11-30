@@ -12,6 +12,7 @@ import styles from "./index.module.css";
 
 import { gql } from "@/__generated__/query";
 import { CheckBox } from "@/components/ui-parts/CheckBox";
+import { URL_PATH_PARTICIPANT } from "@/consts";
 import { auth } from "@/firebaseConfig";
 
 Modal.setAppElement(document.querySelector("body")!);
@@ -80,7 +81,7 @@ export const SignInButton = () => {
         }
 
         if (data.result === false) {
-          await Router.push("/signup");
+          await Router.push(URL_PATH_PARTICIPANT.SIGN_UP);
         }
       }
     } catch (error) {

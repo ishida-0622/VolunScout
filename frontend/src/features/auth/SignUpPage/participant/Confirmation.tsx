@@ -6,7 +6,7 @@ import type { FormValues } from ".";
 
 import { apiClientParticipant } from "@/api/command";
 import { CheckBox } from "@/components/ui-parts/CheckBox";
-import { CONDITIONS, THEMES } from "@/consts";
+import { CONDITIONS, THEMES, URL_PATH_PARTICIPANT } from "@/consts";
 import { TermsOfUseAndPrivacyPolicyModal } from "@/features/auth/SignUpPage/TermsOfUseAndPrivacyPolicyModal";
 import { getuid } from "@/features/auth/utils/getuid";
 import { stringToNumber } from "@/utils/stringToNumber";
@@ -53,7 +53,7 @@ export const Confirmation = ({ values, prevPage }: Props) => {
     try {
       await apiClientParticipant.createParticipantAccount(body);
       alert("会員登録が完了しました");
-      await Router.push("/");
+      await Router.push(URL_PATH_PARTICIPANT.HOME);
     } catch (error) {
       console.error(error);
       alert("エラーが発生しました");
