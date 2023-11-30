@@ -3,7 +3,7 @@
  */
 export const URL_PATH = {
   CONTACT: "/contact",
-};
+} as const;
 
 /**
  * URLパス（参加者）
@@ -22,7 +22,7 @@ export const URL_PATH_PARTICIPANT = {
   VOLUNTEER_DETAIL: (id: string) => `/volunteer/${id}`,
   APPLY: (id: string) => `/volunteer/${id}/apply`,
   APPLY_LIST: "/apply",
-};
+} as const;
 
 /**
  * URLパス（団体）
@@ -38,4 +38,4 @@ export const URL_PATH_GROUP = {
   VOLUNTEER_DETAIL: (id: string) => `/group/volunteer/${id}`,
   VOLUNTEER_CREATE: "/group/volunteer/create",
   VOLUNTEER_EDIT: (id: string) => `/group/volunteer/${id}/edit`,
-};
+} as const;
