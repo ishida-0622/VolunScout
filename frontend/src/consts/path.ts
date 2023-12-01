@@ -3,6 +3,9 @@
  */
 export const URL_PATH = {
   CONTACT: "/contact",
+  DONATE: "/donate",
+  PRIVACY_POLICY: "/privacy-policy",
+  TERMS_OF_SERVICE: "/terms-of-service",
 } as const;
 
 /**
