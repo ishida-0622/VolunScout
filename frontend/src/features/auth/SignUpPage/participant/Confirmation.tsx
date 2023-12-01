@@ -4,7 +4,7 @@ import { useRef } from "react";
 import type { CreateParticipantAccountRequestBody } from "@/__generated__/command";
 import type { FormValues } from ".";
 
-import { apiClient } from "@/api/command";
+import { apiClientParticipant } from "@/api/command";
 import { CheckBox } from "@/components/ui-parts/CheckBox";
 import { CONDITIONS, THEMES } from "@/consts";
 import { TermsOfUseAndPrivacyPolicyModal } from "@/features/auth/SignUpPage/TermsOfUseAndPrivacyPolicyModal";
@@ -36,7 +36,6 @@ export const Confirmation = ({ values, prevPage }: Props) => {
     if (!uid) {
       throw new Error("uid is null");
     }
-    // TODO:バックエンド未完成
     const body: CreateParticipantAccountRequestBody = {
       birthday: values.birthday,
       furigana: values.furigana,
@@ -45,10 +44,14 @@ export const Confirmation = ({ values, prevPage }: Props) => {
       phone: values.phone,
       pid: uid,
       profile: values.profile,
-      region: values.regions,
+      regions: values.regions,
+      themes: values.themes,
+      themes_required: values.themesRequired,
+      conditions: values.conditions,
+      conditions_required: values.conditionsRequired,
     };
     try {
-      await apiClient.createParticipantAccount(body);
+      await apiClientParticipant.createParticipantAccount(body);
       alert("会員登録が完了しました");
       await Router.push("/");
     } catch (error) {

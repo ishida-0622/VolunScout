@@ -6,11 +6,11 @@ use utoipa::ToSchema;
 
 use command_repository::user_account::group::GroupUserRepository;
 use domain::model::user_account::{
-        user_id::UserId, user_name::UserName, user_name_furigana::UserNameFurigana,
-        user_phone::UserPhone,
-    };
+    user_id::UserId, user_name::UserName, user_name_furigana::UserNameFurigana,
+    user_phone::UserPhone,
+};
 
-use super::{WriteApiResponseFailureBody, WriteApiResponseSuccessBody, AppData};
+use super::{AppData, WriteApiResponseFailureBody, WriteApiResponseSuccessBody};
 
 /// グループアカウントの作成時のリクエストボディを表す構造体
 #[derive(Debug, Serialize, Deserialize, ToSchema)]
@@ -367,4 +367,3 @@ pub async fn delete_group_account(
         }
     }
 }
-

@@ -4,6 +4,7 @@ import { useLazyQuery } from "@apollo/client";
 import { FirebaseError } from "firebase/app";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import Image from "next/image";
+import Router from "next/router";
 import { useRef, useState } from "react";
 import Modal from "react-modal";
 
@@ -79,7 +80,7 @@ export const SignInButton = () => {
         }
 
         if (data.result === false) {
-          // TODO: 新規登録画面に遷移
+          await Router.push("/signup");
         }
       }
     } catch (error) {

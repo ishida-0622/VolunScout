@@ -3,6 +3,7 @@ use serde::{Serialize, Deserialize};
 use self::{volunteer::VolunteerId, user_account::user_id::UserId};
 
 pub mod apply;
+pub mod condition;
 pub mod gender;
 pub mod group_account;
 pub mod participant_account;

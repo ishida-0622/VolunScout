@@ -7,16 +7,17 @@ use utoipa::ToSchema;
 
 use command_repository::user_account::participant::ParticipantUserRepository;
 use domain::model::{
+    condition::Condition,
     gender::{gender_from_i8, Gender},
     region::Region,
+    theme::Theme,
     user_account::{
         user_id::UserId, user_name::UserName, user_name_furigana::UserNameFurigana,
         user_phone::UserPhone,
     },
 };
 
-use super::{WriteApiResponseFailureBody, WriteApiResponseSuccessBody, AppData};
-
+use super::{AppData, WriteApiResponseFailureBody, WriteApiResponseSuccessBody};
 
 /// 参加者アカウントの作成時のリクエストボディを表す構造体
 #[derive(Debug, Serialize, Deserialize, ToSchema)]
@@ -34,9 +35,17 @@ pub struct CreateParticipantAccountRequestBody {
     #[schema(required = true, value_type = String, example = "2002-06-22")]
     pub birthday: NaiveDate,
     #[schema(required = true)]
-    pub region: Vec<String>,
+    pub regions: Vec<String>,
     #[schema(required = true)]
     pub profile: String,
+    #[schema(required = true)]
+    pub themes: Vec<String>,
+    #[schema(required = true)]
+    pub themes_required: Vec<String>,
+    #[schema(required = true)]
+    pub conditions: Vec<String>,
+    #[schema(required = true)]
+    pub conditions_required: Vec<String>,
 }
 
 /// 参加者アカウントの更新時のリクエストボディを表す構造体
@@ -55,9 +64,17 @@ pub struct UpdateParticipantAccountRequestBody {
     #[schema(required = true, value_type = String, example = "2002-06-22")]
     pub birthday: NaiveDate,
     #[schema(required = true)]
-    pub region: Vec<String>,
+    pub regions: Vec<String>,
     #[schema(required = true)]
     pub profile: String,
+    #[schema(required = true)]
+    pub themes: Vec<String>,
+    #[schema(required = true)]
+    pub themes_required: Vec<String>,
+    #[schema(required = true)]
+    pub conditions: Vec<String>,
+    #[schema(required = true)]
+    pub conditions_required: Vec<String>,
 }
 
 /// 参加者アカウントの削除時のリクエストボディを表す構造体
@@ -66,7 +83,6 @@ pub struct DeleteParticipantAccountRequestBody {
     #[schema(required = true)]
     pub pid: String,
 }
-
 
 #[utoipa::path(
     post,
@@ -156,17 +172,50 @@ pub async fn create_participant_account(
 
     let birthday: NaiveDate = body.birthday;
 
-    let region: Vec<Region> = body
-        .region
+    let regions: Vec<Region> = body
+        .regions
         .iter()
         .map(|r: &String| Region::from_str(r).unwrap())
         .collect::<Vec<Region>>();
 
     let profile: String = body.profile;
 
+    let themes: Vec<Theme> = body
+        .themes
+        .iter()
+        .map(|t: &String| Theme::from_str(t).unwrap())
+        .collect::<Vec<Theme>>();
+    let themes_required: Vec<Theme> = body
+        .themes_required
+        .iter()
+        .map(|t: &String| Theme::from_str(t).unwrap())
+        .collect::<Vec<Theme>>();
+
+    let conditions: Vec<Condition> = body
+        .conditions
+        .iter()
+        .map(|c: &String| Condition::from_str(c).unwrap())
+        .collect::<Vec<Condition>>();
+    let conditions_required: Vec<Condition> = body
+        .conditions_required
+        .iter()
+        .map(|c: &String| Condition::from_str(c).unwrap())
+        .collect::<Vec<Condition>>();
+
     match repository
         .create(
-            pid, name, furigana, phone, gender, birthday, region, profile,
+            pid,
+            name,
+            furigana,
+            phone,
+            gender,
+            birthday,
+            regions,
+            profile,
+            themes,
+            themes_required,
+            conditions,
+            conditions_required,
         )
         .await
     {
@@ -278,17 +327,50 @@ pub async fn update_participant_account(
 
     let birthday: NaiveDate = body.birthday;
 
-    let region: Vec<Region> = body
-        .region
+    let regions: Vec<Region> = body
+        .regions
         .iter()
         .map(|r: &String| Region::from_str(r).unwrap())
         .collect::<Vec<Region>>();
 
     let profile: String = body.profile;
 
+    let themes: Vec<Theme> = body
+        .themes
+        .iter()
+        .map(|t: &String| Theme::from_str(t).unwrap())
+        .collect::<Vec<Theme>>();
+    let themes_required: Vec<Theme> = body
+        .themes_required
+        .iter()
+        .map(|t: &String| Theme::from_str(t).unwrap())
+        .collect::<Vec<Theme>>();
+
+    let conditions: Vec<Condition> = body
+        .conditions
+        .iter()
+        .map(|c: &String| Condition::from_str(c).unwrap())
+        .collect::<Vec<Condition>>();
+    let conditions_required: Vec<Condition> = body
+        .conditions_required
+        .iter()
+        .map(|c: &String| Condition::from_str(c).unwrap())
+        .collect::<Vec<Condition>>();
+
     match repository
         .update(
-            pid, name, furigana, phone, gender, birthday, region, profile,
+            pid,
+            name,
+            furigana,
+            phone,
+            gender,
+            birthday,
+            regions,
+            profile,
+            themes,
+            themes_required,
+            conditions,
+            conditions_required,
         )
         .await
     {
