@@ -8,7 +8,7 @@ import { apiClientParticipant } from "@/api/command";
 import { CheckBox } from "@/components/ui-parts/CheckBox";
 import { CONDITIONS, THEMES, URL_PATH_PARTICIPANT } from "@/consts";
 import { TermsOfUseAndPrivacyPolicyModal } from "@/features/auth/SignUpPage/TermsOfUseAndPrivacyPolicyModal";
-import { getuid } from "@/features/auth/utils/getuid";
+import { getUid } from "@/features/auth/utils/getUid";
 import { stringToNumber } from "@/utils/stringToNumber";
 
 type Props = {
@@ -32,7 +32,7 @@ export const Confirmation = ({ values, prevPage }: Props) => {
       alert("利用規約とプライバシーポリシーに同意してください");
       return;
     }
-    const uid = await getuid();
+    const uid = await getUid();
     if (!uid) {
       throw new Error("uid is null");
     }
