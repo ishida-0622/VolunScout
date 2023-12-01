@@ -4,7 +4,7 @@ import { useLazyQuery } from "@apollo/client";
 import { FirebaseError } from "firebase/app";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import Image from "next/image";
-import Router from "next/router";
+import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import Modal from "react-modal";
 
@@ -31,6 +31,7 @@ const ExistsParticipantAccountQuery = gql(/* GraphQL */ `
 // `);
 
 export const SignInButton = () => {
+  const router = useRouter();
   const provider = new GoogleAuthProvider();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -81,7 +82,7 @@ export const SignInButton = () => {
         }
 
         if (data.result === false) {
-          await Router.push(URL_PATH_PARTICIPANT.SIGN_UP);
+          router.push(URL_PATH_PARTICIPANT.SIGN_UP);
         }
       }
     } catch (error) {

@@ -1,4 +1,4 @@
-import Router from "next/router";
+import { useRouter } from "next/navigation";
 import { useRef } from "react";
 
 import type { CreateParticipantAccountRequestBody } from "@/__generated__/command";
@@ -17,6 +17,7 @@ type Props = {
 };
 
 export const Confirmation = ({ values, prevPage }: Props) => {
+  const router = useRouter();
   const themesSet = new Set(values.themes);
   const themesRequiredSet = new Set(values.themesRequired);
   const conditionsSet = new Set(values.conditions);
@@ -53,7 +54,7 @@ export const Confirmation = ({ values, prevPage }: Props) => {
     try {
       await apiClientParticipant.createParticipantAccount(body);
       alert("会員登録が完了しました");
-      await Router.push(URL_PATH_PARTICIPANT.HOME);
+      router.push(URL_PATH_PARTICIPANT.HOME);
     } catch (error) {
       console.error(error);
       alert("エラーが発生しました");
