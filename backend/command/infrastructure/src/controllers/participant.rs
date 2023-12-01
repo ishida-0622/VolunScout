@@ -14,7 +14,7 @@ use domain::model::{
     user_account::{
         user_id::UserId, user_name::UserName, user_name_furigana::UserNameFurigana,
         user_phone::UserPhone,
-    },
+    }
 };
 
 use super::{AppData, WriteApiResponseFailureBody, WriteApiResponseSuccessBody};
@@ -340,7 +340,8 @@ pub async fn update_participant_account(
         .iter()
         .map(|t: &String| Theme::from_str(t).unwrap())
         .collect::<Vec<Theme>>();
-    let themes_required: Vec<Theme> = body
+
+        let themes_required: Vec<Theme> = body
         .themes_required
         .iter()
         .map(|t: &String| Theme::from_str(t).unwrap())

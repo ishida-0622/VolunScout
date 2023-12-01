@@ -10,7 +10,7 @@ use domain::model::{
     user_account::{
         user_id::UserId, user_name::UserName, user_name_furigana::UserNameFurigana,
         user_phone::UserPhone,
-    },
+    }
 };
 
 #[async_trait]
