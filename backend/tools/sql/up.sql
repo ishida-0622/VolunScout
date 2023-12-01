@@ -151,7 +151,7 @@ CREATE TABLE IF NOT EXISTS `review`
   `point` TINYINT NOT NULL,
   PRIMARY KEY (`from_id`, `to_id`),
   FOREIGN KEY(`from_id`) REFERENCES `participant_account`(`uid`),
-  FOREIGN KEY(`from_id`) REFERENCES `group_accout`(`gid`),
+  FOREIGN KEY(`from_id`) REFERENCES `group_account`(`gid`),
   FOREIGN KEY(`to_id`) REFERENCES `participant_account`(`uid`),
   FOREIGN KEY(`to_id`) REFERENCES `volunteer`(`vid`)
 );
