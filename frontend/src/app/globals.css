@@ -19,7 +19,8 @@ p,
 figure,
 blockquote,
 dl,
-dd {
+dd,
+ul {
   margin: 0;
 }
 ul[role="list"],
