@@ -5,21 +5,23 @@ INSERT INTO participant_account VALUES (
   0,
   "2002-06-22",
   "08012345678",
-  "ken",
+  "kendesu",
   DEFAULT,
   NULL
 );
 
 INSERT INTO group_account VALUES (
   "group_account000000000000000",
-  "ken",
-  "ken",
+  "VolunScout",
+  "boran sukauto",
   "08012345678",
   "Tokyo",
   "Hello",
+  "katogi",
+  "katogi",
   DEFAULT,
-  NULL,
-  DEFAULT
+  DEFAULT,
+  NULL
 );
 
 INSERT INTO volunteer(

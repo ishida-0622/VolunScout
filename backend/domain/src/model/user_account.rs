@@ -18,6 +18,7 @@ pub struct User {
     pub furigana: UserNameFurigana,
     pub phone: UserPhone,
     pub review: Review,
+    pub review_relation: Vec<ReviewRelation>,
     pub is_deleted: bool,
     pub deleted_on: Option<NaiveDate>,
 }
@@ -30,6 +31,7 @@ impl User {
             furigana,
             phone,
             review: Review::new(),
+            review_relation: Vec::new(),
             is_deleted: false,
             deleted_on: None,
         }
@@ -72,6 +74,21 @@ impl Review {
             as f32
             / total as f32;
         self.value = Some(value);
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ReviewRelation {
+    pub to_id: super::ReviewToId,   // UserId or VolunteerId
+    pub point: u8
+}
+
+impl ReviewRelation {
+    pub fn new(to_id: super::ReviewToId, point: u8) -> ReviewRelation {
+        ReviewRelation {
+            to_id,
+            point
+        }
     }
 }
 

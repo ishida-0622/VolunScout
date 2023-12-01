@@ -4,13 +4,18 @@ use ulid_generator_rs::{ULIDGenerator, ULID};
 
 use crate::model::{user_account::user_id::UserId, volunteer::VolunteerId};
 
+use super::group_participants::GroupParticipantsId;
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Apply {
     pub id: ApplyId,
     pub user_id: UserId,
     pub volunteer_id: VolunteerId,
-    pub people_num: u32,
-    pub apply_at: DateTime<Utc>,
+    pub group_participants_id: Option<GroupParticipantsId>,
+    pub applied_at: DateTime<Utc>,
+    pub is_allowed: u8,
+    pub decided_at: Option<DateTime<Utc>>,
+    pub is_sent: bool
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -25,15 +30,22 @@ impl ApplyId {
 }
 
 impl Apply {
-    pub fn new(user_id: UserId, volunteer_id: VolunteerId, people_num: u32) -> Apply {
+    pub fn new(
+        user_id: UserId,
+        volunteer_id: VolunteerId,
+        group_participants_id: Option<GroupParticipantsId>
+    ) -> Apply {
         let apply_id: ApplyId = ApplyId::new();
-        let apply_at: DateTime<Utc> = Utc::now();
+        let applied_at: DateTime<Utc> = Utc::now();
         Apply {
             id: apply_id,
             user_id,
             volunteer_id,
-            people_num,
-            apply_at,
+            group_participants_id,
+            applied_at,
+            is_allowed: 0,
+            decided_at: None,
+            is_sent: false
         }
     }
 }
