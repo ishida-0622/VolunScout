@@ -22,6 +22,10 @@ pub struct CreateGroupAccountRequestBody {
     #[schema(required = true)]
     pub furigana: String,
     #[schema(required = true)]
+    pub representative_name: String,
+    #[schema(required = true)]
+    pub representative_furigana: String,
+    #[schema(required = true)]
     pub phone: String,
     #[schema(required = true)]
     pub address: String,
@@ -38,6 +42,10 @@ pub struct UpdateGroupAccountRequestBody {
     pub name: String,
     #[schema(required = true)]
     pub furigana: String,
+    #[schema(required = true)]
+    pub representative_name: String,
+    #[schema(required = true)]
+    pub representative_furigana: String,
     #[schema(required = true)]
     pub phone: String,
     #[schema(required = true)]
@@ -111,6 +119,34 @@ pub async fn create_group_account(
         }
     };
 
+    let representative_name: UserName = match UserName::from_str(&body.representative_name) {
+        Ok(representative_name) => representative_name,
+        Err(error) => {
+            log::warn!("error = {}", error);
+            return (
+                StatusCode::BAD_REQUEST,
+                Json(WriteApiResponseFailureBody {
+                    message: error.to_string(),
+                }),
+            )
+                .into_response();
+        }
+    };
+
+    let representative_furigana: UserNameFurigana = match UserNameFurigana::from_str(&body.representative_furigana) {
+        Ok(representative_furigana) => representative_furigana,
+        Err(error) => {
+            log::warn!("error = {}", error);
+            return (
+                StatusCode::BAD_REQUEST,
+                Json(WriteApiResponseFailureBody {
+                    message: error.to_string(),
+                }),
+            )
+                .into_response();
+        }
+    };
+
     let phone: UserPhone = match UserPhone::from_str(&body.phone) {
         Ok(phone) => phone,
         Err(error) => {
@@ -130,7 +166,7 @@ pub async fn create_group_account(
     let contents: String = body.contents;
 
     match repository
-        .create(gid, name, furigana, phone, address, contents)
+        .create(gid, name, furigana, representative_name, representative_furigana, phone, address, contents)
         .await
     {
         Ok(_) => (
@@ -211,6 +247,34 @@ pub async fn update_group_account(
         }
     };
 
+    let representative_name: UserName = match UserName::from_str(&body.representative_name) {
+        Ok(representative_name) => representative_name,
+        Err(error) => {
+            log::warn!("error = {}", error);
+            return (
+                StatusCode::BAD_REQUEST,
+                Json(WriteApiResponseFailureBody {
+                    message: error.to_string(),
+                }),
+            )
+                .into_response();
+        }
+    };
+
+    let representative_furigana: UserNameFurigana = match UserNameFurigana::from_str(&body.representative_furigana) {
+        Ok(representative_furigana) => representative_furigana,
+        Err(error) => {
+            log::warn!("error = {}", error);
+            return (
+                StatusCode::BAD_REQUEST,
+                Json(WriteApiResponseFailureBody {
+                    message: error.to_string(),
+                }),
+            )
+                .into_response();
+        }
+    };
+
     let phone: UserPhone = match UserPhone::from_str(&body.phone) {
         Ok(phone) => phone,
         Err(error) => {
@@ -230,7 +294,7 @@ pub async fn update_group_account(
     let contents: String = body.contents;
 
     match repository
-        .update(gid, name, furigana, phone, address, contents)
+        .update(gid, name, furigana, representative_name, representative_furigana, phone, address, contents)
         .await
     {
         Ok(_) => (
