@@ -131,6 +131,7 @@ CREATE TABLE IF NOT EXISTS `volunteer_element`
 (
   `vid` CHAR(28) NOT NULL,
   `eid` TINYINT NOT NULL,
+  `is_need` BOOLEAN NOT NULL DEFAULT false,
   PRIMARY KEY (`vid`, `eid`)
 );
 
