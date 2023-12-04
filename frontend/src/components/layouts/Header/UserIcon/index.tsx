@@ -3,14 +3,18 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { AiOutlineQuestionCircle } from "react-icons/ai";
+import { HiOutlineCurrencyYen } from "react-icons/hi2";
+import { IoDocumentTextOutline, IoLogOutOutline } from "react-icons/io5";
 
 import styles from "./index.module.css";
 
 import type { AccountType } from "@/features/auth/types";
 
+import { IconConfig } from "@/components/layouts/IconConfig";
 import { URL_PATH, URL_PATH_GROUP, URL_PATH_PARTICIPANT } from "@/consts";
+import { useLogout } from "@/features/auth/hooks/useLogout";
 import { useUser } from "@/features/auth/hooks/useUser";
-import { logout } from "@/features/auth/utils/logout";
 
 type Props = {
   accountType: AccountType;
@@ -18,6 +22,7 @@ type Props = {
 
 export const UserIcon = ({ accountType }: Props) => {
   const { user, isLoading } = useUser();
+  const { logout } = useLogout();
 
   const [isTooltipOpen, setIsTooltipOpen] = useState(false);
   const toggleTooltip = () => setIsTooltipOpen((prev) => !prev);
@@ -35,7 +40,7 @@ export const UserIcon = ({ accountType }: Props) => {
   if (isLoading) return null;
 
   return (
-    <>
+    <IconConfig>
       <div>
         <Image
           src={user?.photoURL ?? "/icon.svg"}
@@ -51,20 +56,32 @@ export const UserIcon = ({ accountType }: Props) => {
         <div className={styles.tooltip}>
           <ul>
             <li>
-              <Link href={toMyPage()}>マイページ</Link>
+              <Link href={toMyPage()}>
+                <IoDocumentTextOutline />
+                マイページ
+              </Link>
             </li>
             <li>
-              <Link href={URL_PATH.CONTACT}>お問い合わせ</Link>
+              <Link href={URL_PATH.CONTACT}>
+                <AiOutlineQuestionCircle />
+                お問い合わせ
+              </Link>
             </li>
             <li>
-              <Link href={URL_PATH.DONATE}>運営への寄付</Link>
+              <Link href={URL_PATH.DONATE}>
+                <HiOutlineCurrencyYen />
+                運営への寄付
+              </Link>
             </li>
             <li>
-              <span onClick={logout}>ログアウト</span>
+              <span onClick={logout} className={styles.logout}>
+                <IoLogOutOutline />
+                ログアウト
+              </span>
             </li>
           </ul>
         </div>
       )}
-    </>
+    </IconConfig>
   );
 };
