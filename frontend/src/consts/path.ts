@@ -42,3 +42,87 @@ export const URL_PATH_GROUP = {
   VOLUNTEER_CREATE: "/group/volunteer/create",
   VOLUNTEER_EDIT: (id: string) => `/group/volunteer/${id}/edit`,
 } as const;
+
+/**
+ * URLパスが参加者のものかどうかを判定する
+ *
+ * @param path URLパス
+ *
+ * @returns 参加者のものであればtrue
+ */
+export const isParticipantPath = (path: string) => {
+  const paths = Object.values(URL_PATH_PARTICIPANT).map((p) => {
+    if (typeof p === "function") {
+      switch (p) {
+        case URL_PATH_PARTICIPANT.ACCOUNT_DETAIL:
+          // uid(Firebase Auth)は28桁
+          return new RegExp(`^${p(".{28}")}$`);
+        case URL_PATH_PARTICIPANT.SCOUT_DETAIL:
+        case URL_PATH_PARTICIPANT.VOLUNTEER_DETAIL:
+        case URL_PATH_PARTICIPANT.APPLY:
+          // ulidは26桁
+          return new RegExp(`^${p(".{26}")}$`);
+        default:
+          throw new Error("invalid path");
+      }
+    }
+    return new RegExp(`^${p}$`);
+  });
+  return paths.some((p) => p.test(path));
+};
+
+/**
+ * URLパスが団体のものかどうかを判定する
+ *
+ * @param path URLパス
+ *
+ * @returns 団体のものであればtrue
+ */
+export const isGroupPath = (path: string) => {
+  const paths = Object.values(URL_PATH_GROUP).map((p) => {
+    if (typeof p === "function") {
+      switch (p) {
+        case URL_PATH_GROUP.ACCOUNT_DETAIL:
+          // uid(Firebase Auth)は28桁
+          return new RegExp(`^${p(".{28}")}$`);
+        case URL_PATH_GROUP.VOLUNTEER_DETAIL:
+        case URL_PATH_GROUP.VOLUNTEER_EDIT:
+          // ulidは26桁
+          return new RegExp(`^${p(".{26}")}$`);
+        default:
+          throw new Error("invalid path");
+      }
+    }
+    return new RegExp(`^${p}$`);
+  });
+  return paths.some((p) => p.test(path));
+};
+
+/**
+ * URLパスが共通のものかどうかを判定する
+ *
+ * @param path URLパス
+ *
+ * @returns 共通のものであればtrue
+ */
+export const isCommonPath = (path: string) => {
+  const paths = Object.values(URL_PATH).map((p) => new RegExp(`^${p}$`));
+  return paths.some((p) => p.test(path));
+};
+
+/**
+ * URLパスがヘッダーのリンクが非表示のものかどうかを判定する
+ *
+ * @param path URLパス
+ *
+ * @returns ヘッダーのリンクが非表示のものであればtrue
+ */
+export const isNoHeaderLink = (path: string) => {
+  switch (path) {
+    case URL_PATH_PARTICIPANT.SIGN_UP:
+    case URL_PATH_GROUP.SIGN_UP:
+      return true;
+    default:
+      return false;
+  }
+};
