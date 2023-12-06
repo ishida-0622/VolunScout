@@ -1,4 +1,4 @@
-import { AccountDeletePage } from "@/features/auth/AccoountDeletePage/group";
+import { AccountDeletePage } from "@/features/auth/AccountDeletePage/group";
 
 const AccountDelete = () => {
   return <AccountDeletePage />;
