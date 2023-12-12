@@ -1,16 +1,29 @@
 import Image from "next/image";
+import Link from "next/link";
 
+import { GroupHeader } from "./GroupHeader";
+import { ParticipantHeader } from "./ParticipantHeader";
+import { UserIconOrSignInButton } from "./UserIconOrSignInButton";
 import styles from "./index.module.css";
 
+import type { AccountType } from "@/features/auth/types";
+
 import { joinClassnames } from "@/components/@joinClassnames";
-import { SignInButton } from "@/features/auth/SignInButton";
+import { URL_PATH_GROUP, URL_PATH_PARTICIPANT } from "@/consts";
 
 type Props = {
-  accountType: "participant" | "group";
+  accountType: AccountType;
+  isNoLink?: boolean;
+  isNoIcon?: boolean;
   className?: string;
 };
 
-export const Header = ({ accountType, className }: Props) => {
+export const Header = ({
+  accountType,
+  className,
+  isNoLink = false,
+  isNoIcon = false,
+}: Props) => {
   return (
     <header
       className={joinClassnames(
@@ -20,10 +33,30 @@ export const Header = ({ accountType, className }: Props) => {
       )}
     >
       <div>
-        <Image src={"/icon.svg"} alt="Icon" width={100} height={100} />
+        <Link
+          href={
+            accountType === "group"
+              ? URL_PATH_GROUP.HOME
+              : URL_PATH_PARTICIPANT.HOME
+          }
+        >
+          <Image src={"/icon.svg"} alt="Icon" width={100} height={100} />
+        </Link>
+      </div>
+      <div>
         <h1>VolunScout</h1>
       </div>
-      <SignInButton />
+      {isNoLink ? null : (
+        <>
+          {accountType === "group" && <GroupHeader />}
+          {accountType === "participant" && <ParticipantHeader />}
+        </>
+      )}
+      {isNoIcon ? null : (
+        <div>
+          <UserIconOrSignInButton accountType={accountType} />
+        </div>
+      )}
     </header>
   );
 };
