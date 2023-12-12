@@ -1,4 +1,4 @@
-import Router from "next/router";
+import { useRouter } from "next/navigation";
 import { useRef } from "react";
 
 import type { CreateParticipantAccountRequestBody } from "@/__generated__/command";
@@ -6,9 +6,9 @@ import type { FormValues } from ".";
 
 import { apiClientParticipant } from "@/api/command";
 import { CheckBox } from "@/components/ui-parts/CheckBox";
-import { CONDITIONS, THEMES } from "@/consts";
+import { CONDITIONS, THEMES, URL_PATH_PARTICIPANT } from "@/consts";
 import { TermsOfUseAndPrivacyPolicyModal } from "@/features/auth/SignUpPage/TermsOfUseAndPrivacyPolicyModal";
-import { getuid } from "@/features/auth/utils/getuid";
+import { getUid } from "@/features/auth/utils/getUid";
 import { stringToNumber } from "@/utils/stringToNumber";
 
 type Props = {
@@ -17,6 +17,7 @@ type Props = {
 };
 
 export const Confirmation = ({ values, prevPage }: Props) => {
+  const router = useRouter();
   const themesSet = new Set(values.themes);
   const themesRequiredSet = new Set(values.themesRequired);
   const conditionsSet = new Set(values.conditions);
@@ -32,7 +33,7 @@ export const Confirmation = ({ values, prevPage }: Props) => {
       alert("利用規約とプライバシーポリシーに同意してください");
       return;
     }
-    const uid = await getuid();
+    const uid = await getUid();
     if (!uid) {
       throw new Error("uid is null");
     }
@@ -53,7 +54,7 @@ export const Confirmation = ({ values, prevPage }: Props) => {
     try {
       await apiClientParticipant.createParticipantAccount(body);
       alert("会員登録が完了しました");
-      await Router.push("/");
+      router.push(URL_PATH_PARTICIPANT.HOME);
     } catch (error) {
       console.error(error);
       alert("エラーが発生しました");
