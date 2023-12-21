@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import styles from "./index.module.css";
 
@@ -7,16 +10,20 @@ import type { AccountType } from "@/features/auth/types";
 
 import { joinClassnames } from "@/components/@joinClassnames";
 import { URL_PATH } from "@/consts";
+import { getAccountTypeFromPath } from "@/features/auth/utils/getAccountType";
 
 type Props = {
-  accountType: AccountType;
   className?: string;
 };
 
 /**
  * フッター
  */
-export const Footer = ({ accountType, className }: Props) => {
+export const Footer = ({ className }: Props) => {
+  const pathname = usePathname();
+
+  const accountType: AccountType = getAccountTypeFromPath(pathname);
+
   return (
     <footer
       className={joinClassnames(
