@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { Footer } from "@/components/layouts/Footer";
 import { WithApollo } from "@/components/layouts/WithApollo";
 
 import "./globals.css";
@@ -18,6 +19,7 @@ export default function RootLayout({
     <html lang="ja">
       <body>
         <WithApollo>{children}</WithApollo>
+        <Footer />
       </body>
     </html>
   );
