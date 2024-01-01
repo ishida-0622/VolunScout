@@ -9,6 +9,7 @@ type Props = {
   initialState?: boolean;
   onChange?: (_: boolean) => void;
   className?: string;
+  children?: React.ReactNode;
 };
 
 const noop = (_: boolean) => {};
@@ -18,6 +19,7 @@ export const CheckBox = ({
   initialState = false,
   onChange = noop,
   className,
+  children,
   ...props
 }: Props) => {
   const [state, toggle] = useReducer((state) => {
@@ -31,6 +33,7 @@ export const CheckBox = ({
     <label className={joinClassnames(styles.base, className)}>
       <input type="checkbox" checked={state} onChange={toggle} {...props} />
       {label}
+      {children}
     </label>
   );
 };
