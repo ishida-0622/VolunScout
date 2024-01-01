@@ -1,3 +1,5 @@
+"use client";
+
 import { SubmitButton } from "../SubmitButton";
 
 import styles from "./index.module.css";
@@ -6,16 +8,26 @@ import type { DeleteGroupAccountRequestBody } from "@/__generated__/command";
 
 import { apiClientGroup } from "@/api/command";
 import { BackButton } from "@/components/ui-parts/BackButton";
+import { useLogout } from "@/features/auth/hooks/useLogout";
 import { getUid } from "@/features/auth/utils/getUid";
 
 export const AccountDeletePage = () => {
+  const { logout } = useLogout();
+
   const handleOnClick = async () => {
     const gid = await getUid();
     if (gid === undefined) {
       throw new Error("gid is undefined");
     }
     const body: DeleteGroupAccountRequestBody = { gid };
-    await apiClientGroup.deleteGroupAccount(body);
+
+    try {
+      await apiClientGroup.deleteGroupAccount(body);
+      logout();
+    } catch (e) {
+      console.error(e);
+      alert("アカウント削除に失敗しました");
+    }
   };
 
   return (

@@ -1,3 +1,5 @@
+"use client";
+
 import { SubmitButton } from "../SubmitButton";
 
 import styles from "./index.module.css";
@@ -6,9 +8,12 @@ import type { DeleteParticipantAccountRequestBody } from "@/__generated__/comman
 
 import { apiClientParticipant } from "@/api/command";
 import { BackButton } from "@/components/ui-parts/BackButton";
+import { useLogout } from "@/features/auth/hooks/useLogout";
 import { getUid } from "@/features/auth/utils/getUid";
 
 export const AccountDeletePage = () => {
+  const { logout } = useLogout();
+
   const handleOnClick = async () => {
     const pid = await getUid();
     if (pid === undefined) {
@@ -17,7 +22,14 @@ export const AccountDeletePage = () => {
     const body: DeleteParticipantAccountRequestBody = {
       pid,
     };
-    await apiClientParticipant.deleteParticipantAccount(body);
+
+    try {
+      await apiClientParticipant.deleteParticipantAccount(body);
+      logout();
+    } catch (e) {
+      console.error(e);
+      alert("アカウント削除に失敗しました");
+    }
   };
 
   return (
