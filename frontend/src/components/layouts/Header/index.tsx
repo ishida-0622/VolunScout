@@ -18,7 +18,7 @@ import {
   isNoHeaderIcon,
   isNoHeaderLink,
 } from "@/consts";
-import { AuthProvider, useAuthContext } from "@/contexts/AuthContext";
+import { useAuthContext } from "@/contexts/AuthContext";
 import { getAccountTypeFromPath } from "@/features/auth/utils/getAccountType";
 
 type Props = {
@@ -37,40 +37,38 @@ export const Header = ({ className }: Props) => {
   const isNoIcon = isNoHeaderIcon(pathname);
 
   return (
-    <AuthProvider>
-      <header
-        className={joinClassnames(
-          styles.base,
-          accountType === "participant" ? styles.participant : styles.group,
-          className
-        )}
-      >
+    <header
+      className={joinClassnames(
+        styles.base,
+        accountType === "participant" ? styles.participant : styles.group,
+        className
+      )}
+    >
+      <div>
+        <Link
+          href={
+            accountType === "group"
+              ? URL_PATH_GROUP.HOME
+              : URL_PATH_PARTICIPANT.HOME
+          }
+        >
+          <Image src={"/icon.svg"} alt="Icon" width={100} height={100} />
+        </Link>
+      </div>
+      <div>
+        <h1>VolunScout</h1>
+      </div>
+      {isNoLink ? null : (
+        <>
+          {accountType === "group" && <GroupHeader />}
+          {accountType === "participant" && <ParticipantHeader />}
+        </>
+      )}
+      {isNoIcon ? null : (
         <div>
-          <Link
-            href={
-              accountType === "group"
-                ? URL_PATH_GROUP.HOME
-                : URL_PATH_PARTICIPANT.HOME
-            }
-          >
-            <Image src={"/icon.svg"} alt="Icon" width={100} height={100} />
-          </Link>
+          <UserIconOrSignInButton accountType={accountType} />
         </div>
-        <div>
-          <h1>VolunScout</h1>
-        </div>
-        {isNoLink ? null : (
-          <>
-            {accountType === "group" && <GroupHeader />}
-            {accountType === "participant" && <ParticipantHeader />}
-          </>
-        )}
-        {isNoIcon ? null : (
-          <div>
-            <UserIconOrSignInButton accountType={accountType} />
-          </div>
-        )}
-      </header>
-    </AuthProvider>
+      )}
+    </header>
   );
 };
