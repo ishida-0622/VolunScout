@@ -8,14 +8,15 @@ import type { DeleteParticipantAccountRequestBody } from "@/__generated__/comman
 
 import { apiClientParticipant } from "@/api/command";
 import { BackButton } from "@/components/ui-parts/BackButton";
+import { useAuthContext } from "@/contexts/AuthContext";
 import { useLogout } from "@/features/auth/hooks/useLogout";
-import { getUid } from "@/features/auth/utils/getUid";
 
 export const AccountDeletePage = () => {
   const { logout } = useLogout();
+  const { user } = useAuthContext();
 
   const handleOnClick = async () => {
-    const pid = await getUid();
+    const pid = user?.uid;
     if (pid === undefined) {
       throw new Error("uid is undefined");
     }

@@ -9,7 +9,7 @@ import type { FormValues } from "../useInputForm";
 import { apiClientGroup } from "@/api/command";
 import { CheckBox } from "@/components/ui-parts/CheckBox";
 import { URL_PATH_GROUP } from "@/consts";
-import { getUid } from "@/features/auth/utils/getUid";
+import { useAuthContext } from "@/contexts/AuthContext";
 
 type Props = {
   values: FormValues;
@@ -18,6 +18,7 @@ type Props = {
 
 export const Confirmation = ({ values, onPrevPage }: Props) => {
   const router = useRouter();
+  const { user } = useAuthContext();
 
   const isAgreed = useRef(false);
 
@@ -30,7 +31,7 @@ export const Confirmation = ({ values, onPrevPage }: Props) => {
       alert("利用規約とプライバシーポリシーに同意してください");
       return;
     }
-    const uid = await getUid();
+    const uid = user?.uid;
     if (!uid) {
       throw new Error("uid is null");
     }
