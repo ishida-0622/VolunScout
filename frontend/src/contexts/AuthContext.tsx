@@ -8,11 +8,13 @@ import { auth } from "@/firebaseConfig";
 export type AuthContextType = {
   user: User | null;
   initializing: boolean;
+  isLogged: boolean;
 };
 
 const initValue: AuthContextType = {
   user: null,
   initializing: true,
+  isLogged: false,
 };
 
 const AuthContext = createContext(initValue);
@@ -31,6 +33,7 @@ export const AuthProvider = ({ children }: Props) => {
     () => ({
       user,
       initializing,
+      isLogged: !initializing && user !== null,
     }),
     [user, initializing]
   );
