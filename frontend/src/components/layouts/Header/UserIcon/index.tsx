@@ -13,15 +13,15 @@ import type { AccountType } from "@/features/auth/types";
 
 import { IconConfig } from "@/components/layouts/IconConfig";
 import { URL_PATH, URL_PATH_GROUP, URL_PATH_PARTICIPANT } from "@/consts";
+import { useAuthContext } from "@/contexts/AuthContext";
 import { useLogout } from "@/features/auth/hooks/useLogout";
-import { useUser } from "@/features/auth/hooks/useUser";
 
 type Props = {
   accountType: AccountType;
 };
 
 export const UserIcon = ({ accountType }: Props) => {
-  const { user, isLoading } = useUser();
+  const { user, initializing } = useAuthContext();
   const { logout } = useLogout();
 
   const [isTooltipOpen, setIsTooltipOpen] = useState(false);
@@ -37,7 +37,7 @@ export const UserIcon = ({ accountType }: Props) => {
     }
   };
 
-  if (isLoading) return null;
+  if (initializing) return null;
 
   return (
     <IconConfig>
