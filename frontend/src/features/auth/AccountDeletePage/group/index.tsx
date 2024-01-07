@@ -8,14 +8,15 @@ import type { DeleteGroupAccountRequestBody } from "@/__generated__/command";
 
 import { apiClientGroup } from "@/api/command";
 import { BackButton } from "@/components/ui-parts/BackButton";
+import { useAuthContext } from "@/contexts/AuthContext";
 import { useLogout } from "@/features/auth/hooks/useLogout";
-import { getUid } from "@/features/auth/utils/getUid";
 
 export const AccountDeletePage = () => {
   const { logout } = useLogout();
+  const { user } = useAuthContext();
 
   const handleOnClick = async () => {
-    const gid = await getUid();
+    const gid = user?.uid;
     if (gid === undefined) {
       throw new Error("gid is undefined");
     }

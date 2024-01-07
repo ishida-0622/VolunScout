@@ -4,8 +4,8 @@ import { UserIcon } from "../UserIcon";
 
 import type { AccountType } from "@/features/auth/types";
 
+import { useAuthContext } from "@/contexts/AuthContext";
 import { SignInButton } from "@/features/auth/SignInButton";
-import { useUser } from "@/features/auth/hooks/useUser";
 
 type Props = {
   accountType: AccountType;
@@ -18,9 +18,9 @@ type Props = {
  * @returns ユーザーアイコンまたはサインインボタン
  */
 export const UserIconOrSignInButton = ({ accountType }: Props) => {
-  const { user, isLoading } = useUser();
+  const { user, initializing } = useAuthContext();
 
-  if (isLoading) return null;
+  if (initializing) return null;
 
   return user ? <UserIcon accountType={accountType} /> : <SignInButton />;
 };

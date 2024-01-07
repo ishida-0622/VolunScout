@@ -126,3 +126,18 @@ export const isNoHeaderLink = (path: string) => {
       return false;
   }
 };
+
+/**
+ * URLパスがヘッダーのアイコンが非表示のものかどうかを判定する
+ * @param path URLパス
+ * @returns ヘッダーのアイコンが非表示のものであればtrue
+ */
+export const isNoHeaderIcon = (path: string) => {
+  switch (path) {
+    case URL_PATH_PARTICIPANT.SIGN_UP:
+    case URL_PATH_GROUP.SIGN_UP:
+      return true;
+    default:
+      return false;
+  }
+};

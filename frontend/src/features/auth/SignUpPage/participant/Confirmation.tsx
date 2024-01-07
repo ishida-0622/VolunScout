@@ -7,8 +7,8 @@ import type { FormValues } from ".";
 import { apiClientParticipant } from "@/api/command";
 import { CheckBox } from "@/components/ui-parts/CheckBox";
 import { CONDITIONS, THEMES, URL_PATH_PARTICIPANT } from "@/consts";
+import { useAuthContext } from "@/contexts/AuthContext";
 import { TermsOfUseAndPrivacyPolicyModal } from "@/features/auth/SignUpPage/TermsOfUseAndPrivacyPolicyModal";
-import { getUid } from "@/features/auth/utils/getUid";
 import { stringToNumber } from "@/utils/stringToNumber";
 
 type Props = {
@@ -18,6 +18,7 @@ type Props = {
 
 export const Confirmation = ({ values, prevPage }: Props) => {
   const router = useRouter();
+  const { user } = useAuthContext();
   const themesSet = new Set(values.themes);
   const themesRequiredSet = new Set(values.themesRequired);
   const conditionsSet = new Set(values.conditions);
@@ -33,8 +34,8 @@ export const Confirmation = ({ values, prevPage }: Props) => {
       alert("利用規約とプライバシーポリシーに同意してください");
       return;
     }
-    const uid = await getUid();
-    if (!uid) {
+    const uid = user?.uid;
+    if (uid === undefined) {
       throw new Error("uid is null");
     }
     const body: CreateParticipantAccountRequestBody = {
