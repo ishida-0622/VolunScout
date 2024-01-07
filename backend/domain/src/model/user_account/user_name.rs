@@ -17,7 +17,7 @@ impl UserName {
     pub fn new(name: &str) -> Result<UserName> {
         if name.is_empty() {
             Err(UserNameError::Empty.into())
-        } else if name.len() > 50 {
+        } else if name.chars().count() > 50 {
             Err(UserNameError::TooLong.into())
         } else {
             Ok(UserName(name.to_string()))

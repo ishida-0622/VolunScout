@@ -17,7 +17,7 @@ impl UserNameFurigana {
     pub fn new(furigana: &str) -> Result<UserNameFurigana> {
         if furigana.is_empty() {
             Err(UserNameFuriganaError::Empty.into())
-        } else if furigana.len() > 50 {
+        } else if furigana.chars().count() > 50 {
             Err(UserNameFuriganaError::TooLong.into())
         } else {
             Ok(UserNameFurigana(furigana.to_string()))
