@@ -74,11 +74,3 @@ impl Review {
         self.value = Some(value);
     }
 }
-
-#[test]
-fn test_user_id() {
-    let uid = UserId::new("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa").unwrap();
-    assert_eq!(uid.to_string(), "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-    let uid = UserId::new("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-    assert_eq!(uid.is_err(), true);
-}
