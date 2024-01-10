@@ -19,8 +19,10 @@ p,
 figure,
 blockquote,
 dl,
-dd {
+dd,
+ul {
   margin: 0;
+  padding: 0;
 }
 ul[role="list"],
 ol[role="list"] {

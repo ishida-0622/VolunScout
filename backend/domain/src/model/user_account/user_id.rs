@@ -40,3 +40,32 @@ impl std::str::FromStr for UserId {
         Self::new(s)
     }
 }
+
+#[cfg(test)]
+mod test_user_id {
+    use super::*;
+
+    #[test]
+    fn ok() {
+        let uid = UserId::new("abcdefghijklmnopqrstuvwxyz12").unwrap();
+        assert_eq!(uid.to_string(), "abcdefghijklmnopqrstuvwxyz12");
+    }
+
+    #[test]
+    fn empty() {
+        let uid = UserId::new("");
+        assert_eq!(uid.is_err(), true);
+    }
+
+    #[test]
+    fn too_long() {
+        let uid = UserId::new("abcdefghijklmnopqrstuvwxyz123");
+        assert_eq!(uid.is_err(), true);
+    }
+
+    #[test]
+    fn too_short() {
+        let uid = UserId::new("abcdefghijklmnopqrstuvwxyz1");
+        assert_eq!(uid.is_err(), true);
+    }
+}

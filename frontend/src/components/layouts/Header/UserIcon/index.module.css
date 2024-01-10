@@ -1,0 +1,17 @@
+.base {
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.tooltip {
+  background-color: var(--color-white);
+}
+
+.tooltip li {
+  list-style-type: none;
+}
+
+.logout {
+  color: var(--color-red);
+  cursor: pointer;
+}

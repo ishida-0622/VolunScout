@@ -1,14 +1,14 @@
-import Router from "next/router";
+import { useRouter } from "next/navigation";
 import { useRef } from "react";
 
 import type { CreateParticipantAccountRequestBody } from "@/__generated__/command";
 import type { FormValues } from "..";
 
-import { apiClient } from "@/api/command";
+import { apiClientParticipant } from "@/api/command";
 import { CheckBox } from "@/components/ui-parts/CheckBox";
-import { CONDITIONS, THEMES } from "@/consts";
+import { CONDITIONS, THEMES, URL_PATH_PARTICIPANT } from "@/consts";
+import { useAuthContext } from "@/contexts/AuthContext";
 import { TermsOfUseAndPrivacyPolicyModal } from "@/features/auth/SignUpPage/TermsOfUseAndPrivacyPolicyModal";
-import { getuid } from "@/features/auth/utils/getuid";
 import { stringToNumber } from "@/utils/stringToNumber";
 
 type Props = {
@@ -17,6 +17,8 @@ type Props = {
 };
 
 export const Confirmation = ({ values, prevPage }: Props) => {
+  const router = useRouter();
+  const { user } = useAuthContext();
   const themesSet = new Set(values.themes);
   const themesRequiredSet = new Set(values.themesRequired);
   const conditionsSet = new Set(values.conditions);
@@ -32,11 +34,10 @@ export const Confirmation = ({ values, prevPage }: Props) => {
       alert("利用規約とプライバシーポリシーに同意してください");
       return;
     }
-    const uid = await getuid();
-    if (!uid) {
+    const uid = user?.uid;
+    if (uid === undefined) {
       throw new Error("uid is null");
     }
-    // TODO:バックエンド未完成
     const body: CreateParticipantAccountRequestBody = {
       birthday: values.birthday,
       furigana: values.furigana,
@@ -45,12 +46,16 @@ export const Confirmation = ({ values, prevPage }: Props) => {
       phone: values.phone,
       pid: uid,
       profile: values.profile,
-      region: values.regions,
+      regions: values.regions,
+      themes: values.themes,
+      themes_required: values.themesRequired,
+      conditions: values.conditions,
+      conditions_required: values.conditionsRequired,
     };
     try {
-      await apiClient.createParticipantAccount(body);
+      await apiClientParticipant.createParticipantAccount(body);
       alert("会員登録が完了しました");
-      await Router.push("/");
+      router.push(URL_PATH_PARTICIPANT.HOME);
     } catch (error) {
       console.error(error);
       alert("エラーが発生しました");

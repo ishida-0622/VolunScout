@@ -32,16 +32,19 @@ CREATE TABLE IF NOT EXISTS `volunteer`
 (
   `vid` CHAR(26),
   `gid` CHAR(28) NOT NULL,
+  `title` VARCHAR(30) NOT NULL,
+  `message` TEXT NOT NULL,
   `overview` TEXT NOT NULL,
-  `people_num` INT NOT NULL,
+  `recruited_num` INT NOT NULL,
+  `place` VARCHAR(100) NOT NULL,
   `start_at` DATETIME NOT NULL,
-  `start_day` TINYINT NOT NULL,
   `finish_at` DATETIME NOT NULL,
-  `finish_day` TINYINT NOT NULL,
   `as_group` BOOLEAN NOT NULL,
   `is_deleted` BOOLEAN NOT NULL DEFAULT false,
   `deleted_at` DATETIME,
   `deadline_on` DATE NOT NULL,
+  `registered_at` DATETIME NOT NULL,
+  `updated_at` DATETIME NOT NULL,
   PRIMARY KEY (`vid`),
   FOREIGN KEY(`gid`) REFERENCES `group_account`(`gid`)
 );
@@ -103,7 +106,7 @@ CREATE TABLE IF NOT EXISTS `volunteer_region`
 CREATE TABLE IF NOT EXISTS `participant_element`
 (
   `uid` CHAR(28) NOT NULL,
-  `eid` TINYINT NOT NULL,
+  `eid` VARCHAR(255) NOT NULL,
   `is_need` BOOLEAN NOT NULL DEFAULT false,
   PRIMARY KEY (`uid`, `eid`)
 );

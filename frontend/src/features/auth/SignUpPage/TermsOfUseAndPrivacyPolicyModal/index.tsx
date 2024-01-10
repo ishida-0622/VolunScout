@@ -2,8 +2,8 @@ import Link from "next/link";
 import { useState } from "react";
 import Modal from "react-modal";
 
-import { PrivacyPolicy } from "./PrivacyPolicy";
-import { TermsOfUse } from "./TermsOfUse";
+import { PrivacyPolicyPage } from "@/features/legal/PrivacyPolicyPage";
+import { TermsOfServicePage } from "@/features/legal/TermsOfServicePage";
 
 export const TermsOfUseAndPrivacyPolicyModal = () => {
   const [isTermsOfUseModalOpen, setIsTermsOfUseModalOpen] = useState(false);
@@ -31,14 +31,14 @@ export const TermsOfUseAndPrivacyPolicyModal = () => {
         isOpen={isTermsOfUseModalOpen}
         onRequestClose={closeTermsOfUseModal}
       >
-        <TermsOfUse />
+        <TermsOfServicePage />
         <button onClick={closeTermsOfUseModal}>閉じる</button>
       </Modal>
       <Modal
         isOpen={isPrivacyPolicyModalOpen}
         onRequestClose={closePrivacyPolicyModal}
       >
-        <PrivacyPolicy />
+        <PrivacyPolicyPage />
         <button onClick={closePrivacyPolicyModal}>閉じる</button>
       </Modal>
     </>

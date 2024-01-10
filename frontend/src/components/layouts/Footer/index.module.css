@@ -1,0 +1,10 @@
+.base {
+}
+
+.participant {
+  background-color: var(--color-green);
+}
+
+.group {
+  background-color: var(--color-blue);
+}
