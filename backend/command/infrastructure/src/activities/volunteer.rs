@@ -21,7 +21,6 @@ impl VolunteerImpl {
     }
 }
 
-// TODO:termsも他テーブルに関連してSQLを実装する
 #[async_trait]
 impl VolunteerRepository for VolunteerImpl {
     async fn create(
@@ -42,7 +41,7 @@ impl VolunteerRepository for VolunteerImpl {
         let id: String = vid.to_string();
 
         sqlx::query!(
-            "INSERT INTO volunteer (vid, gid, title, message, overview, recruited_num, place, start_at, finish_at, deadline_on, as_group, registered_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO volunteer (vid, gid, title, message, overview, recruited_num, place, start_at, finish_at, deadline_on, as_group, reward, registered_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             id,
             gid.to_string(),
             title,
@@ -54,6 +53,7 @@ impl VolunteerRepository for VolunteerImpl {
             finish_at,
             deadline_on,
             as_group,
+            terms.reward,
             Utc::now(),
             Utc::now()
         ).execute(&self.pool).await?;
@@ -150,7 +150,7 @@ impl VolunteerRepository for VolunteerImpl {
         let id: String = vid.to_string();
 
         let update_query = sqlx::query!(
-            "UPDATE volunteer SET title = ?, message = ?, overview = ?, recruited_num = ?, place = ?, start_at = ?, finish_at = ?, deadline_on = ?, as_group = ?, updated_at = ? WHERE vid = ?",
+            "UPDATE volunteer SET title = ?, message = ?, overview = ?, recruited_num = ?, place = ?, start_at = ?, finish_at = ?, deadline_on = ?, as_group = ?, reward = ?, updated_at = ? WHERE vid = ?",
             title,
             message,
             overview,
@@ -160,6 +160,7 @@ impl VolunteerRepository for VolunteerImpl {
             finish_at,
             deadline_on,
             as_group,
+            terms.reward,
             Utc::now(),
             id
         )

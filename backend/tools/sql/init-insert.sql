@@ -35,6 +35,7 @@ INSERT INTO volunteer(
   start_at,
   finish_at,
   as_group,
+  reward,
   deadline_on,
   registered_at,
   updated_at
@@ -49,6 +50,7 @@ INSERT INTO volunteer(
   "2023-12-24 11:00:00",
   "2023-12-24 17:00:00",
   false,
+  "1000 yen as transportation expenses",
   "2023-12-10",
   NOW(),
   NOW()

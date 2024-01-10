@@ -42,6 +42,7 @@ CREATE TABLE IF NOT EXISTS `volunteer`
   `start_at` DATETIME NOT NULL,
   `finish_at` DATETIME NOT NULL,
   `as_group` BOOLEAN NOT NULL,
+  `reward` VARCHAR(100),
   `is_deleted` BOOLEAN NOT NULL DEFAULT false,
   `deleted_at` DATETIME,
   `deadline_on` DATE NOT NULL,
@@ -122,7 +123,7 @@ CREATE TABLE IF NOT EXISTS `volunteer_region`
 CREATE TABLE IF NOT EXISTS `participant_element`
 (
   `uid` CHAR(28) NOT NULL,
-  `eid` VARCHAR(255) NOT NULL,
+  `eid` VARCHAR(20) NOT NULL,
   `is_need` BOOLEAN NOT NULL DEFAULT false,
   PRIMARY KEY (`uid`, `eid`)
 );
@@ -130,7 +131,7 @@ CREATE TABLE IF NOT EXISTS `participant_element`
 CREATE TABLE IF NOT EXISTS `volunteer_element`
 (
   `vid` CHAR(28) NOT NULL,
-  `eid` VARCHAR(255) NOT NULL,
+  `eid` VARCHAR(20) NOT NULL,
   `is_need` BOOLEAN NOT NULL DEFAULT false,
   PRIMARY KEY (`vid`, `eid`)
 );
