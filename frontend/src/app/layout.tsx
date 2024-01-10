@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { Footer } from "@/components/layouts/Footer";
 import { Header } from "@/components/layouts/Header";
+import { IconConfig } from "@/components/layouts/IconConfig/index";
 import { WithApollo } from "@/components/layouts/WithApollo";
 import { AuthProvider } from "@/contexts/AuthContext";
 
@@ -22,8 +23,10 @@ export default function RootLayout({
       <body>
         <WithApollo>
           <AuthProvider>
-            <Header />
-            {children}
+            <IconConfig>
+              <Header />
+              {children}
+            </IconConfig>
           </AuthProvider>
         </WithApollo>
         <Footer />
