@@ -20,10 +20,12 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body>
-        <AuthProvider>
-          <Header />
-          <WithApollo>{children}</WithApollo>
-        </AuthProvider>
+        <WithApollo>
+          <AuthProvider>
+            <Header />
+            {children}
+          </AuthProvider>
+        </WithApollo>
         <Footer />
       </body>
     </html>
