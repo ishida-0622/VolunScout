@@ -36,6 +36,7 @@ impl VolunteerRepository for VolunteerImpl {
         finish_at: DateTime<Utc>,
         deadline_on: NaiveDate,
         as_group: bool,
+        reward: Option<String>,
         terms: Terms
     ) -> Result<()> {
         let id: String = vid.to_string();
@@ -53,7 +54,7 @@ impl VolunteerRepository for VolunteerImpl {
             finish_at,
             deadline_on,
             as_group,
-            terms.reward,
+            reward,
             Utc::now(),
             Utc::now()
         ).execute(&self.pool).await?;
@@ -158,6 +159,7 @@ impl VolunteerRepository for VolunteerImpl {
         finish_at: DateTime<Utc>,
         deadline_on: NaiveDate,
         as_group: bool,
+        reward: Option<String>,
         terms: Terms
     ) -> Result<()> {
         let id: String = vid.to_string();
@@ -173,7 +175,7 @@ impl VolunteerRepository for VolunteerImpl {
             finish_at,
             deadline_on,
             as_group,
-            terms.reward,
+            reward,
             Utc::now(),
             id
         )

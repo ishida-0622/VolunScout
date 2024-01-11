@@ -179,12 +179,12 @@ pub async fn create_volunteer(
         required_theme,
         condition,
         required_condition,
-        reward,
+        // reward,
         target_status
     );
 
     match repository
-        .create(vid, gid, title, message, overview, recruited_num, place, start_at, finish_at, deadline_on, as_group, terms)
+        .create(vid, gid, title, message, overview, recruited_num, place, start_at, finish_at, deadline_on, as_group, reward, terms)
         .await
     {
         Ok(_) => (
@@ -272,12 +272,11 @@ pub async fn update_volunteer(
         required_theme,
         condition,
         required_condition,
-        reward,
         target_status
     );
 
     match repository
-        .update(vid, title, message, overview, recruited_num, place, start_at, finish_at, deadline_on, as_group, terms)
+        .update(vid, title, message, overview, recruited_num, place, start_at, finish_at, deadline_on, as_group, reward, terms)
         .await
     {
         Ok(_) => (

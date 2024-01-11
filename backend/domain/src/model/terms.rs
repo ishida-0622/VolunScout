@@ -9,7 +9,6 @@ pub struct Terms {
     pub required_themes: Vec<Theme>,
     pub conditions: Vec<Condition>,
     pub required_conditions: Vec<Condition>,
-    pub reward: Option<String>,
     pub target_status: Vec<TargetStatus>,
 }
 
@@ -20,7 +19,6 @@ impl Terms {
         required_themes: Vec<Theme>,
         conditions: Vec<Condition>,
         required_conditions: Vec<Condition>,
-        reward: Option<String>,
         target_status: Vec<TargetStatus>,
     ) -> Terms {
         Terms {
@@ -29,7 +27,6 @@ impl Terms {
             required_themes,
             conditions,
             required_conditions,
-            reward,
             target_status,
         }
     }

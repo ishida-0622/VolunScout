@@ -206,7 +206,6 @@ pub async fn create_participant_account(
         .iter()
         .map(|c: &String| Condition::from_str(c).unwrap())
         .collect::<Vec<Condition>>();
-    let reward: Option<String> = None;
     let target_status: Vec<TargetStatus> = body
         .target_status
         .iter()
@@ -218,7 +217,6 @@ pub async fn create_participant_account(
         required_theme,
         condition,
         required_condition,
-        reward,
         target_status
     );
 
@@ -371,7 +369,6 @@ pub async fn update_participant_account(
         .iter()
         .map(|c: &String| Condition::from_str(c).unwrap())
         .collect::<Vec<Condition>>();
-    let reward: Option<String> = None;
     let target_status: Vec<TargetStatus> = body
         .target_status
         .iter()
@@ -383,7 +380,6 @@ pub async fn update_participant_account(
         required_theme,
         condition,
         required_condition,
-        reward,
         target_status
     );
 
