@@ -23,6 +23,10 @@ pub struct GroupAccount {
     pub address: String,
     /// 団体紹介
     pub contents: String,
+    // 代表者氏名
+    pub representative_name: String,
+    // 代表者氏名(フリガナ)
+    pub representative_furigana: String,
     /// 有料会員
     pub is_paid: MySqlBool,
     /// 削除フラグ
@@ -39,6 +43,8 @@ impl GroupAccount {
         phone: String,
         address: String,
         contents: String,
+        representative_name: String,
+        representative_furigana: String,
         is_paid: MySqlBool,
         is_deleted: MySqlBool,
         deleted_at: Option<NaiveDateTime>,
@@ -50,6 +56,8 @@ impl GroupAccount {
             phone,
             address,
             contents,
+            representative_name,
+            representative_furigana,
             is_paid,
             is_deleted,
             deleted_at,
