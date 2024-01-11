@@ -10,6 +10,18 @@ INSERT INTO participant_account VALUES (
   NULL
 );
 
+INSERT INTO participant_account VALUES (
+  "participant_account000000001",
+  "taro",
+  "taro",
+  0,
+  "2002-10-11",
+  "08012341234",
+  "yorodesu",
+  DEFAULT,
+  NULL
+);
+
 INSERT INTO group_account VALUES (
   "group_account000000000000000",
   "VolunScout",
@@ -49,7 +61,7 @@ INSERT INTO volunteer(
   "Tokyo Sky Tree Soramachi 1F",
   "2023-12-24 11:00:00",
   "2023-12-24 17:00:00",
-  false,
+  true,
   "1000 yen as transportation expenses",
   "2023-12-10",
   NOW(),
@@ -122,10 +134,22 @@ INSERT INTO apply VALUES (
   "apply000000000000000000000",
   "volunteer00000000000000000",
   "participant_account000000000",
-  "2024-1-20 12:00:00",
+  "2024-1-12 12:00:00",
+  true,
+  1,
+  "2024-1-12 16:20:00",
+  true
+);
+
+INSERT INTO apply VALUES (
+  "apply000000000000000000001",
+  "volunteer00000000000000000",
+  "participant_account000000001",
+  "2024-1-13 12:00:00",
+  false,
   0,
   NULL,
-  true
+  false
 );
 
 INSERT INTO group_participants VALUES (
@@ -135,4 +159,13 @@ INSERT INTO group_participants VALUES (
   "first furigana",
   0,
   21
+);
+
+INSERT INTO group_participants VALUES (
+  "apply000000000000000000000",
+  2,
+  "second hanako",
+  "second furigana",
+  1,
+  19
 );
