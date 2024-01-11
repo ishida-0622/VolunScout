@@ -7,6 +7,7 @@ import { WithApollo } from "@/components/layouts/WithApollo";
 import { AuthProvider } from "@/contexts/AuthContext";
 
 import "./globals.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 export const metadata: Metadata = {
   title: "Create Next App",

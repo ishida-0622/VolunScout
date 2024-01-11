@@ -22,9 +22,11 @@ CREATE TABLE IF NOT EXISTS `group_account`
   `phone` VARCHAR(11) NOT NULL,
   `address` VARCHAR(100) NOT NULL,
   `contents` TEXT NOT NULL,
+  `representative_name` VARCHAR(50) NOT NULL,
+  `representative_furigana` VARCHAR(50) NOT NULL,
+  `is_paid` BOOLEAN NOT NULL DEFAULT false,
   `is_deleted` BOOLEAN NOT NULL DEFAULT false,
   `deleted_at` DATETIME,
-  `is_paid` BOOLEAN NOT NULL DEFAULT false,
   PRIMARY KEY (`gid`)
 );
 
@@ -40,6 +42,7 @@ CREATE TABLE IF NOT EXISTS `volunteer`
   `start_at` DATETIME NOT NULL,
   `finish_at` DATETIME NOT NULL,
   `as_group` BOOLEAN NOT NULL,
+  `reward` VARCHAR(100),
   `is_deleted` BOOLEAN NOT NULL DEFAULT false,
   `deleted_at` DATETIME,
   `deadline_on` DATE NOT NULL,
@@ -55,7 +58,7 @@ CREATE TABLE IF NOT EXISTS `scout`
   `vid` CHAR(26) NOT NULL,
   `uid` CHAR(28) NOT NULL,
   `message` TEXT NOT NULL,
-  `is_succeed` BOOLEAN NOT NULL DEFAULT false,
+  `is_sent` BOOLEAN NOT NULL DEFAULT false,
   `is_read` BOOLEAN NOT NULL DEFAULT false,
   `send_at` DATETIME NOT NULL,
   `is_denied` BOOLEAN NOT NULL DEFAULT false,
@@ -65,17 +68,31 @@ CREATE TABLE IF NOT EXISTS `scout`
   FOREIGN KEY(`uid`) REFERENCES `participant_account`(`uid`)
 );
 
+CREATE TABLE IF NOT EXISTS `group_participants`
+(
+  `gpid` CHAR(26),
+  `serial` INT NOT NULL,
+  `name` VARCHAR(50) NOT NULL,
+  `furigana` VARCHAR(50) NOT NULL,
+  `gender` TINYINT NOT NULL DEFAULT 2,
+  `age` TINYINT NOT NULL,
+  PRIMARY KEY (`gpid`, `serial`)
+);
+
 CREATE TABLE IF NOT EXISTS `apply`
 (
   `aid` CHAR(26),
   `vid` CHAR(26) NOT NULL,
   `uid` CHAR(28) NOT NULL,
-  `people_num` INT,
-  `apply_at` DATETIME NOT NULL,
-  `is_allowed` TINYINT NOT NULL DEFAULT 0,
+  `gpid` CHAR(26),
+  `applied_at` DATETIME NOT NULL,
+  `allowed_status` TINYINT NOT NULL DEFAULT 0,
+  `decided_at` DATETIME,
+  `is_sent` BOOLEAN NOT NULL DEFAULT false,
   PRIMARY KEY (`aid`),
   FOREIGN KEY(`vid`) REFERENCES `volunteer`(`vid`),
-  FOREIGN KEY(`uid`) REFERENCES `participant_account`(`uid`)
+  FOREIGN KEY(`uid`) REFERENCES `participant_account`(`uid`),
+  FOREIGN KEY(`gpid`) REFERENCES `group_participants`(`gpid`)
 );
 
 CREATE TABLE IF NOT EXISTS `favorite`
@@ -106,7 +123,7 @@ CREATE TABLE IF NOT EXISTS `volunteer_region`
 CREATE TABLE IF NOT EXISTS `participant_element`
 (
   `uid` CHAR(28) NOT NULL,
-  `eid` VARCHAR(255) NOT NULL,
+  `eid` VARCHAR(20) NOT NULL,
   `is_need` BOOLEAN NOT NULL DEFAULT false,
   PRIMARY KEY (`uid`, `eid`)
 );
@@ -114,7 +131,8 @@ CREATE TABLE IF NOT EXISTS `participant_element`
 CREATE TABLE IF NOT EXISTS `volunteer_element`
 (
   `vid` CHAR(28) NOT NULL,
-  `eid` TINYINT NOT NULL,
+  `eid` VARCHAR(20) NOT NULL,
+  `is_need` BOOLEAN NOT NULL DEFAULT false,
   PRIMARY KEY (`vid`, `eid`)
 );
 
@@ -129,14 +147,12 @@ CREATE TABLE IF NOT EXISTS `volunteer_dates`
 
 CREATE TABLE IF NOT EXISTS `review`
 (
-  `rid` CHAR(26),
-  `from_id` VARCHAR(28) NOT NULL,
+  `from_id` CHAR(28) NOT NULL,
   `to_id` VARCHAR(28) NOT NULL,
-  `user_type` TINYINT NOT NULL,
   `point` TINYINT NOT NULL,
-  PRIMARY KEY (`rid`),
+  PRIMARY KEY (`from_id`, `to_id`),
   FOREIGN KEY(`from_id`) REFERENCES `participant_account`(`uid`),
-  FOREIGN KEY(`from_id`) REFERENCES `volunteer`(`vid`),
+  FOREIGN KEY(`from_id`) REFERENCES `group_account`(`gid`),
   FOREIGN KEY(`to_id`) REFERENCES `participant_account`(`uid`),
   FOREIGN KEY(`to_id`) REFERENCES `volunteer`(`vid`)
 );
@@ -146,4 +162,4 @@ CREATE TABLE IF NOT EXISTS `group_volunteer_photo`
   `s3_key` VARCHAR(100),
   `gvid` VARCHAR(28) NOT NULL,
   PRIMARY KEY (`s3_key`)
-)
+);
