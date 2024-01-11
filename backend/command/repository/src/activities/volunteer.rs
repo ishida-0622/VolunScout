@@ -25,6 +25,7 @@ pub trait VolunteerRepository: Send + Sync {
         finish_at: DateTime<Utc>,
         deadline_on: NaiveDate,
         as_group: bool,
+        reward: Option<String>,
         terms: Terms,
     ) -> Result<()>;
 
@@ -41,6 +42,7 @@ pub trait VolunteerRepository: Send + Sync {
         finish_at: DateTime<Utc>,
         deadline_on: NaiveDate,
         as_group: bool,
+        reward: Option<String>,
         terms: Terms,
     ) -> Result<()>;
 

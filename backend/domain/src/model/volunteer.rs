@@ -48,7 +48,6 @@ impl std::fmt::Display for VolunteerId {
     }
 }
 
-
 impl Volunteer {
     pub fn new(
         gid: UserId,
