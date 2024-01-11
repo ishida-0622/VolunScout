@@ -68,6 +68,20 @@ CREATE TABLE IF NOT EXISTS `scout`
   FOREIGN KEY(`uid`) REFERENCES `participant_account`(`uid`)
 );
 
+CREATE TABLE IF NOT EXISTS `apply`
+(
+  `aid` CHAR(26),
+  `vid` CHAR(26) NOT NULL,
+  `uid` CHAR(28) NOT NULL,
+  `applied_at` DATETIME NOT NULL,
+  `allowed_status` TINYINT NOT NULL DEFAULT 0,
+  `decided_at` DATETIME,
+  `is_sent` BOOLEAN NOT NULL DEFAULT false,
+  PRIMARY KEY (`aid`),
+  FOREIGN KEY(`vid`) REFERENCES `volunteer`(`vid`),
+  FOREIGN KEY(`uid`) REFERENCES `participant_account`(`uid`)
+);
+
 CREATE TABLE IF NOT EXISTS `group_participants`
 (
   `gpid` CHAR(26),
@@ -76,23 +90,8 @@ CREATE TABLE IF NOT EXISTS `group_participants`
   `furigana` VARCHAR(50) NOT NULL,
   `gender` TINYINT NOT NULL DEFAULT 2,
   `age` TINYINT NOT NULL,
-  PRIMARY KEY (`gpid`, `serial`)
-);
-
-CREATE TABLE IF NOT EXISTS `apply`
-(
-  `aid` CHAR(26),
-  `vid` CHAR(26) NOT NULL,
-  `uid` CHAR(28) NOT NULL,
-  `gpid` CHAR(26),
-  `applied_at` DATETIME NOT NULL,
-  `allowed_status` TINYINT NOT NULL DEFAULT 0,
-  `decided_at` DATETIME,
-  `is_sent` BOOLEAN NOT NULL DEFAULT false,
-  PRIMARY KEY (`aid`),
-  FOREIGN KEY(`vid`) REFERENCES `volunteer`(`vid`),
-  FOREIGN KEY(`uid`) REFERENCES `participant_account`(`uid`),
-  FOREIGN KEY(`gpid`) REFERENCES `group_participants`(`gpid`)
+  PRIMARY KEY (`gpid`, `serial`),
+  FOREIGN KEY(`gpid`) REFERENCES `apply`(`aid`)
 );
 
 CREATE TABLE IF NOT EXISTS `favorite`

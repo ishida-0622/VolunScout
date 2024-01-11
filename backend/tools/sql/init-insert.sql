@@ -117,3 +117,22 @@ INSERT INTO favorite VALUES (
   "volunteer11111111111111111",
   NOW()
 );
+
+INSERT INTO apply VALUES (
+  "apply000000000000000000000",
+  "volunteer00000000000000000",
+  "participant_account000000000",
+  "2024-1-20 12:00:00",
+  0,
+  NULL,
+  true
+);
+
+INSERT INTO group_participants VALUES (
+  "apply000000000000000000000",
+  1,
+  "first taro",
+  "first furigana",
+  0,
+  21
+);
