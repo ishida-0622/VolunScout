@@ -86,7 +86,7 @@ CREATE TABLE IF NOT EXISTS `apply`
   `uid` CHAR(28) NOT NULL,
   `gpid` CHAR(26),
   `applied_at` DATETIME NOT NULL,
-  `is_allowed` TINYINT NOT NULL DEFAULT 0,
+  `allowed_status` TINYINT NOT NULL DEFAULT 0,
   `decided_at` DATETIME,
   `is_sent` BOOLEAN NOT NULL DEFAULT false,
   PRIMARY KEY (`aid`),

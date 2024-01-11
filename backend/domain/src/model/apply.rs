@@ -13,7 +13,8 @@ pub struct Apply {
     pub volunteer_id: VolunteerId,
     pub group_participants_id: Option<GroupParticipantsId>,
     pub applied_at: DateTime<Utc>,
-    pub is_allowed: u8,
+    /// 0:未承認 1:承認済 2:棄却済
+    pub allowed_status: u8,
     pub decided_at: Option<DateTime<Utc>>,
     pub is_sent: bool
 }
@@ -43,7 +44,7 @@ impl Apply {
             volunteer_id,
             group_participants_id,
             applied_at,
-            is_allowed: 0,
+            allowed_status: 0,
             decided_at: None,
             is_sent: false
         }
