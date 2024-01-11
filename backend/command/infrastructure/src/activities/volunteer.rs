@@ -8,7 +8,7 @@ use command_repository::activities::volunteer::VolunteerRepository;
 use domain::model::{
     volunteer::VolunteerId,
     user_account::user_id::UserId,
-    terms::Terms, region::Region, theme::Theme, condition::Condition
+    terms::Terms, region::Region, theme::Theme, condition::Condition, target_status::TargetStatus
 };
 
 pub struct VolunteerImpl {
@@ -120,13 +120,26 @@ impl VolunteerRepository for VolunteerImpl {
             })
             .collect::<Vec<_>>();
 
+        let insert_target_status_query: Vec<_> = terms.target_status
+            .iter()
+            .map(|t: &TargetStatus| {
+                sqlx::query!(
+                    "INSERT INTO volunteer_element (vid, eid) VALUES (?, ?)",
+                    id,
+                    t.to_id()
+                )
+                .execute(&self.pool)
+            })
+            .collect::<Vec<_>>();
+
         future::try_join_all(
             insert_region_query
                 .into_iter()
                 .chain(insert_theme_query)
                 .chain(insert_theme_required_query)
                 .chain(insert_condition_query)
-                .chain(insert_condition_required_query),
+                .chain(insert_condition_required_query)
+                .chain(insert_target_status_query),
         )
         .await?;
 
@@ -242,13 +255,26 @@ impl VolunteerRepository for VolunteerImpl {
             })
             .collect::<Vec<_>>();
 
+        let insert_target_status_query: Vec<_> = terms.target_status
+            .iter()
+            .map(|t: &TargetStatus| {
+                sqlx::query!(
+                    "INSERT INTO volunteer_element (vid, eid) VALUES (?, ?)",
+                    id,
+                    t.to_id()
+                )
+                .execute(&self.pool)
+            })
+            .collect::<Vec<_>>();
+
         future::try_join_all(
             insert_region_query
                 .into_iter()
                 .chain(insert_theme_query)
                 .chain(insert_theme_required_query)
                 .chain(insert_condition_query)
-                .chain(insert_condition_required_query),
+                .chain(insert_condition_required_query)
+                .chain(insert_target_status_query),
         )
         .await?;
 

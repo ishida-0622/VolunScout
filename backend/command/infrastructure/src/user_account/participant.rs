@@ -13,7 +13,7 @@ use domain::model::{
     user_account::{
         user_id::UserId, user_name::UserName, user_name_furigana::UserNameFurigana,
         user_phone::UserPhone,
-    }, terms::Terms
+    }, terms::Terms, target_status::TargetStatus
 };
 
 pub struct ParticipantAccountImpl {
@@ -113,13 +113,26 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
             })
             .collect::<Vec<_>>();
 
+        let insert_target_status_query: Vec<_> = terms.target_status
+            .iter()
+            .map(|t: &TargetStatus| {
+                sqlx::query!(
+                    "INSERT INTO participant_element (uid, eid) VALUES (?, ?)",
+                    id,
+                    t.to_id()
+                )
+                .execute(&self.pool)
+            })
+            .collect::<Vec<_>>();
+
         future::try_join_all(
             insert_region_query
                 .into_iter()
                 .chain(insert_theme_query)
                 .chain(insert_theme_required_query)
                 .chain(insert_condition_query)
-                .chain(insert_condition_required_query),
+                .chain(insert_condition_required_query)
+                .chain(insert_target_status_query),
         )
         .await?;
 
@@ -227,13 +240,26 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
             })
             .collect::<Vec<_>>();
 
+        let insert_target_status_query: Vec<_> = terms.target_status
+            .iter()
+            .map(|t: &TargetStatus| {
+                sqlx::query!(
+                    "INSERT INTO participant_element (uid, eid) VALUES (?, ?)",
+                    id,
+                    t.to_id()
+                )
+                .execute(&self.pool)
+            })
+            .collect::<Vec<_>>();
+
         future::try_join_all(
             insert_region_query
                 .into_iter()
                 .chain(insert_theme_query)
                 .chain(insert_theme_required_query)
                 .chain(insert_condition_query)
-                .chain(insert_condition_required_query),
+                .chain(insert_condition_required_query)
+                .chain(insert_target_status_query),
         )
         .await?;
 
