@@ -8,24 +8,26 @@ pub const TARGET_STATUSES: [&str; 5] = [
     "シニア",
 ];
 
+pub const TARGET_STATUSES_PREFIX: &str = "target_status_";
+
 #[derive(Debug, Clone)]
 pub struct TargetStatusMap {
-    pub target_statuses_index_to_name: HashMap<usize, String>,
-    pub target_statuses_name_to_index: HashMap<String, usize>,
+    pub target_statuses_index_to_name: HashMap<String, String>,
+    pub target_statuses_name_to_index: HashMap<String, String>,
 }
 
 impl TargetStatusMap {
     pub fn new() -> TargetStatusMap {
-        let target_statuses_index_to_name: HashMap<usize, String> = TARGET_STATUSES
+        let target_statuses_index_to_name: HashMap<String, String> = TARGET_STATUSES
             .iter()
             .enumerate()
-            .map(|(index, target_status)| (index, target_status.to_string()))
-            .collect::<HashMap<usize, String>>();
-        let target_statuses_name_to_index: HashMap<String, usize> = TARGET_STATUSES
+            .map(|(index, target_status)| (format!("{}{}", TARGET_STATUSES_PREFIX, index), target_status.to_string()))
+            .collect();
+        let target_statuses_name_to_index: HashMap<String, String> = TARGET_STATUSES
             .iter()
             .enumerate()
-            .map(|(index, target_status)| (target_status.to_string(), index))
-            .collect::<HashMap<String, usize>>();
+            .map(|(index, target_status)| (target_status.to_string(), format!("{}{}", TARGET_STATUSES_PREFIX, index)))
+            .collect();
         TargetStatusMap {
             target_statuses_index_to_name,
             target_statuses_name_to_index,
