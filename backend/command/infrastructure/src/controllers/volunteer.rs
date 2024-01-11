@@ -29,9 +29,9 @@ pub struct CreateVolunteerRequestBody {
     pub recruited_num: u32,
     #[schema(required = true)]
     pub place: String,
-    #[schema(required = true, value_type = String, example = "2023-12-17 9:00:00")]
+    #[schema(required = true, value_type = String, example = "2023-12-17T9:00:00Z")]
     pub start_at: DateTime<Utc>,
-    #[schema(required = true, value_type = String, example = "2023-12-17 17:00:00")]
+    #[schema(required = true, value_type = String, example = "2023-12-17T17:00:00Z")]
     pub finish_at: DateTime<Utc>,
     #[schema(required = true, value_type = String, example = "2023-12-3")]
     pub deadline_on: NaiveDate,
@@ -70,9 +70,9 @@ pub struct UpdateVolunteerRequestBody {
     pub recruited_num: u32,
     #[schema(required = true)]
     pub place: String,
-    #[schema(required = true, value_type = String, format = DateTime, example = "2023-12-17 09:00:00")]
+    #[schema(required = true, value_type = String, format = DateTime, example = "2023-12-17T09:00:00Z")]
     pub start_at: DateTime<Utc>,
-    #[schema(required = true, value_type = String, format = DateTime, example = "2023-12-17 17:00:00")]
+    #[schema(required = true, value_type = String, format = DateTime, example = "2023-12-17T17:00:00Z")]
     pub finish_at: DateTime<Utc>,
     #[schema(required = true, value_type = String, example = "2023-12-3")]
     pub deadline_on: NaiveDate,
