@@ -1,6 +1,7 @@
 pub mod group;
 pub mod participant;
 pub mod volunteer;
+pub mod apply;
 
 use axum::{routing::post, Router};
 use lambda_http::Body;
@@ -10,8 +11,10 @@ use std::sync::Arc;
 use tokio::sync::RwLock;
 use utoipa::ToSchema;
 
-use crate::activities::volunteer::VolunteerImpl;
-use crate::user_account::{group::GroupAccountImpl, participant::ParticipantAccountImpl};
+use crate::{
+    activities::{volunteer::VolunteerImpl, apply::ApplyImpl},
+    user_account::{group::GroupAccountImpl, participant::ParticipantAccountImpl}
+};
 
 /// 失敗時のAPIレスポンスのボディを表す構造体
 #[derive(Debug, Serialize, Deserialize, ToSchema)]
@@ -30,6 +33,7 @@ pub struct AppState {
     group_account_repository: GroupAccountImpl,
     participant_account_repository: ParticipantAccountImpl,
     volunteer_repository: VolunteerImpl,
+    apply_repository: ApplyImpl,
 }
 
 impl AppState {
@@ -38,6 +42,7 @@ impl AppState {
             group_account_repository: GroupAccountImpl::new(pool.clone()),
             participant_account_repository: ParticipantAccountImpl::new(pool.clone()),
             volunteer_repository: VolunteerImpl::new(pool.clone()),
+            apply_repository: ApplyImpl::new(pool.clone()),
         }
     }
 }
@@ -56,6 +61,9 @@ pub enum Endpoints {
     CreateVolunteer,
     UpdateVolunteer,
     DeleteVolunteer,
+    CreateApply,
+    UpdateApplyAllowedStatus,
+    UpdateApplyIsSent,
 }
 
 impl Endpoints {
@@ -70,6 +78,9 @@ impl Endpoints {
             Endpoints::CreateVolunteer => "/volunteer/create",
             Endpoints::UpdateVolunteer => "/volunteer/update",
             Endpoints::DeleteVolunteer => "/volunteer/delete",
+            Endpoints::CreateApply => "/apply/create",
+            Endpoints::UpdateApplyAllowedStatus => "/apply/update-allowed-status",
+            Endpoints::UpdateApplyIsSent => "/apply/update-is-sent",
         }
     }
 }
@@ -115,6 +126,18 @@ pub fn create_router(pool: MySqlPool) -> Router {
         .route(
             Endpoints::DeleteVolunteer.as_str(),
             post(volunteer::delete_volunteer),
+        )
+        .route(
+            Endpoints::CreateApply.as_str(),
+            post(apply::create_apply),
+        )
+        .route(
+            Endpoints::UpdateApplyAllowedStatus.as_str(),
+            post(apply::update_apply_allowed_status),
+        )
+        .route(
+            Endpoints::UpdateApplyIsSent.as_str(),
+            post(apply::update_apply_is_sent),
         )
         .with_state(state);
 
