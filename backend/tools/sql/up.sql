@@ -74,6 +74,7 @@ CREATE TABLE IF NOT EXISTS `apply`
   `vid` CHAR(26) NOT NULL,
   `uid` CHAR(28) NOT NULL,
   `applied_at` DATETIME NOT NULL,
+  `as_group` BOOLEAN NOT NULL,
   `allowed_status` TINYINT NOT NULL DEFAULT 0,
   `decided_at` DATETIME,
   `is_sent` BOOLEAN NOT NULL DEFAULT false,

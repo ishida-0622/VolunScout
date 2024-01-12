@@ -1,11 +1,10 @@
 use serde::{Deserialize, Serialize};
-use ulid_generator_rs::{ULIDGenerator, ULID};
 
-use super::{user_account::{user_name::UserName, user_name_furigana::UserNameFurigana}, gender::Gender};
+use super::{user_account::{user_name::UserName, user_name_furigana::UserNameFurigana}, gender::Gender, apply::ApplyId};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct GroupParticipants {
-    pub gpid: GroupParticipantsId,
+    pub gpid: ApplyId,
     pub serial: u16,
     pub name: UserName,
     pub furigana: UserNameFurigana,
@@ -13,20 +12,9 @@ pub struct GroupParticipants {
     pub age: u8
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct GroupParticipantsId(pub ULID);
-
-impl GroupParticipantsId {
-    pub fn new() -> GroupParticipantsId {
-        let mut generator: ULIDGenerator = ULIDGenerator::new();
-        let value: ULID = generator.generate().unwrap();
-        GroupParticipantsId(value)
-    }
-}
-
 impl GroupParticipants {
     pub fn new(
-        gpid: GroupParticipantsId,
+        gpid: ApplyId,
         serial: u16,
         name: UserName,
         furigana: UserNameFurigana,
@@ -41,12 +29,5 @@ impl GroupParticipants {
             gender,
             age
         }
-    }
-}
-
-// Displayを実装することで, to_string()で文字列に変換できるようになる
-impl std::fmt::Display for GroupParticipantsId {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{}", self.0.to_string())
     }
 }
