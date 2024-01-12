@@ -100,7 +100,7 @@ pub async fn create_apply(
 
 #[utoipa::path(
     post,
-    path="/apply/update-allowed-status",
+    path="/apply/update/allowed-status",
     request_body=UpdateApplyAllowedStatusRequestBody,
     responses(
         (status=200, description="Update apply's allowed_status successfully.", body=WriteApiResponseSuccessBody),
@@ -144,7 +144,7 @@ pub async fn update_apply_allowed_status(
 
 #[utoipa::path(
     post,
-    path="/apply/update-is-sent",
+    path="/apply/update/is-sent",
     request_body=UpdateApplyIsSent,
     responses(
         (status=200, description="Update apply's is-sent successfully.", body=WriteApiResponseSuccessBody),

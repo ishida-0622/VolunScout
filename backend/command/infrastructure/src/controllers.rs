@@ -79,8 +79,8 @@ impl Endpoints {
             Endpoints::UpdateVolunteer => "/volunteer/update",
             Endpoints::DeleteVolunteer => "/volunteer/delete",
             Endpoints::CreateApply => "/apply/create",
-            Endpoints::UpdateApplyAllowedStatus => "/apply/update-allowed-status",
-            Endpoints::UpdateApplyIsSent => "/apply/update-is-sent",
+            Endpoints::UpdateApplyAllowedStatus => "/apply/update/allowed-status",
+            Endpoints::UpdateApplyIsSent => "/apply/update/is-sent",
         }
     }
 }
