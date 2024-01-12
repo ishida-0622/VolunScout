@@ -36,7 +36,7 @@ pub struct UpdateApplyAllowedStatusRequestBody {
 #[derive(Debug, Serialize, Deserialize, ToSchema)]
 pub struct UpdateApplyIsSentRequestBody {
     #[schema(required = true)]
-    pub aid: String,
+    pub aid: String
 }
 
 #[utoipa::path(
@@ -103,8 +103,8 @@ pub async fn create_apply(
     path="/apply/update-allowed-status",
     request_body=UpdateApplyAllowedStatusRequestBody,
     responses(
-        (status=200, description="Update apply successfully.", body=WriteApiResponseSuccessBody),
-        (status=500, description="Update apply failed.", body=WriteApiResponseFailureBody)
+        (status=200, description="Update apply's allowed_status successfully.", body=WriteApiResponseSuccessBody),
+        (status=500, description="Update apply's allowed_status failed.", body=WriteApiResponseFailureBody)
     )
 )]
 pub async fn update_apply_allowed_status(
@@ -144,16 +144,16 @@ pub async fn update_apply_allowed_status(
 
 #[utoipa::path(
     post,
-    path="/volunteer/update-is-sent",
+    path="/apply/update-is-sent",
     request_body=UpdateApplyIsSent,
     responses(
-        (status=200, description="Delete volunteer successfully.", body=WriteApiResponseSuccessBody),
-        (status=500, description="Delete volunteer failed.", body=WriteApiResponseFailureBody)
+        (status=200, description="Update apply's is-sent successfully.", body=WriteApiResponseSuccessBody),
+        (status=500, description="Update apply's is-sent failed.", body=WriteApiResponseFailureBody)
     )
 )]
 pub async fn update_apply_is_sent(
     State(state): State<AppData>,
-    Json(body): Json<UpdateApplyAllowedStatusRequestBody>,
+    Json(body): Json<UpdateApplyIsSentRequestBody>,
 ) -> impl IntoResponse {
     let mut lock = state.write().await;
     let repository = &mut lock.apply_repository;
@@ -180,4 +180,3 @@ pub async fn update_apply_is_sent(
         }
     }
 }
-
