@@ -5,10 +5,8 @@ use chrono::{NaiveDate, NaiveDateTime};
 
 use domain::model::{region::Region, user_account::user_id::UserId, volunteer::Volunteer};
 
-use crate::MySqlBool;
-
 /// 参加者アカウントリードモデル
-#[derive(SimpleObject)]
+#[derive(SimpleObject, sqlx::Type)]
 pub struct ParticipantAccount {
     /// 参加者アカウントid
     pub uid: String,
@@ -27,7 +25,7 @@ pub struct ParticipantAccount {
     /// プロフィール
     pub profile: String,
     /// 削除フラグ
-    pub is_deleted: MySqlBool,
+    pub is_deleted: bool,
     /// 削除日時
     pub deleted_at: Option<NaiveDateTime>,
 }
