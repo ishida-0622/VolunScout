@@ -1,3 +1,5 @@
+use std::str::FromStr;
+
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use ulid_generator_rs::{ULIDGenerator, ULID};
@@ -25,6 +27,11 @@ impl ApplyId {
         let mut generator: ULIDGenerator = ULIDGenerator::new();
         let value: ULID = generator.generate().unwrap();
         ApplyId(value)
+    }
+
+    pub fn from_str(value: &str) -> ApplyId {
+        let aid = ULID::from_str(&value).unwrap();
+        ApplyId(aid)
     }
 }
 
