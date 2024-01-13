@@ -1708,6 +1708,7 @@ dependencies = [
  "async-trait",
  "chrono",
  "domain",
+ "sqlx",
 ]
 
 [[package]]
