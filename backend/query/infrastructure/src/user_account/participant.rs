@@ -2,7 +2,6 @@ use anyhow::Result;
 use async_trait::async_trait;
 use domain::consts::conditions::ConditionMap;
 use domain::consts::themes::ThemeMap;
-use query_repository::MySqlBool;
 use sqlx::MySqlPool;
 
 use domain::consts::region::RegionMap;
@@ -85,7 +84,8 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
     async fn find_theme_by_id(&self, pid: &UserId) -> Result<Vec<ParticipantTheme>> {
         let response = sqlx::query!(
             r#"
-            SELECT * FROM participant_element WHERE uid = ?
+            SELECT eid, is_need as "is_need: bool"
+            FROM participant_element WHERE uid = ?
             "#,
             pid.to_string()
         )
@@ -99,7 +99,7 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
             .filter(|element| theme_map.get(&element.eid).is_some())
             .map(|element| ParticipantTheme {
                 name: theme_map.get(&element.eid).unwrap().to_string(),
-                is_required: MySqlBool::from(element.is_need),
+                is_required: element.is_need,
             })
             .collect();
 
@@ -109,7 +109,9 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
     async fn find_condition_by_id(&self, pid: &UserId) -> Result<Vec<ParticipantCondition>> {
         let response = sqlx::query!(
             r#"
-            SELECT * FROM participant_element WHERE uid = ?
+            SELECT eid, is_need as "is_need: bool"
+            FROM participant_element
+            WHERE uid = ?
             "#,
             pid.to_string()
         )
@@ -123,7 +125,7 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
             .filter(|element| condition_map.get(&element.eid).is_some())
             .map(|element| ParticipantCondition {
                 name: condition_map.get(&element.eid).unwrap().to_string(),
-                is_required: MySqlBool::from(element.is_need),
+                is_required: element.is_need,
             })
             .collect();
 

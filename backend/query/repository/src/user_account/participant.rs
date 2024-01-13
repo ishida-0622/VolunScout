@@ -38,21 +38,21 @@ pub struct ParticipantRegion {
 }
 
 /// 参加者テーマリードモデル
-#[derive(SimpleObject)]
+#[derive(SimpleObject, sqlx::Type)]
 pub struct ParticipantTheme {
     /// テーマ名
     pub name: String,
     /// 必須フラグ
-    pub is_required: MySqlBool,
+    pub is_required: bool,
 }
 
 /// 参加者条件リードモデル
-#[derive(SimpleObject)]
+#[derive(SimpleObject, sqlx::Type)]
 pub struct ParticipantCondition {
     /// 条件名
     pub name: String,
     /// 必須フラグ
-    pub is_required: MySqlBool,
+    pub is_required: bool,
 }
 
 #[async_trait]
