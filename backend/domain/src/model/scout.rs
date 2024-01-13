@@ -11,7 +11,7 @@ pub struct Scout {
     pub sender: VolunteerId,
     pub message: String,
     pub send_at: DateTime<Utc>,
-    pub is_send: bool,
+    pub is_sent: bool,
     pub is_read: bool,
 }
 
@@ -36,7 +36,7 @@ impl Scout {
             sender,
             message,
             send_at,
-            is_send: false,
+            is_sent: false,
             is_read: false,
         }
     }

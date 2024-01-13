@@ -2,10 +2,12 @@ import type { Metadata } from "next";
 
 import { Footer } from "@/components/layouts/Footer";
 import { Header } from "@/components/layouts/Header";
+import { IconConfig } from "@/components/layouts/IconConfig/index";
 import { WithApollo } from "@/components/layouts/WithApollo";
 import { AuthProvider } from "@/contexts/AuthContext";
 
 import "./globals.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -22,8 +24,10 @@ export default function RootLayout({
       <body>
         <WithApollo>
           <AuthProvider>
-            <Header />
-            {children}
+            <IconConfig>
+              <Header />
+              {children}
+            </IconConfig>
           </AuthProvider>
         </WithApollo>
         <Footer />

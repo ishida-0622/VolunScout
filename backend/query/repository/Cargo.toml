@@ -10,5 +10,6 @@ anyhow = { workspace = true }
 async-graphql = { workspace = true }
 async-trait = { workspace = true }
 chrono = { workspace = true }
+sqlx = { workspace = true }
 
 domain = { path = "../../domain" }

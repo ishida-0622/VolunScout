@@ -13,7 +13,7 @@ use domain::model::{
     user_account::{
         user_id::UserId, user_name::UserName, user_name_furigana::UserNameFurigana,
         user_phone::UserPhone,
-    },
+    }, terms::Terms, target_status::TargetStatus
 };
 
 pub struct ParticipantAccountImpl {
@@ -36,12 +36,8 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
         phone: UserPhone,
         gender: Gender,
         birthday: NaiveDate,
-        regions: Vec<Region>,
         profile: String,
-        themes: Vec<Theme>,
-        themes_required: Vec<Theme>,
-        conditions: Vec<Condition>,
-        conditions_required: Vec<Condition>,
+        terms: Terms
     ) -> Result<()> {
         let id: String = pid.to_string();
 
@@ -55,7 +51,7 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
             profile
         ).execute(&self.pool).await?;
 
-        let insert_region_query: Vec<_> = regions
+        let insert_region_query: Vec<_> = terms.regions
             .iter()
             .map(|r: &Region| {
                 sqlx::query!(
@@ -67,7 +63,7 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
             })
             .collect::<Vec<_>>();
 
-        let insert_theme_query: Vec<_> = themes
+        let insert_theme_query: Vec<_> = terms.themes
             .iter()
             .map(|t: &Theme| {
                 sqlx::query!(
@@ -79,7 +75,7 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
             })
             .collect::<Vec<_>>();
 
-        let insert_theme_required_query: Vec<_> = themes_required
+        let insert_theme_required_query: Vec<_> = terms.required_themes
             .iter()
             .map(|t: &Theme| {
                 sqlx::query!(
@@ -92,7 +88,7 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
             })
             .collect::<Vec<_>>();
 
-        let insert_condition_query: Vec<_> = conditions
+        let insert_condition_query: Vec<_> = terms.conditions
             .iter()
             .map(|c: &Condition| {
                 sqlx::query!(
@@ -104,7 +100,7 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
             })
             .collect::<Vec<_>>();
 
-        let insert_condition_required_query: Vec<_> = conditions_required
+        let insert_condition_required_query: Vec<_> = terms.required_conditions
             .iter()
             .map(|c: &Condition| {
                 sqlx::query!(
@@ -117,13 +113,26 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
             })
             .collect::<Vec<_>>();
 
+        let insert_target_status_query: Vec<_> = terms.target_status
+            .iter()
+            .map(|t: &TargetStatus| {
+                sqlx::query!(
+                    "INSERT INTO participant_element (uid, eid) VALUES (?, ?)",
+                    id,
+                    t.to_id()
+                )
+                .execute(&self.pool)
+            })
+            .collect::<Vec<_>>();
+
         future::try_join_all(
             insert_region_query
                 .into_iter()
                 .chain(insert_theme_query)
                 .chain(insert_theme_required_query)
                 .chain(insert_condition_query)
-                .chain(insert_condition_required_query),
+                .chain(insert_condition_required_query)
+                .chain(insert_target_status_query),
         )
         .await?;
 
@@ -138,12 +147,8 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
         phone: UserPhone,
         gender: Gender,
         birthday: NaiveDate,
-        regions: Vec<Region>,
         profile: String,
-        themes: Vec<Theme>,
-        themes_required: Vec<Theme>,
-        conditions: Vec<Condition>,
-        conditions_required: Vec<Condition>,
+        terms: Terms
     ) -> Result<()> {
         let update_query = sqlx::query!(
             "UPDATE participant_account SET name = ?,furigana = ?, phone = ?, gender = ?, birthday = ?, profile = ? WHERE uid = ?",
@@ -173,7 +178,7 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
 
         let id: String = pid.to_string();
 
-        let insert_region_query: Vec<_> = regions
+        let insert_region_query: Vec<_> = terms.regions
             .iter()
             .map(|r: &Region| {
                 sqlx::query!(
@@ -185,7 +190,7 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
             })
             .collect::<Vec<_>>();
 
-        let insert_theme_query: Vec<_> = themes
+        let insert_theme_query: Vec<_> = terms.themes
             .iter()
             .map(|t: &Theme| {
                 sqlx::query!(
@@ -197,7 +202,7 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
             })
             .collect::<Vec<_>>();
 
-        let insert_theme_required_query: Vec<_> = themes_required
+        let insert_theme_required_query: Vec<_> = terms.required_themes
             .iter()
             .map(|t: &Theme| {
                 sqlx::query!(
@@ -210,7 +215,7 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
             })
             .collect::<Vec<_>>();
 
-        let insert_condition_query: Vec<_> = conditions
+        let insert_condition_query: Vec<_> = terms.conditions
             .iter()
             .map(|c: &Condition| {
                 sqlx::query!(
@@ -222,7 +227,7 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
             })
             .collect::<Vec<_>>();
 
-        let insert_condition_required_query: Vec<_> = conditions_required
+        let insert_condition_required_query: Vec<_> = terms.required_conditions
             .iter()
             .map(|c: &Condition| {
                 sqlx::query!(
@@ -235,13 +240,26 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
             })
             .collect::<Vec<_>>();
 
+        let insert_target_status_query: Vec<_> = terms.target_status
+            .iter()
+            .map(|t: &TargetStatus| {
+                sqlx::query!(
+                    "INSERT INTO participant_element (uid, eid) VALUES (?, ?)",
+                    id,
+                    t.to_id()
+                )
+                .execute(&self.pool)
+            })
+            .collect::<Vec<_>>();
+
         future::try_join_all(
             insert_region_query
                 .into_iter()
                 .chain(insert_theme_query)
                 .chain(insert_theme_required_query)
                 .chain(insert_condition_query)
-                .chain(insert_condition_required_query),
+                .chain(insert_condition_required_query)
+                .chain(insert_target_status_query),
         )
         .await?;
 

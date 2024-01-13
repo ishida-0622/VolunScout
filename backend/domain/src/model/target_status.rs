@@ -2,7 +2,7 @@ use anyhow::Result;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
-use crate::consts::target_status::{TargetStatusMap, TARGET_STATUSES};
+use crate::consts::target_status::{TargetStatusMap, TARGET_STATUSES, TARGET_STATUSES_PREFIX};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TargetStatus {
@@ -25,10 +25,19 @@ impl TargetStatus {
         Err(TargetStatusError::NotFound.into())
     }
 
-    pub fn to_uint(&self) -> u8 {
-        let target_status_map: TargetStatusMap = TargetStatusMap::new();
-        let index: &usize = target_status_map.target_statuses_name_to_index.get(&self.target_status).unwrap();
-        *index as u8
+    pub fn to_id(&self) -> String {
+        let theme_map: TargetStatusMap = TargetStatusMap::new();
+        let id = theme_map.target_statuses_name_to_index.get(&self.target_status).unwrap();
+        id.to_string()
+    }
+
+    /// IDからprefixを除いたIDを取得する
+    ///
+    /// 例: theme_0 -> 0
+    pub fn remove_prefix(&self) -> String {
+        let theme_map: TargetStatusMap = TargetStatusMap::new();
+        let id = theme_map.target_statuses_name_to_index.get(&self.target_status).unwrap();
+        id.replace(TARGET_STATUSES_PREFIX, "")
     }
 }
 

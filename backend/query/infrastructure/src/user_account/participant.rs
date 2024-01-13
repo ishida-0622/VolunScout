@@ -27,7 +27,12 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
     async fn find_by_id(&self, pid: &UserId) -> Result<ParticipantAccount> {
         let user = sqlx::query_as!(
             ParticipantAccount,
-            "SELECT * FROM participant_account WHERE uid = ?",
+            r#"
+            SELECT
+                uid, name, furigana, phone, gender, birthday, profile, is_deleted as "is_deleted: bool", deleted_at
+            FROM participant_account
+            WHERE uid = ?
+            "#,
             pid.to_string()
         )
         .fetch_one(&self.pool)
@@ -39,7 +44,9 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
         let users = sqlx::query_as!(
             ParticipantAccount,
             r#"
-            SELECT * FROM participant_account
+            SELECT
+                uid, name, furigana, phone, gender, birthday, profile, is_deleted as "is_deleted: bool", deleted_at
+            FROM participant_account
             WHERE uid IN (?)
             "#,
             pids.iter()

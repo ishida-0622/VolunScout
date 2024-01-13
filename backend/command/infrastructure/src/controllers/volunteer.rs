@@ -9,7 +9,7 @@ use command_repository::activities::volunteer::VolunteerRepository;
 use domain::model::{
         volunteer::VolunteerId,
         user_account::user_id::UserId,
-        terms::Terms, region::Region, theme::Theme, target_status::TargetStatus
+        terms::Terms, region::Region, theme::Theme, target_status::TargetStatus, condition::Condition
     };
 
 use super::{WriteApiResponseFailureBody, WriteApiResponseSuccessBody, AppData};
@@ -29,9 +29,9 @@ pub struct CreateVolunteerRequestBody {
     pub recruited_num: u32,
     #[schema(required = true)]
     pub place: String,
-    #[schema(required = true, value_type = String, example = "2023-12-17 9:00:00")]
+    #[schema(required = true, value_type = String, example = "2023-12-17T9:00:00Z")]
     pub start_at: DateTime<Utc>,
-    #[schema(required = true, value_type = String, example = "2023-12-17 17:00:00")]
+    #[schema(required = true, value_type = String, example = "2023-12-17T17:00:00Z")]
     pub finish_at: DateTime<Utc>,
     #[schema(required = true, value_type = String, example = "2023-12-3")]
     pub deadline_on: NaiveDate,
@@ -42,7 +42,11 @@ pub struct CreateVolunteerRequestBody {
     #[schema(required = true)]
     pub theme: Vec<String>,
     #[schema(required = true)]
-    pub transportation_expenses: bool,
+    pub required_theme: Vec<String>,
+    #[schema(required = true)]
+    pub condition: Vec<String>,
+    #[schema(required = true)]
+    pub required_condition: Vec<String>,
     #[schema()]
     pub reward: Option<String>,
     #[schema(required = true)]
@@ -66,9 +70,9 @@ pub struct UpdateVolunteerRequestBody {
     pub recruited_num: u32,
     #[schema(required = true)]
     pub place: String,
-    #[schema(required = true, value_type = String, format = DateTime, example = "2023-12-17 09:00:00")]
+    #[schema(required = true, value_type = String, format = DateTime, example = "2023-12-17T09:00:00Z")]
     pub start_at: DateTime<Utc>,
-    #[schema(required = true, value_type = String, format = DateTime, example = "2023-12-17 17:00:00")]
+    #[schema(required = true, value_type = String, format = DateTime, example = "2023-12-17T17:00:00Z")]
     pub finish_at: DateTime<Utc>,
     #[schema(required = true, value_type = String, example = "2023-12-3")]
     pub deadline_on: NaiveDate,
@@ -79,7 +83,11 @@ pub struct UpdateVolunteerRequestBody {
     #[schema(required = true)]
     pub theme: Vec<String>,
     #[schema(required = true)]
-    pub transportation_expenses: bool,
+    pub required_theme: Vec<String>,
+    #[schema(required = true)]
+    pub condition: Vec<String>,
+    #[schema(required = true)]
+    pub required_condition: Vec<String>,
     #[schema()]
     pub reward: Option<String>,
     #[schema(required = true)]
@@ -144,7 +152,21 @@ pub async fn create_volunteer(
         .iter()
         .map(|t: &String| Theme::from_str(t).unwrap())
         .collect::<Vec<Theme>>();
-    let transportation_expenses: bool = body.transportation_expenses;
+    let required_theme: Vec<Theme> = body
+        .required_theme
+        .iter()
+        .map(|t: &String| Theme::from_str(t).unwrap())
+        .collect::<Vec<Theme>>();
+    let condition: Vec<Condition> = body
+        .condition
+        .iter()
+        .map(|t: &String| Condition::from_str(t).unwrap())
+        .collect::<Vec<Condition>>();
+    let required_condition: Vec<Condition> = body
+        .required_condition
+        .iter()
+        .map(|t: &String| Condition::from_str(t).unwrap())
+        .collect::<Vec<Condition>>();
     let reward: Option<String> = body.reward;
     let target_status: Vec<TargetStatus> = body
         .target_status
@@ -154,13 +176,15 @@ pub async fn create_volunteer(
     let terms: Terms = Terms::new(
         region,
         theme,
-        transportation_expenses,
-        reward,
+        required_theme,
+        condition,
+        required_condition,
+        // reward,
         target_status
     );
 
     match repository
-        .create(vid, gid, title, message, overview, recruited_num, place, start_at, finish_at, deadline_on, as_group, terms)
+        .create(vid, gid, title, message, overview, recruited_num, place, start_at, finish_at, deadline_on, as_group, reward, terms)
         .await
     {
         Ok(_) => (
@@ -221,7 +245,21 @@ pub async fn update_volunteer(
         .iter()
         .map(|t: &String| Theme::from_str(t).unwrap())
         .collect::<Vec<Theme>>();
-    let transportation_expenses: bool = body.transportation_expenses;
+    let required_theme: Vec<Theme> = body
+        .required_theme
+        .iter()
+        .map(|t: &String| Theme::from_str(t).unwrap())
+        .collect::<Vec<Theme>>();
+    let condition: Vec<Condition> = body
+        .condition
+        .iter()
+        .map(|t: &String| Condition::from_str(t).unwrap())
+        .collect::<Vec<Condition>>();
+    let required_condition: Vec<Condition> = body
+        .required_condition
+        .iter()
+        .map(|t: &String| Condition::from_str(t).unwrap())
+        .collect::<Vec<Condition>>();
     let reward: Option<String> = body.reward;
     let target_status: Vec<TargetStatus> = body
         .target_status
@@ -231,13 +269,14 @@ pub async fn update_volunteer(
     let terms: Terms = Terms::new(
         region,
         theme,
-        transportation_expenses,
-        reward,
+        required_theme,
+        condition,
+        required_condition,
         target_status
     );
 
     match repository
-        .update(vid, title, message, overview, recruited_num, place, start_at, finish_at, deadline_on, as_group, terms)
+        .update(vid, title, message, overview, recruited_num, place, start_at, finish_at, deadline_on, as_group, reward, terms)
         .await
     {
         Ok(_) => (
