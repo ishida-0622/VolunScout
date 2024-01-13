@@ -169,3 +169,13 @@ INSERT INTO group_participants VALUES (
   1,
   19
 );
+
+INSERT INTO participant_region VALUES ("participant_account000000000", 1);
+INSERT INTO participant_region VALUES ("participant_account000000000", 10);
+INSERT INTO participant_region VALUES ("participant_account000000000", 15);
+
+INSERT INTO participant_element VALUES("participant_account000000000", "theme_1", false);
+INSERT INTO participant_element VALUES("participant_account000000000", "theme_2", true);
+
+INSERT INTO participant_element VALUES("participant_account000000000", "condition_1", false);
+INSERT INTO participant_element VALUES("participant_account000000000", "condition_2", true);
