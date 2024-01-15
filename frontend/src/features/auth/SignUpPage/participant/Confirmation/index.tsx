@@ -49,9 +49,11 @@ export const Confirmation = ({ values, prevPage }: Props) => {
       pid: uid,
       profile: values.profile,
       region: values.regions,
-      theme: values.themes,
+      theme: values.themes.filter((theme) => !themesRequiredSet.has(theme)),
       required_theme: values.themesRequired,
-      condition: values.conditions,
+      condition: values.conditions.filter(
+        (condition) => !conditionsRequiredSet.has(condition)
+      ),
       required_condition: values.conditionsRequired,
       target_status: values.targetStatuses,
     };
