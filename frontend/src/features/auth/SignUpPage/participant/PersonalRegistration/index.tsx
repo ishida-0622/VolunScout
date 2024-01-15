@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 
 import styles from "./index.module.css"; // CSSモジュールのインポート
@@ -8,6 +9,7 @@ import styles from "./index.module.css"; // CSSモジュールのインポート
 import type { FormValues } from "..";
 
 import { TARGET_STATUSES } from "@/consts";
+import { useAuthContext } from "@/contexts/AuthContext";
 
 type Personal = Pick<
   FormValues,
@@ -23,6 +25,14 @@ export const PersonalRegistration = ({ onNextPage, values }: Props) => {
   const { register, handleSubmit } = useForm<Personal>({
     defaultValues: values,
   });
+  const { user } = useAuthContext();
+  const [userIcon, setUserIcon] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (user) {
+      setUserIcon(user.photoURL);
+    }
+  }, [user]);
 
   const onSubmit: SubmitHandler<Personal> = (data) => onNextPage(data);
 
@@ -30,10 +40,10 @@ export const PersonalRegistration = ({ onNextPage, values }: Props) => {
     <section className={styles.section}>
       <div className={styles.userIcon}>
         <Image
-          src="/icon.svg"
+          src={userIcon ?? "/icon.svg"}
           alt="User Icon"
-          width={100}
-          height={100}
+          width={120}
+          height={120}
           className={styles.user_icon_image}
         />
       </div>
