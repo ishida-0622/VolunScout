@@ -4,7 +4,7 @@ use async_trait::async_trait;
 use domain::model::{
     apply::ApplyId,
     volunteer::VolunteerId,
-    user_account::user_id::UserId
+    user_account::user_id::UserId, group_participants::GroupParticipants
 };
 
 
@@ -16,7 +16,8 @@ pub trait ApplyRepository: Send + Sync {
         aid: ApplyId,
         vid: VolunteerId,
         user_id: UserId,
-        as_group: bool
+        as_group: bool,
+        members: Option<Vec<GroupParticipants>>
     ) -> Result<()>;
 
     /// 応募の承認を更新する
