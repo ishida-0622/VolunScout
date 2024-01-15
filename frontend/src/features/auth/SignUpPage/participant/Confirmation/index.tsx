@@ -82,7 +82,7 @@ export const Confirmation = ({ values, prevPage }: Props) => {
           </p>
           <p style={{ display: "flex" }}>
             <span style={{ width: "6rem" }}>性別</span>
-            <span style={{margin: "0 0.4rem"}}>:</span>
+            <span style={{ margin: "0 0.4rem" }}>:</span>
             <span>
               {values.gender === "0"
                 ? "男性"
@@ -100,9 +100,9 @@ export const Confirmation = ({ values, prevPage }: Props) => {
         <div className={styles.select}>
           <details open>
             <summary className={styles.main}>地域</summary>
-            {values.regions.map((region) =>
+            {values.regions.map((region) => (
               <p key={region}>{region}</p>
-            )}
+            ))}
           </details>
           <details open>
             <summary className={styles.main}>テーマ</summary>
@@ -110,7 +110,7 @@ export const Confirmation = ({ values, prevPage }: Props) => {
               if (themesRequiredSet.has(theme)) {
                 return (
                   <p key={theme}>
-                    <span>※</span>
+                    <span className={styles.asterisk}>※</span>
                     <span>{theme}</span>
                   </p>
                 );
@@ -127,7 +127,7 @@ export const Confirmation = ({ values, prevPage }: Props) => {
               if (conditionsRequiredSet.has(condition)) {
                 return (
                   <p key={condition}>
-                    <span>※</span>
+                    <span className={styles.asterisk}>※</span>
                     <span>{condition}</span>
                   </p>
                 );
