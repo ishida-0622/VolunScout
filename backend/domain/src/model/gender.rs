@@ -35,3 +35,12 @@ pub fn gender_from_i8(arg: &i8) -> Result<Gender> {
         _ => Err(GenderError::NotFound.into()),
     }
 }
+
+pub fn gender_to_i8(arg: &Gender) -> Result<i8> {
+    match arg {
+        Gender::Male => Ok(Gender::Male as i8),
+        Gender::Female => Ok(Gender::Female as i8),
+        Gender::Other => Ok(Gender::Other as i8),
+        _ => Err(GenderError::NotFound.into())
+    }
+}
