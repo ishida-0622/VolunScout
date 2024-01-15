@@ -52,11 +52,6 @@
   border-radius: 0.5rem;
 }
 
-.userIcon img {
-  width: 200px; /* 例として現在より少し大きなサイズに調整 */
-  height: 150px; /* 例として現在より少し大きなサイズに調整 */
-}
-
 .button {
   padding: 8px;
   background-color: #4caf50;
