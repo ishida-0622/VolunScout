@@ -11,6 +11,9 @@ import { useAuthContext } from "@/contexts/AuthContext";
 import { TermsOfUseAndPrivacyPolicyModal } from "@/features/auth/SignUpPage/TermsOfUseAndPrivacyPolicyModal";
 import { stringToNumber } from "@/utils/stringToNumber";
 
+// eslint-disable-next-line import/order
+import styles from "./index.module.css"; // CSSモジュールのインポート
+
 type Props = {
   values: FormValues;
   prevPage: () => void;
@@ -64,73 +67,86 @@ export const Confirmation = ({ values, prevPage }: Props) => {
 
   return (
     <section>
-      <button onClick={prevPage}>戻る</button>
-      <h2>入力情報の確認</h2>
-      <p>{values.name}</p>
-      <p>
-        <span>生年月日</span>
-        <span>{values.birthday}</span>
-      </p>
-      <p>
-        <span>性別</span>
-        <span>
-          {values.gender === "0"
-            ? "男性"
-            : values.gender === "1"
-            ? "女性"
-            : "その他"}
-        </span>
-      </p>
-      <p>
-        <span>電話番号</span>
-        <span>{values.phone}</span>
-      </p>
-      <p>{values.profile}</p>
-      <details open>
-        <summary>地域</summary>
-        {values.regions.map((region) => (
-          <p key={region}>{region}</p>
-        ))}
-      </details>
-      <details open>
-        <summary>テーマ</summary>
-        {THEMES.map((theme) => {
-          if (themesRequiredSet.has(theme)) {
-            return (
-              <p key={theme}>
-                <span>※</span>
-                <span>{theme}</span>
-              </p>
-            );
-          }
-          if (themesSet.has(theme)) {
-            return <p key={theme}>{theme}</p>;
-          }
-          return null;
-        })}
-      </details>
-      <details open>
-        <summary>活動希望条件</summary>
-        {CONDITIONS.map((condition) => {
-          if (conditionsRequiredSet.has(condition)) {
-            return (
-              <p key={condition}>
-                <span>※</span>
-                <span>{condition}</span>
-              </p>
-            );
-          }
-          if (conditionsSet.has(condition)) {
-            return <p key={condition}>{condition}</p>;
-          }
-          return null;
-        })}
-      </details>
-      <label>
-        <CheckBox label="" onChange={handleAgreed} />
-        <TermsOfUseAndPrivacyPolicyModal />
-      </label>
-      <button onClick={handleSubmit}>会員登録する</button>
+      <button onClick={prevPage} className={styles.button}>
+        戻る
+      </button>
+      <div className={styles.main_contents}>
+        <h2>入力情報の確認</h2>
+        <div className={styles.name}>
+          <p>{values.name}</p>
+        </div>
+        <div className={styles.profile}>
+          <p>
+            <span>生年月日 : </span>
+            <span>{values.birthday}</span>
+          </p>
+          <p style={{ display: "flex" }}>
+            <span style={{ width: "6rem" }}>性別</span>
+            <span style={{margin: "0 0.4rem"}}>:</span>
+            <span>
+              {values.gender === "0"
+                ? "男性"
+                : values.gender === "1"
+                  ? "女性"
+                  : "その他"}
+            </span>
+          </p>
+          <p>
+            <span>電話番号 : </span>
+            <span>{values.phone}</span>
+          </p>
+          <p>{values.profile}</p>
+        </div>
+        <div className={styles.select}>
+          <details open>
+            <summary className={styles.main}>地域</summary>
+            {values.regions.map((region) =>
+              <p key={region}>{region}</p>
+            )}
+          </details>
+          <details open>
+            <summary className={styles.main}>テーマ</summary>
+            {THEMES.map((theme) => {
+              if (themesRequiredSet.has(theme)) {
+                return (
+                  <p key={theme}>
+                    <span>※</span>
+                    <span>{theme}</span>
+                  </p>
+                );
+              }
+              if (themesSet.has(theme)) {
+                return <p key={theme}>{theme}</p>;
+              }
+              return null;
+            })}
+          </details>
+          <details open>
+            <summary className={styles.main}>活動希望条件</summary>
+            {CONDITIONS.map((condition) => {
+              if (conditionsRequiredSet.has(condition)) {
+                return (
+                  <p key={condition}>
+                    <span>※</span>
+                    <span>{condition}</span>
+                  </p>
+                );
+              }
+              if (conditionsSet.has(condition)) {
+                return <p key={condition}>{condition}</p>;
+              }
+              return null;
+            })}
+          </details>
+        </div>
+        <label>
+          <CheckBox label="" onChange={handleAgreed} />
+          <TermsOfUseAndPrivacyPolicyModal />
+        </label>
+        <button onClick={handleSubmit} className={styles.button}>
+          会員登録する
+        </button>
+      </div>
     </section>
   );
 };

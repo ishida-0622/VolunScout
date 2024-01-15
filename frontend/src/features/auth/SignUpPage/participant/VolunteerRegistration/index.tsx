@@ -2,6 +2,8 @@
 
 import { useForm, type SubmitHandler } from "react-hook-form";
 
+import styles from "./index.module.css"; // CSSモジュールのインポート
+
 import type { FormValues } from "..";
 
 import { CheckBoxControl } from "@/components/ui-parts/CheckBoxControl";
@@ -39,72 +41,87 @@ export const VolunteerRegistration = ({
   return (
     <section>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <button type="button" onClick={handleSubmit(onSubmitPrev)}>
+        <button
+          type="button"
+          className={styles.return}
+          onClick={handleSubmit(onSubmitPrev)}
+        >
           戻る
         </button>
-        <h2>自己紹介（後からでも設定可能です）</h2>
-        <label>
-          <textarea {...register("profile")} />
-        </label>
-        <h2>活動希望条件（後からでも設定可能です）</h2>
+        <div className={styles.main_contents}>
+          <h2 className={styles.h2}>自己紹介（後からでも設定可能です）</h2>
+          <label>
+            <textarea className={styles.textarea} {...register("profile")} />
+          </label>
+          <h2 className={styles.h2}>活動希望条件（後からでも設定可能です）</h2>
 
-        <details>
-          <summary>地域</summary>
-          {REGIONS.map((region) => (
-            <div key={region}>
-              <label>
-                <input
-                  type="checkbox"
-                  value={region}
-                  {...register("regions")}
-                />
-                {region}
-              </label>
-            </div>
-          ))}
-        </details>
+          <div className={styles.select}>
+            <details open>
+              <summary className={styles.main}>地域</summary>
+              {REGIONS.map((region) => (
+                <div key={region}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      value={region}
+                      {...register("regions")}
+                    />
+                    {region}
+                  </label>
+                </div>
+              ))}
+            </details>
 
-        <details>
-          <summary>テーマ</summary>
-          {THEMES.map((theme) => (
-            <div key={theme}>
-              <CheckBoxControl
-                name="themes"
-                value={theme}
-                register={register}
-                label={theme}
-              />
-              <ToggleSwitchControl
-                name="themesRequired"
-                value={theme}
-                register={register}
-                label=""
-              />
-            </div>
-          ))}
-        </details>
+            <details open>
+              <summary className={styles.main}>テーマ</summary>
+              {THEMES.map((theme) => (
+                // TODO
+                <div key={theme} style={{ display: "flex" }}>
+                  <CheckBoxControl
+                    name="themes"
+                    value={theme}
+                    register={register}
+                    label={theme}
+                  />
+                  <ToggleSwitchControl
+                    name="themesRequired"
+                    value={theme}
+                    register={register}
+                    label=""
+                    // TODO
+                    className={styles.toggle}
+                  />
+                </div>
+              ))}
+            </details>
 
-        <details>
-          <summary>条件</summary>
-          {CONDITIONS.map((condition) => (
-            <div key={condition}>
-              <CheckBoxControl
-                name="conditions"
-                value={condition}
-                register={register}
-                label={condition}
-              />
-              <ToggleSwitchControl
-                name="conditionsRequired"
-                value={condition}
-                register={register}
-                label=""
-              />
-            </div>
-          ))}
-        </details>
-
-        <button type="submit">入力情報の確認へ</button>
+            <details open>
+              <summary className={styles.main}>条件</summary>
+              {CONDITIONS.map((condition) => (
+                <div key={condition} style={{ display: "flex" }}>
+                  <CheckBoxControl
+                    name="conditions"
+                    value={condition}
+                    register={register}
+                    label={condition}
+                  />
+                  <ToggleSwitchControl
+                    name="conditionsRequired"
+                    value={condition}
+                    register={register}
+                    label=""
+                    className={styles.toggle}
+                  />
+                </div>
+              ))}
+            </details>
+          </div>
+          <div className={styles.container}>
+            <button type="submit" className={styles.button}>
+              入力情報の確認へ
+            </button>
+          </div>
+        </div>
       </form>
     </section>
   );
