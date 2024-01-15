@@ -19,6 +19,7 @@ export type FormValues = {
   themesRequired: string[];
   conditions: string[];
   conditionsRequired: string[];
+  targetStatuses: string[];
 };
 
 export const SignUpPage = () => {
@@ -35,6 +36,7 @@ export const SignUpPage = () => {
     themesRequired: [],
     conditions: [],
     conditionsRequired: [],
+    targetStatuses: [],
   });
 
   const [pageCounter, setPageCounter] = useState(0);

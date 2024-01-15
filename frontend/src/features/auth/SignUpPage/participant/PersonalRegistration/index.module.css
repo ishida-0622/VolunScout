@@ -15,7 +15,6 @@
   margin-top: 200px;
 }
 
-
 .main_contents {
   margin: 0 auto;
   width: 100%;
@@ -65,9 +64,7 @@
   border: none;
   cursor: pointer;
   border-radius: 8rem; /* 丸みを帯びた形に調整 */
-  transition:
-    background-color 0.3s ease,
-    box-shadow 0.3s ease; /* ホバーエフェクトをスムーズにする */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease; /* ホバーエフェクトをスムーズにする */
 
   background-color: #4caf50;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -91,7 +88,8 @@
 .furigana,
 .birthday,
 .phone,
-.gender {
+.gender,
+.target {
   display: flex;
   flex-direction: row;
   width: 6rem;

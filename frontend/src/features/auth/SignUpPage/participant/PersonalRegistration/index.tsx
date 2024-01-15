@@ -2,13 +2,16 @@
 
 import Image from "next/image";
 import { useForm, type SubmitHandler } from "react-hook-form";
-import type { FormValues } from "..";
 
 import styles from "./index.module.css"; // CSSモジュールのインポート
 
+import type { FormValues } from "..";
+
+import { TARGET_STATUSES } from "@/consts";
+
 type Personal = Pick<
   FormValues,
-  "name" | "furigana" | "phone" | "birthday" | "gender"
+  "name" | "furigana" | "phone" | "birthday" | "gender" | "targetStatuses"
 >;
 
 type Props = {
@@ -69,6 +72,24 @@ export const PersonalRegistration = ({ onNextPage, values }: Props) => {
               {...register("birthday", { required: true })}
               className={styles.input}
             />
+          </label>
+          <label className={styles.label}>
+            <span className={styles.required}>※</span>
+            <span className={styles.target}>区分</span>
+            <span className={styles.colon}>：</span>
+            <select
+              className={styles.input}
+              {...register("targetStatuses", { required: true })}
+            >
+              <option value="" selected disabled>
+                選択してください
+              </option>
+              {TARGET_STATUSES.map((target) => (
+                <option key={target} value={target}>
+                  {target}
+                </option>
+              ))}
+            </select>
           </label>
           <label className={styles.label}>
             <span className={styles.required}>※</span>
