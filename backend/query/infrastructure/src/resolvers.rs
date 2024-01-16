@@ -11,7 +11,10 @@ use sqlx::MySqlPool;
 use domain::model::user_account::user_id::UserId;
 use query_repository::user_account::{
     group::{GroupAccount, GroupUserRepository},
-    participant::{ParticipantAccount, ParticipantUserRepository},
+    participant::{
+        ParticipantAccount, ParticipantCondition, ParticipantRegion, ParticipantTheme,
+        ParticipantUserRepository,
+    },
 };
 
 use crate::user_account::{group::GroupAccountImpl, participant::ParticipantAccountImpl};
@@ -133,6 +136,68 @@ impl QueryRoot {
             ctx.participant_account_dao.find_by_ids(&uids).await?;
 
         Ok(participant_accounts)
+    }
+
+    /// 指定されたuidの地域情報を取得する
+    ///
+    /// ## 引数
+    /// - `uid` - uid
+    ///
+    /// ## 返り値
+    /// - `Vec<ParticipantRegion>` - 地域情報の配列
+    async fn get_participant_regions<'ctx>(
+        &self,
+        ctx: &Context<'ctx>,
+        uid: String,
+    ) -> Result<Vec<ParticipantRegion>> {
+        let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
+        let uid: UserId = UserId::new(&uid).unwrap();
+        let regions: Vec<ParticipantRegion> =
+            ctx.participant_account_dao.find_region_by_id(&uid).await?;
+
+        Ok(regions)
+    }
+
+    /// 指定されたuidのテーマ情報を取得する
+    ///
+    /// ## 引数
+    /// - `uid` - uid
+    ///
+    /// ## 返り値
+    /// - `Vec<ParticipantTheme>` - テーマ情報の配列
+    async fn get_participant_themes<'ctx>(
+        &self,
+        ctx: &Context<'ctx>,
+        uid: String,
+    ) -> Result<Vec<ParticipantTheme>> {
+        let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
+        let uid: UserId = UserId::new(&uid).unwrap();
+        let themes: Vec<ParticipantTheme> =
+            ctx.participant_account_dao.find_theme_by_id(&uid).await?;
+
+        Ok(themes)
+    }
+
+    /// 指定されたuidの条件情報を取得する
+    ///
+    /// ## 引数
+    /// - `uid` - uid
+    ///
+    /// ## 返り値
+    /// - `Vec<ParticipantCondition>` - 条件情報の配列
+    async fn get_participant_conditions<'ctx>(
+        &self,
+        ctx: &Context<'ctx>,
+        uid: String,
+    ) -> Result<Vec<ParticipantCondition>> {
+        let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
+        let uid: UserId = UserId::new(&uid).unwrap();
+        let conditions: Vec<ParticipantCondition> = ctx
+            .participant_account_dao
+            .find_condition_by_id(&uid)
+            .await?;
+
+        Ok(conditions)
     }
 
     /// 参加者アカウントの存在チェックをする
