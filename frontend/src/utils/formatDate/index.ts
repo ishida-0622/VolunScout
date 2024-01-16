@@ -9,6 +9,8 @@
  * @param date Date型の日付
  * @returns yyyy/MM/dd形式の文字列
  */
-export const formatDate = (date: Date): string => {
-  return date.toLocaleDateString("ja-JP");
+export const formatDate = (date: Date | string): string => {
+  return (typeof date === "string" ? new Date(date) : date).toLocaleDateString(
+    "ja-JP"
+  );
 };
