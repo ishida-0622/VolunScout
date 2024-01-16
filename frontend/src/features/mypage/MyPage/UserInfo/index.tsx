@@ -2,9 +2,14 @@
 
 import { useLazyQuery } from "@apollo/client";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
+import styles from "./index.module.css";
+
 import { gql } from "@/__generated__/query";
+import { joinClassnames } from "@/components/@joinClassnames";
+import { URL_PATH_PARTICIPANT } from "@/consts";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { formatDate } from "@/utils/formatDate";
 import { numberToGender } from "@/utils/numberToGender";
@@ -24,6 +29,11 @@ const GetParticipantAccountInfoQuery = gql(/* GraphQL */ `
 `);
 
 export const UserInfo = () => {
+  const router = useRouter();
+  const toEditPage = () => {
+    router.push(URL_PATH_PARTICIPANT.ACCOUNT_EDIT);
+  };
+
   const { user } = useAuthContext();
 
   const [fetchParticipantAccount, { loading, error, data }] = useLazyQuery(
@@ -58,6 +68,7 @@ export const UserInfo = () => {
             alt="User icon"
             width={100}
             height={100}
+            className={styles.user_icon}
           />
         </div>
         <div>
@@ -83,7 +94,9 @@ export const UserInfo = () => {
           {/* TODO:レビュー */}
           <p>★★★★☆</p>
         </div>
-        <button>編集</button>
+        <button className={joinClassnames("btn btn-info")} onClick={toEditPage}>
+          編集
+        </button>
       </div>
       <div>
         <p>{userInfo.profile}</p>
