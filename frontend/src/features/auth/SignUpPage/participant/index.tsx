@@ -19,7 +19,7 @@ export type FormValues = {
   themesRequired: string[];
   conditions: string[];
   conditionsRequired: string[];
-  targetStatuses: string[];
+  targetStatuses: string;
 };
 
 export const SignUpPage = () => {
