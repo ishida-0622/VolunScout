@@ -3,6 +3,8 @@ import { useForm } from "react-hook-form";
 export type FormValues = {
   name: string;
   furigana: string;
+  representativeName: string;
+  representativeFurigana: string;
   address: string;
   phone: string;
   contents: string;
@@ -19,6 +21,8 @@ export const useInputForm = ({ onSubmit = noop }: Props) => {
     defaultValues: {
       name: "",
       furigana: "",
+      representativeName: "",
+      representativeFurigana: "",
       address: "",
       phone: "",
       contents: "",
@@ -44,6 +48,22 @@ export const useInputForm = ({ onSubmit = noop }: Props) => {
           type="text"
           {...register("furigana")}
           placeholder="エヌピーオーホウジン ボランスカウト"
+        />
+      </label>
+      <label>
+        <span>代表者名</span>
+        <input
+          type="text"
+          {...register("representativeName")}
+          placeholder="山田 太郎"
+        />
+      </label>
+      <label>
+        <span>代表者フリガナ</span>
+        <input
+          type="text"
+          {...register("representativeFurigana")}
+          placeholder="ヤマダ タロウ"
         />
       </label>
       <label>
