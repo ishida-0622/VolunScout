@@ -9,7 +9,7 @@ import { useAuthContext } from "@/contexts/AuthContext";
 import { formatDate } from "@/utils/formatDate";
 import { numberToGender } from "@/utils/numberToGender";
 
-const GetParticipantAccountQuery = gql(/* GraphQL */ `
+const GetParticipantAccountInfoQuery = gql(/* GraphQL */ `
   query GetParticipantAccount($uid: String!) {
     user: getParticipantAccount(uid: $uid) {
       name
@@ -27,7 +27,7 @@ export const UserInfo = () => {
   const { user } = useAuthContext();
 
   const [fetchParticipantAccount, { loading, error, data }] = useLazyQuery(
-    GetParticipantAccountQuery
+    GetParticipantAccountInfoQuery
   );
 
   useEffect(() => {
