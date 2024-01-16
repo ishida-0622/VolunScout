@@ -1,6 +1,8 @@
 import { useRouter } from "next/navigation";
 import { useRef } from "react";
 
+import styles from "./index.module.css";
+
 import type { CreateParticipantAccountRequestBody } from "@/__generated__/command";
 import type { FormValues } from "..";
 
@@ -10,9 +12,6 @@ import { CONDITIONS, THEMES, URL_PATH_PARTICIPANT } from "@/consts";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { TermsOfUseAndPrivacyPolicyModal } from "@/features/auth/SignUpPage/TermsOfUseAndPrivacyPolicyModal";
 import { stringToNumber } from "@/utils/stringToNumber";
-
-// eslint-disable-next-line import/order
-import styles from "./index.module.css"; // CSSモジュールのインポート
 
 type Props = {
   values: FormValues;
@@ -49,11 +48,14 @@ export const Confirmation = ({ values, prevPage }: Props) => {
       phone: values.phone,
       pid: uid,
       profile: values.profile,
-      regions: values.regions,
-      themes: values.themes,
-      themes_required: values.themesRequired,
-      conditions: values.conditions,
-      conditions_required: values.conditionsRequired,
+      region: values.regions,
+      theme: values.themes.filter((theme) => !themesRequiredSet.has(theme)),
+      required_theme: values.themesRequired,
+      condition: values.conditions.filter(
+        (condition) => !conditionsRequiredSet.has(condition)
+      ),
+      required_condition: values.conditionsRequired,
+      target_status: values.targetStatuses,
     };
     try {
       await apiClientParticipant.createParticipantAccount(body);
@@ -76,26 +78,34 @@ export const Confirmation = ({ values, prevPage }: Props) => {
           <p>{values.name}</p>
         </div>
         <div className={styles.profile}>
-          <p>
-            <span>生年月日 : </span>
-            <span>{values.birthday}</span>
+          <p className={styles.profile_contents_wrapper}>
+            <span className={styles.content_title}>生年月日</span>
+            <span className={styles.colon}>：</span>
+            <span className={styles.contents}>{values.birthday}</span>
           </p>
-          <p style={{ display: "flex" }}>
-            <span style={{ width: "6rem" }}>性別</span>
-            <span style={{ margin: "0 0.4rem" }}>:</span>
-            <span>
+          <p className={styles.profile_contents_wrapper}>
+            <span className={styles.content_title}>性別</span>
+            <span className={styles.colon}>：</span>
+            <span className={styles.contents}>
               {values.gender === "0"
                 ? "男性"
                 : values.gender === "1"
-                  ? "女性"
-                  : "その他"}
+                ? "女性"
+                : "その他"}
             </span>
           </p>
-          <p>
-            <span>電話番号 : </span>
-            <span>{values.phone}</span>
+          <p className={styles.profile_contents_wrapper}>
+            <span className={styles.content_title}>電話番号</span>
+            <span className={styles.colon}>：</span>
+            <span className={styles.contents}>{values.phone}</span>
           </p>
-          <p>{values.profile}</p>
+          <p className={styles.profile_contents_wrapper}>
+            <span className={styles.content_title}>プロフィール</span>
+            <span className={styles.colon}>：</span>
+            <span className={styles.contents}>
+              {values.profile || "未入力"}
+            </span>
+          </p>
         </div>
         <div className={styles.select}>
           <details open>
