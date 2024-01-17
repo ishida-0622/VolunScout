@@ -185,9 +185,10 @@ INSERT INTO scout VALUES(
   "01HKXVVVKBR6G8240N7HWSPR7M",
   "participant_account000000000",
   "message",
-  DEFAULT,
-  DEFAULT,
   "2023-01-17 12:00:00",
+  DEFAULT,
+  DEFAULT,
+  NULL,
   DEFAULT,
   NULL
 );
@@ -197,9 +198,10 @@ INSERT INTO scout VALUES(
   "01HKXVVVKBR6G8240N7HWSPR7M",
   "participant_account000000001",
   "message",
-  true,
-  true,
   "2023-01-16 16:00:00",
+  true,
+  true,
+  "2023-01-16 17:00:01",
   true,
   "2023-01-17 09:00:00"
 );
