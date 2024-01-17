@@ -1,13 +1,14 @@
-use std::str::FromStr;
+use std::{str::FromStr, collections::HashMap};
 
 use axum::{extract::State, http::StatusCode, response::IntoResponse, Json};
 use serde::{Deserialize, Serialize};
+use serde_json::Value;
 use utoipa::ToSchema;
 
 use command_repository::activities::apply::ApplyRepository;
 use domain::model::{
         apply::ApplyId,
-        user_account::user_id::UserId, volunteer::VolunteerId
+        user_account::{user_id::UserId, user_name::UserName, user_name_furigana::{UserNameFurigana, self}}, volunteer::VolunteerId, group_participants::GroupParticipants, group_account::Group, gender::{Gender, gender_from_i8, self}
     };
 
 use super::{WriteApiResponseFailureBody, WriteApiResponseSuccessBody, AppData};
@@ -20,7 +21,8 @@ pub struct CreateApplyRequestBody {
     #[schema(required = true)]
     pub uid: String,
     #[schema(required = true)]
-    pub as_group: bool
+    pub as_group: bool,
+    pub members: Option<Vec<HashMap<String, Value>>>
 }
 
 /// 応募承認更新時のリクエストボディを表す構造体
@@ -73,9 +75,115 @@ pub async fn create_apply(
     };
 
     let as_group: bool = body.as_group;
+    let members: Option<Vec<GroupParticipants>> = if body.members != None {
+        let mut return_member: Vec<GroupParticipants> = vec![];
+        let m = body.members.unwrap();
+        for (ind, mp) in m.iter().enumerate() {
+            let body_name = mp.get("name");
+            let body_furigana = mp.get("furigana");
+            let body_gender = mp.get("gender");
+            let body_age = mp.get("age");
+            let name: UserName = if body_name == None {
+                return (
+                    StatusCode::BAD_REQUEST,
+                    Json(WriteApiResponseFailureBody {
+                        message: "name is none".to_string(),
+                    }),
+                ).into_response();
+            } else {
+                let user_name = UserName::from_str(&body_name.unwrap().to_string());
+                if let Err(error) = user_name {
+                    log::warn!("error = {}", error);
+                    return (
+                        StatusCode::BAD_REQUEST,
+                        Json(WriteApiResponseFailureBody {
+                            message: error.to_string(),
+                        }),
+                    ).into_response();
+                } else {
+                    user_name.unwrap()
+                }
+            };
+            let furigana: UserNameFurigana = if body_furigana == None {
+                return (
+                    StatusCode::BAD_REQUEST,
+                    Json(WriteApiResponseFailureBody {
+                        message: "furigana is none".to_string(),
+                    }),
+                ).into_response();
+            } else {
+                let user_name_furigana = UserNameFurigana::from_str(&body_furigana.unwrap().to_string());
+                if let Err(error) = user_name_furigana {
+                    log::warn!("error = {}", error);
+                    return (
+                        StatusCode::BAD_REQUEST,
+                        Json(WriteApiResponseFailureBody {
+                            message: error.to_string(),
+                        }),
+                    ).into_response();
+                } else {
+                    user_name_furigana.unwrap()
+                }
+            };
+            let gender: Gender = if body_gender == None {
+                return (
+                    StatusCode::BAD_REQUEST,
+                    Json(WriteApiResponseFailureBody {
+                        message: "gender is none".to_string(),
+                    }),
+                ).into_response();
+            } else {
+                let user_gender = gender_from_i8(&(body_gender.unwrap().as_i64().unwrap() as i8));
+                if let Err(error) = user_gender {
+                    log::warn!("error = {}", error);
+                    return (
+                        StatusCode::BAD_REQUEST,
+                        Json(WriteApiResponseFailureBody {
+                            message: error.to_string(),
+                        }),
+                    ).into_response();
+                } else {
+                    user_gender.unwrap()
+                }
+            };
+            let age: u8 = if body_age == None {
+                return (
+                    StatusCode::BAD_REQUEST,
+                    Json(WriteApiResponseFailureBody {
+                        message: "age is none".to_string(),
+                    }),
+                ).into_response();
+            } else {
+                let user_age = body_age.unwrap().as_u64();
+                if user_age == None {
+                    log::warn!("error = {}", "age is not integer".to_string());
+                    return (
+                        StatusCode::BAD_REQUEST,
+                        Json(WriteApiResponseFailureBody {
+                            message: "age is not integer".to_string(),
+                        }),
+                    ).into_response();
+                } else {
+                    user_age.unwrap() as u8
+                }
+            };
+            let gp = GroupParticipants::new(
+                ind as u16,
+                name,
+                furigana,
+                gender,
+                age
+            );
+            return_member.push(gp);
+        }
+        Some(return_member)
+    } else {
+        None
+    };
+
 
     match repository
-        .create(aid, vid, uid, as_group)
+        .create(aid, vid, uid, as_group, members)
         .await
     {
         Ok(_) => (
