@@ -20,8 +20,6 @@ pub struct CreateApplyRequestBody {
     pub vid: String,
     #[schema(required = true)]
     pub uid: String,
-    #[schema(required = true)]
-    pub as_group: bool,
     pub members: Option<Vec<HashMap<String, Value>>>
 }
 
@@ -74,7 +72,6 @@ pub async fn create_apply(
         }
     };
 
-    let as_group: bool = body.as_group;
     let members: Option<Vec<GroupParticipants>> = if body.members != None {
         let mut return_member: Vec<GroupParticipants> = vec![];
         let m = body.members.unwrap();
@@ -179,6 +176,11 @@ pub async fn create_apply(
         Some(return_member)
     } else {
         None
+    };
+
+    let as_group: bool = match members {
+        None => {false}
+        Some(_) => true
     };
 
 
