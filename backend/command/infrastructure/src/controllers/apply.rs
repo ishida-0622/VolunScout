@@ -179,7 +179,7 @@ pub async fn create_apply(
     };
 
     let as_group: bool = match members {
-        None => {false}
+        None => false,
         Some(_) => true
     };
 
