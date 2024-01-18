@@ -3,7 +3,7 @@ use async_graphql::SimpleObject;
 use async_trait::async_trait;
 use chrono::{NaiveDate, NaiveDateTime};
 
-use domain::model::{region::Region, user_account::user_id::UserId, volunteer::Volunteer};
+use domain::model::{user_account::user_id::UserId, volunteer::Volunteer};
 
 /// 参加者アカウントリードモデル
 #[derive(SimpleObject, sqlx::Type)]
@@ -30,6 +30,31 @@ pub struct ParticipantAccount {
     pub deleted_at: Option<NaiveDateTime>,
 }
 
+/// 参加者地域リードモデル
+#[derive(SimpleObject)]
+pub struct ParticipantRegion {
+    /// 地域名
+    pub name: String,
+}
+
+/// 参加者テーマリードモデル
+#[derive(SimpleObject, sqlx::Type)]
+pub struct ParticipantTheme {
+    /// テーマ名
+    pub name: String,
+    /// 必須フラグ
+    pub is_required: bool,
+}
+
+/// 参加者条件リードモデル
+#[derive(SimpleObject, sqlx::Type)]
+pub struct ParticipantCondition {
+    /// 条件名
+    pub name: String,
+    /// 必須フラグ
+    pub is_required: bool,
+}
+
 #[async_trait]
 pub trait ParticipantUserRepository: Send + Sync {
     /// 参加者アカウントをIDで取得する
@@ -39,7 +64,13 @@ pub trait ParticipantUserRepository: Send + Sync {
     async fn find_by_ids(&self, pids: &[UserId]) -> Result<Vec<ParticipantAccount>>;
 
     /// 参加者の活動地域を取得する
-    async fn find_region_by_id(&self, pid: &UserId) -> Result<Vec<Region>>;
+    async fn find_region_by_id(&self, pid: &UserId) -> Result<Vec<ParticipantRegion>>;
+
+    /// 参加者のテーマを取得する
+    async fn find_theme_by_id(&self, pid: &UserId) -> Result<Vec<ParticipantTheme>>;
+
+    /// 参加者の条件を取得する
+    async fn find_condition_by_id(&self, pid: &UserId) -> Result<Vec<ParticipantCondition>>;
 
     /// 参加者のお気に入りを取得する
     async fn find_favorite_by_id(&self, pid: &UserId) -> Result<Vec<Volunteer>>;

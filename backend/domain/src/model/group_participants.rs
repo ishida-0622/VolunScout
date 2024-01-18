@@ -4,7 +4,6 @@ use super::{user_account::{user_name::UserName, user_name_furigana::UserNameFuri
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct GroupParticipants {
-    pub gpid: ApplyId,
     pub serial: u16,
     pub name: UserName,
     pub furigana: UserNameFurigana,
@@ -14,7 +13,6 @@ pub struct GroupParticipants {
 
 impl GroupParticipants {
     pub fn new(
-        gpid: ApplyId,
         serial: u16,
         name: UserName,
         furigana: UserNameFurigana,
@@ -22,7 +20,6 @@ impl GroupParticipants {
         age: u8
     ) -> GroupParticipants {
         GroupParticipants{
-            gpid,
             serial,
             name,
             furigana,

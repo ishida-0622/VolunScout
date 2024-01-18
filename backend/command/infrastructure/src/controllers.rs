@@ -2,6 +2,7 @@ pub mod group;
 pub mod participant;
 pub mod volunteer;
 pub mod apply;
+pub mod scout;
 
 use axum::{routing::post, Router};
 use lambda_http::Body;
@@ -12,7 +13,7 @@ use tokio::sync::RwLock;
 use utoipa::ToSchema;
 
 use crate::{
-    activities::{volunteer::VolunteerImpl, apply::ApplyImpl},
+    activities::{volunteer::VolunteerImpl, apply::ApplyImpl, scout::ScoutImpl},
     user_account::{group::GroupAccountImpl, participant::ParticipantAccountImpl}
 };
 
@@ -34,6 +35,7 @@ pub struct AppState {
     participant_account_repository: ParticipantAccountImpl,
     volunteer_repository: VolunteerImpl,
     apply_repository: ApplyImpl,
+    scout_repository: ScoutImpl
 }
 
 impl AppState {
@@ -43,6 +45,7 @@ impl AppState {
             participant_account_repository: ParticipantAccountImpl::new(pool.clone()),
             volunteer_repository: VolunteerImpl::new(pool.clone()),
             apply_repository: ApplyImpl::new(pool.clone()),
+            scout_repository: ScoutImpl::new(pool.clone())
         }
     }
 }
@@ -64,6 +67,10 @@ pub enum Endpoints {
     CreateApply,
     UpdateApplyAllowedStatus,
     UpdateApplyIsSent,
+    CreateScout,
+    UpdateScoutIsSent,
+    UpdateScoutIsRead,
+    UpdateScoutDenied,
 }
 
 impl Endpoints {
@@ -81,6 +88,10 @@ impl Endpoints {
             Endpoints::CreateApply => "/apply/create",
             Endpoints::UpdateApplyAllowedStatus => "/apply/update/allowed-status",
             Endpoints::UpdateApplyIsSent => "/apply/update/is-sent",
+            Endpoints::CreateScout => "/scout/create",
+            Endpoints::UpdateScoutIsSent => "/scout/update/is-sent",
+            Endpoints::UpdateScoutIsRead => "/scout/update/is-read",
+            Endpoints::UpdateScoutDenied => "/scout/update/denied",
         }
     }
 }
@@ -138,6 +149,22 @@ pub fn create_router(pool: MySqlPool) -> Router {
         .route(
             Endpoints::UpdateApplyIsSent.as_str(),
             post(apply::update_apply_is_sent),
+        )
+        .route(
+            Endpoints::CreateScout.as_str(),
+            post(scout::create_scout),
+        )
+        .route(
+            Endpoints::UpdateScoutIsSent.as_str(),
+            post(scout::update_scout_is_sent),
+        )
+        .route(
+            Endpoints::UpdateScoutIsRead.as_str(),
+            post(scout::update_scout_is_read),
+        )
+        .route(
+            Endpoints::UpdateScoutDenied.as_str(),
+            post(scout::update_scout_denied),
         )
         .with_state(state);
 

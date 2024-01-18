@@ -1,18 +1,17 @@
 use std::str::FromStr;
 
 use axum::{extract::State, http::StatusCode, response::IntoResponse, Json};
+use chrono::{DateTime, NaiveDate, Utc};
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
-use chrono::{DateTime, NaiveDate, Utc};
 
 use command_repository::activities::volunteer::VolunteerRepository;
 use domain::model::{
-        volunteer::VolunteerId,
-        user_account::user_id::UserId,
-        terms::Terms, region::Region, theme::Theme, target_status::TargetStatus, condition::Condition
-    };
+    condition::Condition, region::Region, target_status::TargetStatus, terms::Terms, theme::Theme,
+    user_account::user_id::UserId, volunteer::VolunteerId,
+};
 
-use super::{WriteApiResponseFailureBody, WriteApiResponseSuccessBody, AppData};
+use super::{AppData, WriteApiResponseFailureBody, WriteApiResponseSuccessBody};
 
 /// ボランティアの作成時のリクエストボディを表す構造体
 #[derive(Debug, Serialize, Deserialize, ToSchema)]
@@ -50,7 +49,7 @@ pub struct CreateVolunteerRequestBody {
     #[schema()]
     pub reward: Option<String>,
     #[schema(required = true)]
-    pub target_status: Vec<String>,
+    pub target_status: String,
 }
 
 /// ボランティアの更新時のリクエストボディを表す構造体
@@ -91,7 +90,7 @@ pub struct UpdateVolunteerRequestBody {
     #[schema()]
     pub reward: Option<String>,
     #[schema(required = true)]
-    pub target_status: Vec<String>,
+    pub target_status: String,
 }
 
 /// ボランティアの削除時のリクエストボディを表す構造体
@@ -168,11 +167,20 @@ pub async fn create_volunteer(
         .map(|t: &String| Condition::from_str(t).unwrap())
         .collect::<Vec<Condition>>();
     let reward: Option<String> = body.reward;
-    let target_status: Vec<TargetStatus> = body
-        .target_status
-        .iter()
-        .map(|t: &String| TargetStatus::from_str(t).unwrap())
-        .collect::<Vec<TargetStatus>>();
+    let target_status: TargetStatus = match TargetStatus::from_str(&body.target_status) {
+        Ok(target_status) => target_status,
+        Err(error) => {
+            log::warn!("error = {}", error);
+            return (
+                StatusCode::BAD_REQUEST,
+                Json(WriteApiResponseFailureBody {
+                    message: error.to_string(),
+                }),
+            )
+                .into_response();
+        }
+    };
+
     let terms: Terms = Terms::new(
         region,
         theme,
@@ -180,11 +188,25 @@ pub async fn create_volunteer(
         condition,
         required_condition,
         // reward,
-        target_status
+        target_status,
     );
 
     match repository
-        .create(vid, gid, title, message, overview, recruited_num, place, start_at, finish_at, deadline_on, as_group, reward, terms)
+        .create(
+            vid,
+            gid,
+            title,
+            message,
+            overview,
+            recruited_num,
+            place,
+            start_at,
+            finish_at,
+            deadline_on,
+            as_group,
+            reward,
+            terms,
+        )
         .await
     {
         Ok(_) => (
@@ -261,22 +283,44 @@ pub async fn update_volunteer(
         .map(|t: &String| Condition::from_str(t).unwrap())
         .collect::<Vec<Condition>>();
     let reward: Option<String> = body.reward;
-    let target_status: Vec<TargetStatus> = body
-        .target_status
-        .iter()
-        .map(|t: &String| TargetStatus::from_str(t).unwrap())
-        .collect::<Vec<TargetStatus>>();
+    let target_status: TargetStatus = match TargetStatus::from_str(&body.target_status) {
+        Ok(target_status) => target_status,
+        Err(error) => {
+            log::warn!("error = {}", error);
+            return (
+                StatusCode::BAD_REQUEST,
+                Json(WriteApiResponseFailureBody {
+                    message: error.to_string(),
+                }),
+            )
+                .into_response();
+        }
+    };
+
     let terms: Terms = Terms::new(
         region,
         theme,
         required_theme,
         condition,
         required_condition,
-        target_status
+        target_status,
     );
 
     match repository
-        .update(vid, title, message, overview, recruited_num, place, start_at, finish_at, deadline_on, as_group, reward, terms)
+        .update(
+            vid,
+            title,
+            message,
+            overview,
+            recruited_num,
+            place,
+            start_at,
+            finish_at,
+            deadline_on,
+            as_group,
+            reward,
+            terms,
+        )
         .await
     {
         Ok(_) => (
@@ -337,4 +381,3 @@ pub async fn delete_volunteer(
         }
     }
 }
-

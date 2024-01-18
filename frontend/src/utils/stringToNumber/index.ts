@@ -6,7 +6,7 @@
  * @returns 変換後の数値
  */
 export const stringToNumber = (str: string) => {
-  const reg = /^\d+$/;
+  const reg = /^-?\d+.?\d*$/;
   if (reg.test(str)) {
     return Number(str);
   } else {

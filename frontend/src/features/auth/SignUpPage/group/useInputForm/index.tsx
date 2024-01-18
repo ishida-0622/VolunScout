@@ -5,6 +5,8 @@ import styles from "./index.module.css"; // CSSモジュールのインポート
 export type FormValues = {
   name: string;
   furigana: string;
+  representativeName: string;
+  representativeFurigana: string;
   address: string;
   phone: string;
   contents: string;
@@ -21,6 +23,8 @@ export const useInputForm = ({ onSubmit = noop }: Props) => {
     defaultValues: {
       name: "",
       furigana: "",
+      representativeName: "",
+      representativeFurigana: "",
       address: "",
       phone: "",
       contents: "",
