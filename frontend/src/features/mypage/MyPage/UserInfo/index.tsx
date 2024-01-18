@@ -15,7 +15,7 @@ import { formatDate } from "@/utils/formatDate";
 import { numberToGender } from "@/utils/numberToGender";
 
 const GetParticipantAccountInfoQuery = gql(/* GraphQL */ `
-  query GetParticipantAccount($uid: String!) {
+  query GetParticipantAccountInfo($uid: String!) {
     user: getParticipantAccount(uid: $uid) {
       name
       furigana
@@ -23,6 +23,9 @@ const GetParticipantAccountInfoQuery = gql(/* GraphQL */ `
       gender
       birthday
       profile
+    }
+    targetStatus: getParticipantTargetStatus(uid: $uid) {
+      name
     }
     # TODO: レビューの取得
   }
@@ -37,7 +40,10 @@ export const UserInfo = () => {
   const { user } = useAuthContext();
 
   const [fetchParticipantAccount, { loading, error, data }] = useLazyQuery(
-    GetParticipantAccountInfoQuery
+    GetParticipantAccountInfoQuery,
+    {
+      fetchPolicy: "cache-and-network",
+    }
   );
 
   useEffect(() => {
@@ -48,11 +54,12 @@ export const UserInfo = () => {
     }
   }, [fetchParticipantAccount, user?.uid]);
 
-  const userInfo = data?.user;
-
-  if (loading || userInfo === undefined) {
+  if (loading || data === undefined) {
     return null;
   }
+
+  const userInfo = data.user;
+  const targetStatus = data.targetStatus;
 
   if (error) {
     console.error(error);
@@ -78,6 +85,11 @@ export const UserInfo = () => {
             <span>生年月日</span>
             <span>：</span>
             <span>{formatDate(userInfo.birthday)}</span>
+          </p>
+          <p>
+            <span>区分</span>
+            <span>：</span>
+            <span>{targetStatus.name}</span>
           </p>
           <p>
             <span>性別</span>
