@@ -1,14 +1,15 @@
-use anyhow::Result;
+use anyhow::{Ok, Result};
 use async_trait::async_trait;
 use domain::consts::conditions::ConditionMap;
+use domain::consts::target_status::{self, TargetStatusMap, TARGET_STATUSES_PREFIX};
 use domain::consts::themes::ThemeMap;
 use sqlx::MySqlPool;
 
 use domain::consts::region::RegionMap;
 use domain::model::{user_account::user_id::UserId, volunteer::Volunteer};
 use query_repository::user_account::participant::{
-    ParticipantAccount, ParticipantCondition, ParticipantRegion, ParticipantTheme,
-    ParticipantUserRepository,
+    ParticipantAccount, ParticipantCondition, ParticipantRegion, ParticipantTargetStatus,
+    ParticipantTheme, ParticipantUserRepository,
 };
 
 pub struct ParticipantAccountImpl {
@@ -130,6 +131,26 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
             .collect();
 
         Ok(conditions)
+    }
+
+    async fn find_target_status_by_id(&self, pid: &UserId) -> Result<ParticipantTargetStatus> {
+        let response = sqlx::query!(
+            r#"
+            SELECT eid FROM participant_element WHERE uid = ? AND eid like ?
+            "#,
+            pid.to_string(),
+            format!("{}%", TARGET_STATUSES_PREFIX)
+        )
+        .fetch_one(&self.pool)
+        .await?;
+
+        let target_status_map = TargetStatusMap::new().target_statuses_index_to_name;
+
+        let target_status = target_status_map.get(&response.eid).unwrap().to_string();
+
+        Ok(ParticipantTargetStatus {
+            name: target_status,
+        })
     }
 
     async fn find_favorite_by_id(&self, pid: &UserId) -> Result<Vec<Volunteer>> {
