@@ -179,3 +179,29 @@ INSERT INTO participant_element VALUES("participant_account000000000", "theme_2"
 
 INSERT INTO participant_element VALUES("participant_account000000000", "condition_1", false);
 INSERT INTO participant_element VALUES("participant_account000000000", "condition_2", true);
+
+INSERT INTO scout VALUES(
+  "01HMAWQDS2Y50QHNGB8GSWJQNW",
+  "01HKXVVVKBR6G8240N7HWSPR7M",
+  "participant_account000000000",
+  "message",
+  "2023-01-17 12:00:00",
+  DEFAULT,
+  DEFAULT,
+  NULL,
+  DEFAULT,
+  NULL
+);
+
+INSERT INTO scout VALUES(
+  "01HMAX08V2DSBK7KVPK92D6MSD",
+  "01HKXVVVKBR6G8240N7HWSPR7M",
+  "participant_account000000001",
+  "message",
+  "2023-01-16 16:00:00",
+  true,
+  true,
+  "2023-01-16 17:00:01",
+  true,
+  "2023-01-17 09:00:00"
+);
