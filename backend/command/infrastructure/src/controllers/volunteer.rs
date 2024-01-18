@@ -100,6 +100,24 @@ pub struct DeleteVolunteerRequestBody {
     pub vid: String,
 }
 
+/// お気に入り登録時のリクエストボディを表す構造体
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
+pub struct RegisterVolunteerFavoriteRequestBody {
+    #[schema(required = true)]
+    pub uid: String,
+    #[schema(required = true)]
+    pub vid: String
+}
+
+/// お気に入り登録時のリクエストボディを表す構造体
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
+pub struct UnregisterVolunteerFavoriteRequestBody {
+    #[schema(required = true)]
+    pub uid: String,
+    #[schema(required = true)]
+    pub vid: String
+}
+
 #[utoipa::path(
     post,
     path="/volunteer/create",
@@ -366,6 +384,110 @@ pub async fn delete_volunteer(
             StatusCode::OK,
             Json(WriteApiResponseSuccessBody {
                 message: "Delete volunteer successfully.".to_string(),
+            }),
+        )
+            .into_response(),
+        Err(error) => {
+            log::error!("error = {}", error);
+            (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                Json(WriteApiResponseFailureBody {
+                    message: error.to_string(),
+                }),
+            )
+                .into_response()
+        }
+    }
+}
+
+#[utoipa::path(
+    post,
+    path="/volunteer/favorite/register",
+    request_body=RegisterVolunteerFavoriteRequestBody,
+    responses(
+        (status=200, description="Register favorite successfully.", body=WriteApiResponseSuccessBody),
+        (status=500, description="Register favorite failed.", body=WriteApiResponseFailureBody)
+    )
+)]
+pub async fn register_favorite(
+    State(state): State<AppData>,
+    Json(body): Json<RegisterVolunteerFavoriteRequestBody>,
+) -> impl IntoResponse {
+    let mut lock = state.write().await;
+    let repository = &mut lock.volunteer_repository;
+
+    let uid: UserId = match UserId::from_str(&body.uid) {
+        Ok(uid) => uid,
+        Err(error) => {
+            log::warn!("error = {}", error);
+            return (
+                StatusCode::BAD_REQUEST,
+                Json(WriteApiResponseFailureBody {
+                    message: error.to_string(),
+                }),
+            )
+                .into_response();
+        }
+    };
+    let vid: VolunteerId = VolunteerId::from_str(&body.vid);
+
+    match repository.register_favorite(uid, vid).await {
+        Ok(_) => (
+            StatusCode::OK,
+            Json(WriteApiResponseSuccessBody {
+                message: "Register favorite successfully.".to_string(),
+            }),
+        )
+            .into_response(),
+        Err(error) => {
+            log::error!("error = {}", error);
+            (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                Json(WriteApiResponseFailureBody {
+                    message: error.to_string(),
+                }),
+            )
+                .into_response()
+        }
+    }
+}
+
+#[utoipa::path(
+    post,
+    path="/volunteer/favorite/unregister",
+    request_body=RegisterVolunteerFavoriteRequestBody,
+    responses(
+        (status=200, description="Unregister favorite successfully.", body=WriteApiResponseSuccessBody),
+        (status=500, description="Unregister favorite failed.", body=WriteApiResponseFailureBody)
+    )
+)]
+pub async fn unregister_favorite(
+    State(state): State<AppData>,
+    Json(body): Json<UnregisterVolunteerFavoriteRequestBody>,
+) -> impl IntoResponse {
+    let mut lock = state.write().await;
+    let repository = &mut lock.volunteer_repository;
+
+    let uid: UserId = match UserId::from_str(&body.uid) {
+        Ok(uid) => uid,
+        Err(error) => {
+            log::warn!("error = {}", error);
+            return (
+                StatusCode::BAD_REQUEST,
+                Json(WriteApiResponseFailureBody {
+                    message: error.to_string(),
+                }),
+            )
+                .into_response();
+        }
+    };
+    let vid: VolunteerId = VolunteerId::from_str(&body.vid);
+
+    match repository.unregister_favorite(uid, vid).await {
+        Ok(_) => (
+            StatusCode::OK,
+            Json(WriteApiResponseSuccessBody {
+                message: "Unregister favorite successfully.".to_string(),
             }),
         )
             .into_response(),

@@ -64,6 +64,8 @@ pub enum Endpoints {
     CreateVolunteer,
     UpdateVolunteer,
     DeleteVolunteer,
+    RegisterVolunteerFavorite,
+    UnregisterVolunteerFavorite,
     CreateApply,
     UpdateApplyAllowedStatus,
     UpdateApplyIsSent,
@@ -85,6 +87,8 @@ impl Endpoints {
             Endpoints::CreateVolunteer => "/volunteer/create",
             Endpoints::UpdateVolunteer => "/volunteer/update",
             Endpoints::DeleteVolunteer => "/volunteer/delete",
+            Endpoints::RegisterVolunteerFavorite => "/volunteer/favorite/register",
+            Endpoints::UnregisterVolunteerFavorite => "/volunteer/favorite/unregister",
             Endpoints::CreateApply => "/apply/create",
             Endpoints::UpdateApplyAllowedStatus => "/apply/update/allowed-status",
             Endpoints::UpdateApplyIsSent => "/apply/update/is-sent",
@@ -137,6 +141,14 @@ pub fn create_router(pool: MySqlPool) -> Router {
         .route(
             Endpoints::DeleteVolunteer.as_str(),
             post(volunteer::delete_volunteer),
+        )
+        .route(
+            Endpoints::RegisterVolunteerFavorite.as_str(),
+            post(volunteer::register_favorite),
+        )
+        .route(
+            Endpoints::UnregisterVolunteerFavorite.as_str(),
+            post(volunteer::unregister_favorite),
         )
         .route(
             Endpoints::CreateApply.as_str(),

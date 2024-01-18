@@ -286,4 +286,27 @@ impl VolunteerRepository for VolunteerImpl {
         .await?;
         Ok(())
     }
+
+    async fn register_favorite(&self, uid: UserId, vid: VolunteerId) -> Result<()> {
+        sqlx::query!(
+            "INSERT INTO favorite VALUES(?, ?, ?)",
+            uid.to_string(),
+            vid.to_string(),
+            Utc::now()
+        )
+        .execute(&self.pool)
+        .await?;
+        Ok(())
+    }
+
+    async fn unregister_favorite(&self, uid: UserId, vid: VolunteerId) -> Result<()> {
+        sqlx::query!(
+            "DELETE FROM favorite where uid = ? AND vid = ?",
+            uid.to_string(),
+            vid.to_string()
+        )
+        .execute(&self.pool)
+        .await?;
+        Ok(())
+    }
 }
