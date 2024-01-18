@@ -15,7 +15,7 @@ import { formatDate } from "@/utils/formatDate";
 import { numberToGender } from "@/utils/numberToGender";
 
 const GetParticipantAccountInfoQuery = gql(/* GraphQL */ `
-  query GetParticipantAccount($uid: String!) {
+  query GetParticipantAccountInfo($uid: String!) {
     user: getParticipantAccount(uid: $uid) {
       name
       furigana
@@ -37,7 +37,10 @@ export const UserInfo = () => {
   const { user } = useAuthContext();
 
   const [fetchParticipantAccount, { loading, error, data }] = useLazyQuery(
-    GetParticipantAccountInfoQuery
+    GetParticipantAccountInfoQuery,
+    {
+      fetchPolicy: "cache-and-network",
+    }
   );
 
   useEffect(() => {
