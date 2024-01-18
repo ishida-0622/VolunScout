@@ -12,8 +12,8 @@ use domain::model::user_account::user_id::UserId;
 use query_repository::user_account::{
     group::{GroupAccount, GroupUserRepository},
     participant::{
-        ParticipantAccount, ParticipantCondition, ParticipantRegion, ParticipantTheme,
-        ParticipantUserRepository,
+        ParticipantAccount, ParticipantCondition, ParticipantRegion, ParticipantTargetStatus,
+        ParticipantTheme, ParticipantUserRepository,
     },
 };
 
@@ -198,6 +198,28 @@ impl QueryRoot {
             .await?;
 
         Ok(conditions)
+    }
+
+    /// 指定されたuidの区分情報を取得する
+    ///
+    /// ## 引数
+    /// - `uid` - uid
+    ///
+    /// ## 返り値
+    /// - `ParticipantTargetStatus` - 対象状況情報
+    async fn get_participant_target_status<'ctx>(
+        &self,
+        ctx: &Context<'ctx>,
+        uid: String,
+    ) -> Result<ParticipantTargetStatus> {
+        let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
+        let uid: UserId = UserId::new(&uid).unwrap();
+        let target_status: ParticipantTargetStatus = ctx
+            .participant_account_dao
+            .find_target_status_by_id(&uid)
+            .await?;
+
+        Ok(target_status)
     }
 
     /// 参加者アカウントの存在チェックをする

@@ -55,6 +55,12 @@ pub struct ParticipantCondition {
     pub is_required: bool,
 }
 
+/// 参加者区分リードモデル
+#[derive(SimpleObject)]
+pub struct ParticipantTargetStatus {
+    pub name: String,
+}
+
 #[async_trait]
 pub trait ParticipantUserRepository: Send + Sync {
     /// 参加者アカウントをIDで取得する
@@ -71,6 +77,9 @@ pub trait ParticipantUserRepository: Send + Sync {
 
     /// 参加者の条件を取得する
     async fn find_condition_by_id(&self, pid: &UserId) -> Result<Vec<ParticipantCondition>>;
+
+    /// 参加者の区分を取得する
+    async fn find_target_status_by_id(&self, pid: &UserId) -> Result<ParticipantTargetStatus>;
 
     /// 参加者のお気に入りを取得する
     async fn find_favorite_by_id(&self, pid: &UserId) -> Result<Vec<Volunteer>>;
