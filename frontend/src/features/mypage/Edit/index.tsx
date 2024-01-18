@@ -92,7 +92,11 @@ export const EditMyPage = () => {
   useEffect(() => {
     if (data) {
       const { user, regions, themes, conditions, targetStatus } = data;
-      setUserInfoValues({ ...user, birthday: user.birthday.toString() });
+      setUserInfoValues({
+        ...user,
+        target_status: targetStatus.name,
+        birthday: user.birthday.toString(),
+      });
       setTermsValues({
         region: regions.map((region) => region.name),
         theme: themes.flatMap((theme) => (theme.isRequired ? [] : theme.name)),
@@ -105,7 +109,6 @@ export const EditMyPage = () => {
         required_condition: conditions.flatMap((condition) =>
           condition.isRequired ? condition.name : []
         ),
-        target_status: targetStatus.name,
       });
     }
   }, [data, setUserInfoValues]);

@@ -8,12 +8,7 @@ import { CONDITIONS, REGIONS, THEMES } from "@/consts";
 
 type FormValues = Pick<
   UpdateParticipantAccountRequestBody,
-  | "region"
-  | "theme"
-  | "required_theme"
-  | "condition"
-  | "required_condition"
-  | "target_status"
+  "region" | "theme" | "required_theme" | "condition" | "required_condition"
 >;
 
 type Props = {

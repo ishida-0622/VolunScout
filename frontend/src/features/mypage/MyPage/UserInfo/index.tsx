@@ -24,6 +24,9 @@ const GetParticipantAccountInfoQuery = gql(/* GraphQL */ `
       birthday
       profile
     }
+    targetStatus: getParticipantTargetStatus(uid: $uid) {
+      name
+    }
     # TODO: レビューの取得
   }
 `);
@@ -51,11 +54,12 @@ export const UserInfo = () => {
     }
   }, [fetchParticipantAccount, user?.uid]);
 
-  const userInfo = data?.user;
-
-  if (loading || userInfo === undefined) {
+  if (loading || data === undefined) {
     return null;
   }
+
+  const userInfo = data.user;
+  const targetStatus = data.targetStatus;
 
   if (error) {
     console.error(error);
@@ -81,6 +85,11 @@ export const UserInfo = () => {
             <span>生年月日</span>
             <span>：</span>
             <span>{formatDate(userInfo.birthday)}</span>
+          </p>
+          <p>
+            <span>区分</span>
+            <span>：</span>
+            <span>{targetStatus.name}</span>
           </p>
           <p>
             <span>性別</span>

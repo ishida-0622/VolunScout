@@ -3,11 +3,18 @@ import { useForm } from "react-hook-form";
 import type { UpdateParticipantAccountRequestBody } from "@/__generated__/command";
 
 import { joinClassnames } from "@/components/@joinClassnames";
+import { TARGET_STATUSES } from "@/consts";
 import { numberToGender } from "@/utils/numberToGender";
 
 type FormValues = Pick<
   UpdateParticipantAccountRequestBody,
-  "name" | "furigana" | "phone" | "gender" | "birthday" | "profile"
+  | "name"
+  | "furigana"
+  | "phone"
+  | "gender"
+  | "birthday"
+  | "profile"
+  | "target_status"
 >;
 
 type Props = {
@@ -58,6 +65,20 @@ export const useUserInfoForm = ({ initialValues, onSubmit = noop }: Props) => {
           {...register("birthday", { required: true })}
           className={joinClassnames("form-control")}
         />
+      </label>
+      <label className="form-label">
+        <span>区分</span>
+        <span>：</span>
+        <select
+          {...register("target_status", { required: true })}
+          className="form-select"
+        >
+          {TARGET_STATUSES.map((target) => (
+            <option key={target} value={target}>
+              {target}
+            </option>
+          ))}
+        </select>
       </label>
       <label className="form-label">
         <span>性別</span>
