@@ -1,2 +1,14 @@
-.base {
+.main_contents {
+   margin: 0% auto;
+   width: 90%;
 }
+
+.top {
+    text-align: center;
+}
+
+.button {
+    margin: 0% auto;
+    width: 10%;
+}
+
