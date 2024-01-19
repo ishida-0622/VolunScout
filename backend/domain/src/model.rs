@@ -16,6 +16,7 @@ pub mod user_account;
 pub mod volunteer;
 pub mod group_participants;
 pub mod favorite;
+pub mod review;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum ReviewToId{
