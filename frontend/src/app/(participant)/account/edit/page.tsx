@@ -1,4 +1,4 @@
-import { EditMyPage } from "@/features/mypage/Edit";
+import { EditMyPage } from "@/features/mypage/participant/Edit";
 
 const EditAccountPage = () => {
   return <EditMyPage />;

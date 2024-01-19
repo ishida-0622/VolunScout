@@ -1,4 +1,4 @@
-import { MyPage } from "@/features/mypage/MyPage";
+import { MyPage } from "@/features/mypage/participant/MyPage";
 
 const AccountPage = () => {
   return <MyPage />;
