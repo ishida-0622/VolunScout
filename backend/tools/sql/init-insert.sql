@@ -205,3 +205,31 @@ INSERT INTO scout VALUES(
   true,
   "2023-01-17 09:00:00"
 );
+
+INSERT INTO volunteer_review VALUES (
+  "participant_account000000000",
+  "01HKXVVVKBR6G8240N7HWSPR7M",
+  4,
+  NULL
+);
+
+INSERT INTO volunteer_review VALUES (
+  "participant_account000000001",
+  "01HKXVVVKBR6G8240N7HWSPR7M",
+  5,
+  "すっごいよかった、さいきょう。わあああああああああああああああああああああ"
+);
+
+INSERT INTO participant_review VALUES (
+  "01HKXVVVKBR6G8240N7HWSPR7M",
+  "participant_account000000000",
+  4,
+  "まあ普通によかったんじゃないですか"
+);
+
+INSERT INTO participant_review VALUES (
+  "01HKXVVVKBR6G8240N7HWSPR7M",
+  "participant_account000000001",
+  5,
+  NULL
+);
