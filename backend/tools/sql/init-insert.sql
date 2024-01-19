@@ -217,14 +217,14 @@ INSERT INTO volunteer_review VALUES (
   "participant_account000000001",
   "01HKXVVVKBR6G8240N7HWSPR7M",
   5,
-  "すっごいよかった、さいきょう。わあああああああああああああああああああああ"
+  "verrrrrrrry goooooooooooooooooood"
 );
 
 INSERT INTO participant_review VALUES (
   "01HKXVVVKBR6G8240N7HWSPR7M",
   "participant_account000000000",
   4,
-  "まあ普通によかったんじゃないですか"
+  "normal"
 );
 
 INSERT INTO participant_review VALUES (
