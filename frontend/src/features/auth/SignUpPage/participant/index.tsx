@@ -36,7 +36,7 @@ export const SignUpPage = () => {
     themesRequired: [],
     conditions: [],
     conditionsRequired: [],
-    targetStatuses: [],
+    targetStatuses: "",
   });
 
   const [pageCounter, setPageCounter] = useState(0);

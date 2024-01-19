@@ -2,7 +2,6 @@ declare const styles: {
   readonly "asterisk": string;
   readonly "button": string;
   readonly "colon": string;
-  readonly "content": string;
   readonly "content_title": string;
   readonly "contents": string;
   readonly "main": string;

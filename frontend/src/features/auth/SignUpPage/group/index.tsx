@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
 
 import { Confirmation } from "./Confirmation";
@@ -17,16 +16,6 @@ export const SignUpPage = () => {
   return (
     <section className={styles.section}>
       <div>
-        <div className={styles.user_icon}>
-          {/* TODO:アイコンを差し替える */}
-          <Image
-            src={"/icon.svg"}
-            alt="user icon"
-            width={200}
-            height={150}
-            className={styles.user_icon_image}
-          />
-        </div>
         {page === "input" && InputForm}
         {page === "confirm" && (
           <Confirmation values={formValues} onPrevPage={toInput} />

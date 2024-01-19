@@ -11,6 +11,8 @@ declare const styles: {
   readonly "main_contents": string;
   readonly "name": string;
   readonly "phone": string;
+  readonly "representative": string;
+  readonly "representative_furigana": string;
   readonly "textarea": string;
 };
 export = styles;

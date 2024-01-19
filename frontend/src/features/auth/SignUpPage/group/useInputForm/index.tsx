@@ -60,6 +60,28 @@ export const useInputForm = ({ onSubmit = noop }: Props) => {
           />
         </label>
         <label className={styles.label}>
+          <span className={styles.representative}>代表者名</span>
+          <span className={styles.colon}>：</span>
+          <input
+            type="text"
+            {...register("representativeName", { required: true })}
+            placeholder="山田太郎"
+            className={styles.input}
+          />
+        </label>
+        <label className={styles.label}>
+          <span className={styles.representative_furigana}>
+            代表者名（フリガナ）
+          </span>
+          <span className={styles.colon}>：</span>
+          <input
+            type="text"
+            {...register("representativeFurigana", { required: true })}
+            placeholder="ヤマダタロウ"
+            className={styles.input}
+          />
+        </label>
+        <label className={styles.label}>
           <span className={styles.address}>所在地</span>
           <span className={styles.colon}>：</span>
           <input

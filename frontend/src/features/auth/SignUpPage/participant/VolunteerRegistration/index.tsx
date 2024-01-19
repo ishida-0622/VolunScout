@@ -75,7 +75,6 @@ export const VolunteerRegistration = ({
             <details open>
               <summary className={styles.main}>テーマ</summary>
               {THEMES.map((theme) => (
-                // TODO
                 <div key={theme} style={{ display: "flex" }}>
                   <CheckBoxControl
                     name="themes"
@@ -88,7 +87,6 @@ export const VolunteerRegistration = ({
                     value={theme}
                     register={register}
                     label=""
-                    // TODO
                     className={styles.toggle}
                   />
                 </div>

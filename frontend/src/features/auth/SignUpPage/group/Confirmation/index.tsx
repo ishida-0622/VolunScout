@@ -65,6 +65,12 @@ export const Confirmation = ({ values, onPrevPage }: Props) => {
           <div>
             <p className={styles.furigana}>{values.furigana}</p>
             <h1 className={styles.name}>{values.name}</h1>
+            <p className={styles.representative_furigana}>
+              {values.representativeFurigana}
+            </p>
+            <p className={styles.representative_name}>
+              {values.representativeName}
+            </p>
             <p className={styles.address}>{values.address}</p>
             <p className={styles.phone}>{values.phone}</p>
           </div>
