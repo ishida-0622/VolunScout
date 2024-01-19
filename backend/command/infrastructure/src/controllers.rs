@@ -3,6 +3,7 @@ pub mod participant;
 pub mod volunteer;
 pub mod apply;
 pub mod scout;
+pub mod review;
 
 use axum::{routing::post, Router};
 use lambda_http::Body;
@@ -13,7 +14,7 @@ use tokio::sync::RwLock;
 use utoipa::ToSchema;
 
 use crate::{
-    activities::{volunteer::VolunteerImpl, apply::ApplyImpl, scout::ScoutImpl},
+    activities::{volunteer::VolunteerImpl, apply::ApplyImpl, scout::ScoutImpl, review::ReviewImpl},
     user_account::{group::GroupAccountImpl, participant::ParticipantAccountImpl}
 };
 
@@ -35,7 +36,8 @@ pub struct AppState {
     participant_account_repository: ParticipantAccountImpl,
     volunteer_repository: VolunteerImpl,
     apply_repository: ApplyImpl,
-    scout_repository: ScoutImpl
+    scout_repository: ScoutImpl,
+    review_repository: ReviewImpl
 }
 
 impl AppState {
@@ -45,7 +47,8 @@ impl AppState {
             participant_account_repository: ParticipantAccountImpl::new(pool.clone()),
             volunteer_repository: VolunteerImpl::new(pool.clone()),
             apply_repository: ApplyImpl::new(pool.clone()),
-            scout_repository: ScoutImpl::new(pool.clone())
+            scout_repository: ScoutImpl::new(pool.clone()),
+            review_repository: ReviewImpl::new(pool.clone()),
         }
     }
 }
@@ -73,6 +76,8 @@ pub enum Endpoints {
     UpdateScoutIsSent,
     UpdateScoutIsRead,
     UpdateScoutDenied,
+    ReviewToVolunteer,
+    ReviewToParticipant
 }
 
 impl Endpoints {
@@ -96,6 +101,8 @@ impl Endpoints {
             Endpoints::UpdateScoutIsSent => "/scout/update/is-sent",
             Endpoints::UpdateScoutIsRead => "/scout/update/is-read",
             Endpoints::UpdateScoutDenied => "/scout/update/denied",
+            Endpoints::ReviewToVolunteer => "/review/to-volunteer",
+            Endpoints::ReviewToParticipant => "/review/to-participant"
         }
     }
 }
@@ -177,6 +184,14 @@ pub fn create_router(pool: MySqlPool) -> Router {
         .route(
             Endpoints::UpdateScoutDenied.as_str(),
             post(scout::update_scout_denied),
+        )
+        .route(
+            Endpoints::ReviewToVolunteer.as_str(),
+            post(review::review_to_volunteer),
+        )
+        .route(
+            Endpoints::ReviewToParticipant.as_str(),
+            post(review::review_to_participant),
         )
         .with_state(state);
 

@@ -146,16 +146,26 @@ CREATE TABLE IF NOT EXISTS `volunteer_dates`
   FOREIGN KEY(`uid`) REFERENCES `participant_account`(`uid`)
 );
 
-CREATE TABLE IF NOT EXISTS `review`
+CREATE TABLE IF NOT EXISTS `volunteer_review`
 (
-  `from_id` CHAR(28) NOT NULL,
-  `to_id` VARCHAR(28) NOT NULL,
+  `uid` CHAR(28) NOT NULL,
+  `vid` CHAR(26) NOT NULL,
   `point` TINYINT NOT NULL,
-  PRIMARY KEY (`from_id`, `to_id`),
-  FOREIGN KEY(`from_id`) REFERENCES `participant_account`(`uid`),
-  FOREIGN KEY(`from_id`) REFERENCES `group_account`(`gid`),
-  FOREIGN KEY(`to_id`) REFERENCES `participant_account`(`uid`),
-  FOREIGN KEY(`to_id`) REFERENCES `volunteer`(`vid`)
+  `comment` TEXT,
+  PRIMARY KEY (`uid`, `vid`),
+  FOREIGN KEY(`uid`) REFERENCES `participant_account`(`uid`),
+  FOREIGN KEY(`vid`) REFERENCES `volunteer`(`vid`)
+);
+
+CREATE TABLE IF NOT EXISTS `participant_review`
+(
+  `vid` CHAR(26) NOT NULL,
+  `uid` CHAR(28) NOT NULL,
+  `point` TINYINT NOT NULL,
+  `comment` TEXT,
+  PRIMARY KEY (`vid`, `uid`),
+  FOREIGN KEY(`vid`) REFERENCES `volunteer`(`vid`),
+  FOREIGN KEY(`uid`) REFERENCES `participant_account`(`uid`)
 );
 
 CREATE TABLE IF NOT EXISTS `group_volunteer_photo`
