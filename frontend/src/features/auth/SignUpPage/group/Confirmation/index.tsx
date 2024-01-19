@@ -41,8 +41,8 @@ export const Confirmation = ({ values, onPrevPage }: Props) => {
     const body: CreateGroupAccountRequestBody = {
       ...values,
       gid: uid,
-      representative_furigana: values.representativeName,
-      representative_name: values.representativeFurigana,
+      representative_name: values.representativeName,
+      representative_furigana: values.representativeFurigana,
     };
 
     try {
