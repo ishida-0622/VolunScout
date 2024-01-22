@@ -43,7 +43,7 @@ export const UserInfo = () => {
     GetParticipantAccountInfoQuery,
     {
       fetchPolicy: "cache-and-network",
-    }
+    },
   );
 
   useEffect(() => {
@@ -67,21 +67,24 @@ export const UserInfo = () => {
   }
 
   return (
-    <div>
+    <div className={styles.main_contents}>
       <div>
         <div>
           <Image
             src={user?.photoURL ?? ""}
             alt="User icon"
             width={100}
-            height={100}
+           height={100}
             className={styles.user_icon}
           />
         </div>
         <div>
-          <p>{userInfo.furigana}</p>
-          <h2>{userInfo.name}</h2>
-          <p>
+          <div className={styles.name}>
+            <p>{userInfo.furigana}</p>
+            <h2>{userInfo.name}</h2>
+          </div>
+          <div className={styles.main}>
+          <p className={styles.birth}>
             <span>生年月日</span>
             <span>：</span>
             <span>{formatDate(userInfo.birthday)}</span>
@@ -101,17 +104,23 @@ export const UserInfo = () => {
             <span>：</span>
             <span>{userInfo.phone}</span>
           </p>
+          </div>
         </div>
         <div>
           {/* TODO:レビュー */}
-          <p>★★★★☆</p>
+          <p className={styles.review}>★★★★☆</p>
         </div>
-        <button className={joinClassnames("btn btn-info")} onClick={toEditPage}>
-          編集
-        </button>
+        <div className={styles.edit}>
+          <button
+            className={joinClassnames("btn btn-info", styles.edit)}
+            onClick={toEditPage}
+          >
+            編集
+          </button>
+        </div>
       </div>
       <div>
-        <p>{userInfo.profile}</p>
+        <p className={styles.profile}>{userInfo.profile}</p>
       </div>
     </div>
   );
