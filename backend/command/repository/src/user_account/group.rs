@@ -19,6 +19,7 @@ pub trait GroupUserRepository: Send + Sync {
         phone: UserPhone,
         address: String,
         contents: String,
+        photo_keys: Vec<String>
     ) -> Result<()>;
 
     /// 団体アカウントを更新する
@@ -32,6 +33,7 @@ pub trait GroupUserRepository: Send + Sync {
         phone: UserPhone,
         address: String,
         contents: String,
+        photo_keys: Vec<String>
     ) -> Result<()>;
 
     /// 団体アカウントを削除する

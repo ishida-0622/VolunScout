@@ -31,6 +31,7 @@ pub struct CreateGroupAccountRequestBody {
     pub address: String,
     #[schema(required = true)]
     pub contents: String,
+    pub photos: Option<Vec<String>>,
 }
 
 /// グループアカウントの更新時のリクエストボディを表す構造体
@@ -52,6 +53,7 @@ pub struct UpdateGroupAccountRequestBody {
     pub address: String,
     #[schema(required = true)]
     pub contents: String,
+    pub photos: Option<Vec<String>>,
 }
 
 /// グループアカウントの削除時のリクエストボディを表す構造体
@@ -165,8 +167,13 @@ pub async fn create_group_account(
 
     let contents: String = body.contents;
 
+    let s3_keys: Vec<String> = match body.photos {
+        None => Vec::new(),
+        Some(s3_keys) => s3_keys
+    };
+
     match repository
-        .create(gid, name, furigana, representative_name, representative_furigana, phone, address, contents)
+        .create(gid, name, furigana, representative_name, representative_furigana, phone, address, contents, s3_keys)
         .await
     {
         Ok(_) => (
@@ -293,8 +300,13 @@ pub async fn update_group_account(
 
     let contents: String = body.contents;
 
+    let s3_keys: Vec<String> = match body.photos {
+        None => Vec::new(),
+        Some(s3_keys) => s3_keys
+    };
+
     match repository
-        .update(gid, name, furigana, representative_name, representative_furigana, phone, address, contents)
+        .update(gid, name, furigana, representative_name, representative_furigana, phone, address, contents, s3_keys)
         .await
     {
         Ok(_) => (
