@@ -54,6 +54,15 @@ pub struct UpdateGroupAccountRequestBody {
     pub contents: String,
 }
 
+/// グループアカウントのプラン変更時のリクエストボディを表す構造体
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
+pub struct SwitchGroupAccountPlanRequestBody {
+    #[schema(required = true)]
+    pub gid: String,
+    #[schema(required = true)]
+    pub is_paid: bool
+}
+
 /// グループアカウントの削除時のリクエストボディを表す構造体
 #[derive(Debug, Serialize, Deserialize, ToSchema)]
 pub struct DeleteGroupAccountRequestBody {
@@ -316,6 +325,61 @@ pub async fn update_group_account(
         }
     }
 }
+
+#[utoipa::path(
+    post,
+    path="/group-account/switch-plan",
+    request_body=DeleteGroupAccountRequestBody,
+    responses(
+        (status=200, description="Update group account's is_paid successfully.", body=WriteApiResponseSuccessBody),
+        (status=500, description="Update group account's is_paid failed.", body=WriteApiResponseFailureBody)
+    )
+)]
+pub async fn switch_group_account_plan(
+    State(state): State<AppData>,
+    Json(body): Json<SwitchGroupAccountPlanRequestBody>,
+) -> impl IntoResponse {
+    let mut lock = state.write().await;
+    let repository = &mut lock.group_account_repository;
+
+    let gid: UserId = match UserId::from_str(&body.gid) {
+        Ok(gid) => gid,
+        Err(error) => {
+            log::warn!("error = {}", error);
+            return (
+                StatusCode::BAD_REQUEST,
+                Json(WriteApiResponseFailureBody {
+                    message: error.to_string(),
+                }),
+            )
+                .into_response();
+        }
+    };
+
+    let is_paid: bool = body.is_paid;
+
+    match repository.switch_plan(gid, is_paid).await {
+        Ok(_) => (
+            StatusCode::OK,
+            Json(WriteApiResponseSuccessBody {
+                message: "Update group account's is_paid successfully.".to_string(),
+            }),
+        )
+            .into_response(),
+        Err(error) => {
+            log::error!("error = {}", error);
+            (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                Json(WriteApiResponseFailureBody {
+                    message: error.to_string(),
+                }),
+            )
+                .into_response()
+        }
+    }
+}
+
+
 
 #[utoipa::path(
     post,

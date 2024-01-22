@@ -75,6 +75,17 @@ impl GroupUserRepository for GroupAccountImpl {
         Ok(())
     }
 
+    async fn switch_plan(&self, gid: UserId, is_paid: bool) -> Result<()> {
+        sqlx::query!(
+            "UPDATE group_account SET is_paid = ? WHERE gid = ?",
+            is_paid,
+            gid.to_string()
+        )
+        .execute(&self.pool)
+        .await?;
+        Ok(())
+    }
+
     async fn delete(&self, gid: UserId) -> Result<()> {
         sqlx::query!(
             "UPDATE group_account SET is_deleted = true, deleted_at = ? WHERE gid = ?",
