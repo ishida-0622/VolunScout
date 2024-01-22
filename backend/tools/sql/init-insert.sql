@@ -233,3 +233,38 @@ INSERT INTO participant_review VALUES (
   5,
   NULL
 );
+
+INSERT INTO group_volunteer_photo VALUES (
+  "group/group0_1.png",
+  "group_account000000000000000"
+);
+
+INSERT INTO group_volunteer_photo VALUES (
+  "group/group0_2.png",
+  "group_account000000000000000"
+);
+
+INSERT INTO group_volunteer_photo VALUES (
+  "group/group1_0.png",
+  "group_account000000000000001"
+);
+
+INSERT INTO group_volunteer_photo VALUES (
+  "group/group1_1.png",
+  "group_account000000000000001"
+);
+
+INSERT INTO group_volunteer_photo VALUES (
+  "volunteer/volunteer0_0.png",
+  "01HKXVVVKBR6G8240N7HWSPR7M"
+);
+
+INSERT INTO group_volunteer_photo VALUES (
+  "volunteer/volunteer0_1.png",
+  "01HKXVVVKBR6G8240N7HWSPR7M"
+);
+
+INSERT INTO group_volunteer_photo VALUES (
+  "volunteer/volunteer1_0.png",
+  "01HKXZRM5AF35HHXJ8284PN0B7"
+);
