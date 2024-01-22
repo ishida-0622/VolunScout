@@ -61,7 +61,7 @@ impl GroupUserRepository for GroupAccountImpl {
             })
             .collect::<Vec<_>>();
 
-        future::try_join_all(insert_photo_query).await?;
+        future::try_join_all(insert_photo_query.into_iter()).await?;
 
         Ok(())
     }
@@ -94,7 +94,7 @@ impl GroupUserRepository for GroupAccountImpl {
         .await?;
 
         sqlx::query!(
-            "DELETE FROM group_account WHERE gid = ?",
+            "DELETE FROM group_photo WHERE gid = ?",
             id
         )
         .execute(&self.pool)
@@ -112,7 +112,7 @@ impl GroupUserRepository for GroupAccountImpl {
             })
             .collect::<Vec<_>>();
 
-        future::try_join_all(insert_photo_query).await?;
+        future::try_join_all(insert_photo_query.into_iter()).await?;
 
         Ok(())
     }
