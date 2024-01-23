@@ -6,7 +6,7 @@ use sqlx::MySqlPool;
 
 use command_repository::activities::volunteer::VolunteerRepository;
 use domain::model::{
-    condition::Condition, region::Region, target_status::TargetStatus, terms::Terms, theme::Theme,
+    condition::Condition, region::Region, terms::Terms, theme::Theme,
     user_account::user_id::UserId, volunteer::VolunteerId,
 };
 

@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use super::{user_account::{user_name::UserName, user_name_furigana::UserNameFurigana}, gender::Gender, apply::ApplyId};
+use super::{user_account::{user_name::UserName, user_name_furigana::UserNameFurigana}, gender::Gender};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct GroupParticipants {
