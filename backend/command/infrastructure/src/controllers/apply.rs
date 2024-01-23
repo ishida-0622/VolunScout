@@ -8,7 +8,7 @@ use utoipa::ToSchema;
 use command_repository::activities::apply::ApplyRepository;
 use domain::model::{
         apply::ApplyId,
-        user_account::{user_id::UserId, user_name::UserName, user_name_furigana::{UserNameFurigana, self}}, volunteer::VolunteerId, group_participants::GroupParticipants, group_account::Group, gender::{Gender, gender_from_i8, self}
+        user_account::{user_id::UserId, user_name::UserName, user_name_furigana::UserNameFurigana}, volunteer::VolunteerId, group_participants::GroupParticipants, gender::{Gender, gender_from_i8}
     };
 
 use super::{WriteApiResponseFailureBody, WriteApiResponseSuccessBody, AppData};
