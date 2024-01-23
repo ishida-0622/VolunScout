@@ -1,7 +1,7 @@
 use anyhow::{Ok, Result};
 use async_trait::async_trait;
 use domain::consts::conditions::ConditionMap;
-use domain::consts::target_status::{self, TargetStatusMap, TARGET_STATUSES_PREFIX};
+use domain::consts::target_status::{TargetStatusMap, TARGET_STATUSES_PREFIX};
 use domain::consts::themes::ThemeMap;
 use sqlx::MySqlPool;
 
