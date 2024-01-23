@@ -1,7 +1,7 @@
 use anyhow::Result;
 use async_graphql::SimpleObject;
 use async_trait::async_trait;
-use chrono::{DateTime, NaiveDate, Utc};
+use chrono::{NaiveDate, NaiveDateTime};
 
 use domain::model::{user_account::user_id::UserId, volunteer::VolunteerId};
 
@@ -15,14 +15,14 @@ pub struct VolunteerReadModel {
     overview: String,
     recruited_num: u32,
     place: String,
-    start_at: DateTime<Utc>,
-    finish_at: DateTime<Utc>,
+    start_at: NaiveDateTime,
+    finish_at: NaiveDateTime,
     deadline_on: NaiveDate,
     as_group: bool,
     is_deleted: bool,
-    deleted_at: Option<DateTime<Utc>>,
-    registered_at: DateTime<Utc>,
-    updated_at: DateTime<Utc>,
+    deleted_at: Option<NaiveDateTime>,
+    registered_at: NaiveDateTime,
+    updated_at: NaiveDateTime,
     regions: Vec<String>,
     themes: Vec<String>,
     required_themes: Vec<String>,
@@ -40,14 +40,14 @@ impl VolunteerReadModel {
         overview: String,
         recruited_num: u32,
         place: String,
-        start_at: DateTime<Utc>,
-        finish_at: DateTime<Utc>,
+        start_at: NaiveDateTime,
+        finish_at: NaiveDateTime,
         deadline_on: NaiveDate,
         as_group: bool,
         is_deleted: bool,
-        deleted_at: Option<DateTime<Utc>>,
-        registered_at: DateTime<Utc>,
-        updated_at: DateTime<Utc>,
+        deleted_at: Option<NaiveDateTime>,
+        registered_at: NaiveDateTime,
+        updated_at: NaiveDateTime,
         regions: Vec<String>,
         themes: Vec<String>,
         required_themes: Vec<String>,

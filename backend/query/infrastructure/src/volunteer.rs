@@ -1,6 +1,5 @@
 use anyhow::Result;
 use async_trait::async_trait;
-use chrono::{DateTime, Utc};
 use futures::future;
 use sqlx::MySqlPool;
 
@@ -128,21 +127,18 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
             volunteer.overview,
             volunteer.recruited_num as u32,
             volunteer.place,
-            DateTime::from_naive_utc_and_offset(volunteer.start_at, Utc),
-            DateTime::from_naive_utc_and_offset(volunteer.finish_at, Utc),
+            volunteer.start_at,
+            volunteer.finish_at,
             volunteer.deadline_on,
             volunteer.as_group,
             volunteer.is_deleted,
             if volunteer.deleted_at.is_some() {
-                Some(DateTime::from_naive_utc_and_offset(
-                    volunteer.deleted_at.unwrap(),
-                    Utc,
-                ))
+                Some(volunteer.deleted_at.unwrap())
             } else {
                 None
             },
-            DateTime::from_naive_utc_and_offset(volunteer.registered_at, Utc),
-            DateTime::from_naive_utc_and_offset(volunteer.updated_at, Utc),
+            volunteer.registered_at,
+            volunteer.updated_at,
             regions,
             themes,
             required_themes,
