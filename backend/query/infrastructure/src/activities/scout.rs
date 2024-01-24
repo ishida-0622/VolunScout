@@ -18,10 +18,6 @@ impl ScoutImpl {
 #[async_trait]
 impl ScoutRepository for ScoutImpl {
     async fn find_by_sid(&self, sid: &ScoutId) -> Result<Scout> {
-        // sqlx::query!("SET log_statements = ON")
-        // .execute(&self.pool)
-        // .await?;
-
         let scout: Scout = sqlx::query_as!(
             Scout,
             r#"
@@ -34,10 +30,6 @@ impl ScoutRepository for ScoutImpl {
         )
         .fetch_one(&self.pool)
         .await?;
-    // sqlx::query!("SET log_statements = OFF")?
-    //     .execute(&self.pool)
-    //     .await?;
-
         Ok(scout)
     }
 
