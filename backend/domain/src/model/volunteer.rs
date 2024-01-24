@@ -21,7 +21,7 @@ pub struct Volunteer {
     pub as_group: bool,
     pub is_deleted: bool,
     pub deleted_at: Option<DateTime<Utc>>,
-    pub registerd_at: DateTime<Utc>,
+    pub registered_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
     pub terms: Terms,
 }
@@ -62,7 +62,7 @@ impl Volunteer {
         as_group: bool,
         is_deleted: bool,
         deleted_at: Option<DateTime<Utc>>,
-        registerd_at: DateTime<Utc>,
+        registered_at: DateTime<Utc>,
         updated_at: DateTime<Utc>,
         terms: Terms,
     ) -> Volunteer {
@@ -81,7 +81,7 @@ impl Volunteer {
             as_group,
             is_deleted,
             deleted_at,
-            registerd_at,
+            registered_at,
             updated_at,
             terms,
         }

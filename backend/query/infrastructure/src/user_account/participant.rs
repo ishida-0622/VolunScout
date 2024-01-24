@@ -1,4 +1,4 @@
-use anyhow::{Ok, Result};
+use anyhow::Result;
 use async_trait::async_trait;
 use domain::consts::conditions::ConditionMap;
 use domain::consts::target_status::{TargetStatusMap, TARGET_STATUSES_PREFIX};

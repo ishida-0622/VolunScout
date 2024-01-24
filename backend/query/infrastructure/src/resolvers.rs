@@ -8,33 +8,44 @@ use async_graphql::{
 use redis::Client;
 use sqlx::MySqlPool;
 
-use domain::model::{user_account::user_id::UserId, scout::ScoutId, volunteer::VolunteerId};
-use query_repository::{user_account::{
-    group::{GroupAccount, GroupUserRepository},
-    participant::{
-        ParticipantAccount, ParticipantCondition, ParticipantRegion, ParticipantTargetStatus,
-        ParticipantTheme, ParticipantUserRepository,
+use domain::model::{scout::ScoutId, user_account::user_id::UserId, volunteer::VolunteerId};
+use query_repository::{
+    activities::scout::{Scout, ScoutRepository},
+    user_account::{
+        group::{GroupAccount, GroupUserRepository},
+        participant::{
+            ParticipantAccount, ParticipantCondition, ParticipantRegion, ParticipantTargetStatus,
+            ParticipantTheme, ParticipantUserRepository,
+        },
     },
-}, activities::scout::{ScoutRepository, Scout}};
+    volunteer::{VolunteerQueryRepository, VolunteerReadModel},
+};
 
-use crate::{user_account::{group::GroupAccountImpl, participant::ParticipantAccountImpl}, activities::scout::ScoutImpl};
+use crate::{
+    activities::scout::ScoutImpl,
+    user_account::{group::GroupAccountImpl, participant::ParticipantAccountImpl},
+    volunteer::VolunteerQueryRepositoryImpl,
+};
 
 pub struct ServiceContext {
     group_account_dao: Arc<dyn GroupUserRepository>,
     participant_account_dao: Arc<dyn ParticipantUserRepository>,
-    scout_dao: Arc<dyn ScoutRepository>
+    scout_dao: Arc<dyn ScoutRepository>,
+    volunteer_dao: Arc<dyn VolunteerQueryRepository>,
 }
 
 impl ServiceContext {
     pub fn new(
         group_account_dao: Arc<dyn GroupUserRepository>,
         participant_account_dao: Arc<dyn ParticipantUserRepository>,
-        scout_dao: Arc<dyn ScoutRepository>
+        scout_dao: Arc<dyn ScoutRepository>,
+        volunteer_dao: Arc<dyn VolunteerQueryRepository>,
     ) -> Self {
         Self {
             group_account_dao,
             participant_account_dao,
-            scout_dao
+            scout_dao,
+            volunteer_dao,
         }
     }
 }
@@ -251,15 +262,10 @@ impl QueryRoot {
     ///
     /// ## 返り値
     /// - `Scout` - スカウト情報
-    async fn get_scout_by_sid<'ctx>(
-        &self,
-        ctx: &Context<'ctx>,
-        sid: String,
-    ) -> Result<Scout> {
+    async fn get_scout_by_sid<'ctx>(&self, ctx: &Context<'ctx>, sid: String) -> Result<Scout> {
         let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
         let sid: ScoutId = ScoutId::from_str(&sid);
-        let scout: Scout =
-            ctx.scout_dao.find_by_sid(&sid).await?;
+        let scout: Scout = ctx.scout_dao.find_by_sid(&sid).await?;
 
         Ok(scout)
     }
@@ -271,15 +277,10 @@ impl QueryRoot {
     ///
     /// ## 返り値
     /// - `Vec<Scout>` - スカウト情報の配列
-    async fn get_scout_by_gid<'ctx>(
-        &self,
-        ctx: &Context<'ctx>,
-        gid: String,
-    ) -> Result<Vec<Scout>> {
+    async fn get_scout_by_gid<'ctx>(&self, ctx: &Context<'ctx>, gid: String) -> Result<Vec<Scout>> {
         let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
         let gid: UserId = UserId::new(&gid).unwrap();
-        let scout: Vec<Scout> =
-            ctx.scout_dao.find_by_gid(&gid).await?;
+        let scout: Vec<Scout> = ctx.scout_dao.find_by_gid(&gid).await?;
 
         Ok(scout)
     }
@@ -291,15 +292,10 @@ impl QueryRoot {
     ///
     /// ## 返り値
     /// - `Vec<Scout>` - スカウト情報の配列
-    async fn get_scout_by_vid<'ctx>(
-        &self,
-        ctx: &Context<'ctx>,
-        vid: String,
-    ) -> Result<Vec<Scout>> {
+    async fn get_scout_by_vid<'ctx>(&self, ctx: &Context<'ctx>, vid: String) -> Result<Vec<Scout>> {
         let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
         let vid: VolunteerId = VolunteerId::from_str(&vid);
-        let scout: Vec<Scout> =
-            ctx.scout_dao.find_by_vid(&vid).await?;
+        let scout: Vec<Scout> = ctx.scout_dao.find_by_vid(&vid).await?;
 
         Ok(scout)
     }
@@ -311,17 +307,50 @@ impl QueryRoot {
     ///
     /// ## 返り値
     /// - `Vec<Scout>` - スカウト情報の配列
-    async fn get_scout_by_uid<'ctx>(
-        &self,
-        ctx: &Context<'ctx>,
-        uid: String,
-    ) -> Result<Vec<Scout>> {
+    async fn get_scout_by_uid<'ctx>(&self, ctx: &Context<'ctx>, uid: String) -> Result<Vec<Scout>> {
         let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
         let uid: UserId = UserId::new(&uid).unwrap();
-        let scout: Vec<Scout> =
-            ctx.scout_dao.find_by_uid(&uid).await?;
+        let scout: Vec<Scout> = ctx.scout_dao.find_by_uid(&uid).await?;
 
         Ok(scout)
+    }
+
+    /// 指定されたvidのボランティア情報を取得する
+    ///
+    /// ## 引数
+    /// - `vid` - vid
+    ///
+    /// ## 返り値
+    /// - `VolunteerReadModel` - ボランティア情報
+    async fn get_volunteer_by_id<'ctx>(
+        &self,
+        ctx: &Context<'ctx>,
+        vid: String,
+    ) -> Result<VolunteerReadModel> {
+        let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
+        let vid = VolunteerId::from_str(&vid);
+        let volunteer: VolunteerReadModel = ctx.volunteer_dao.find_by_id(&vid).await?;
+
+        Ok(volunteer)
+    }
+
+    /// 指定されたgidのボランティア情報を取得する
+    ///
+    /// ## 引数
+    /// - `gid` - gid
+    ///
+    /// ## 返り値
+    /// - `Vec<VolunteerReadModel>` - ボランティア情報の配列
+    async fn get_volunteer_by_gid<'ctx>(
+        &self,
+        ctx: &Context<'ctx>,
+        gid: String,
+    ) -> Result<Vec<VolunteerReadModel>> {
+        let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
+        let gid = UserId::from_str(&gid).unwrap();
+        let volunteers: Vec<VolunteerReadModel> = ctx.volunteer_dao.find_by_gid(&gid).await?;
+
+        Ok(volunteers)
     }
 }
 
@@ -349,11 +378,14 @@ pub fn create_schema(pool: MySqlPool) -> ApiSchema {
     let group_account_dao: GroupAccountImpl = GroupAccountImpl::new(pool.clone());
     let participant_account_dao: ParticipantAccountImpl = ParticipantAccountImpl::new(pool.clone());
     let scout_dao: ScoutImpl = ScoutImpl::new(pool.clone());
+    let volunteer_dao: VolunteerQueryRepositoryImpl =
+        VolunteerQueryRepositoryImpl::new(pool.clone());
 
     let ctx: ServiceContext = ServiceContext::new(
         Arc::new(group_account_dao),
         Arc::new(participant_account_dao),
-        Arc::new(scout_dao)
+        Arc::new(scout_dao),
+        Arc::new(volunteer_dao),
     );
 
     create_schema_builder().data(ctx).finish()
