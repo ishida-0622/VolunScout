@@ -1,10 +1,5 @@
-.base {
-}
+/* index.module.css */
 
-.participant {
+.header_container {
   background-color: var(--color-green);
-}
-
-.group {
-  background-color: var(--color-blue);
 }

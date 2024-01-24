@@ -44,7 +44,7 @@ export const SignInButton = () => {
   };
 
   const [existsParticipantAccount] = useLazyQuery(
-    ExistsParticipantAccountQuery
+    ExistsParticipantAccountQuery,
   );
   // TODO: バックエンド未完成
   // const [existsGroupAccount] = useLazyQuery(ExistsGroupAccountQuery);
@@ -108,31 +108,35 @@ export const SignInButton = () => {
         isOpen={isModalOpen}
         onRequestClose={closeModal}
         className={styles.sign_in_modal}
+        overlayClassName={styles.modal_overlay}
       >
         <button
           type="button"
           onClick={closeModal}
           className={styles.close_sign_in_modal_button}
-        >
-          ×
-        </button>
-        <h1>Sign up / Log in</h1>
-        <Image
-          src="/auth/web_neutral_sq_SI.svg"
-          alt="Google Auth Logo"
-          fill
-          className={styles.google_auth_logo}
-          onClick={() => {
-            handleGoogleSignIn()
-              .then(() => closeModal())
-              .catch(() => {});
-          }}
-        />
-        <CheckBox
-          label="ボランティアを募集する「団体」としてログイン・会員登録する"
-          onChange={handleChangeIsGroup}
-          initialState={isGroup.current}
-        />
+        ></button>
+        <div className={styles.centered}>
+          <h1>Sign up / Log in</h1>
+          <div className={styles.google_auth_logo_container}>
+            <Image
+              src="/auth/web_neutral_sq_SI.svg"
+              alt="Google Auth Logo"
+              fill
+              onClick={() => {
+                handleGoogleSignIn()
+                  .then(() => closeModal())
+                  .catch(() => {});
+              }}
+            />
+          </div>
+          <div className={styles.checkbox_container}>
+            <CheckBox
+              label="ボランティアを募集する「団体」としてログイン・会員登録する"
+              onChange={handleChangeIsGroup}
+              initialState={isGroup.current}
+            />
+          </div>
+        </div>
       </Modal>
     </>
   );

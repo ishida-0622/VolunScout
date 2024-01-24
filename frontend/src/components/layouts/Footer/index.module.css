@@ -1,10 +1,45 @@
 .base {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: var(--color-green); /* ここを変更 */
+  box-shadow: 0px -5px 5px rgba(0, 0, 0, 0.1);
 }
 
-.participant {
-  background-color: var(--color-green);
-}
-
+.participant,
 .group {
-  background-color: var(--color-blue);
+  flex-grow: 1;
+}
+
+.base > div {
+  display: flex;
+  align-items: center;
+}
+
+.base > div:first-child {
+  margin-right: auto;
+}
+
+.base h1 {
+  margin: 0;
+  margin-left: 15px;
+}
+
+.base a {
+  color: inherit;
+  margin: 0 15px;
+  text-decoration: none;
+  font-weight: bold;
+}
+/*
+.base .terms_link,
+.base .privacy_link {
+  margin-left: auto;
+} */
+
+.base .image {
+  margin-left: 20px; /* お好みのマージン値を設定してください */
 }

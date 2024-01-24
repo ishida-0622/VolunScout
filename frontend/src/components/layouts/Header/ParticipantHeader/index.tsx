@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Navbar, Nav } from "react-bootstrap";
 
 import styles from "./index.module.css";
 
@@ -11,22 +11,21 @@ type Props = {
 
 export const ParticipantHeader = ({ className }: Props) => {
   return (
-    <div className={joinClassnames(styles.base, className)}>
-      <div>
-        <Link href={URL_PATH_PARTICIPANT.FAVORITE}>
-          <span>お気に入り</span>
-        </Link>
-      </div>
-      <div>
-        <Link href={URL_PATH_PARTICIPANT.APPLY_LIST}>
-          <span>応募したボランティア</span>
-        </Link>
-      </div>
-      <div>
-        <Link href={URL_PATH_PARTICIPANT.SCOUT}>
-          <span>スカウト</span>
-        </Link>
-      </div>
-    </div>
+    <>
+      <Navbar.Toggle aria-controls="links" />
+      <Navbar.Collapse id="links" className={joinClassnames(className)}>
+        <Nav className={joinClassnames("me-auto", styles.base)}>
+          <Nav.Link href={URL_PATH_PARTICIPANT.FAVORITE}>
+            <span>お気に入り</span>
+          </Nav.Link>
+          <Nav.Link href={URL_PATH_PARTICIPANT.APPLY_LIST}>
+            <span>応募したボランティア</span>
+          </Nav.Link>
+          <Nav.Link href={URL_PATH_PARTICIPANT.SCOUT}>
+            <span>スカウト</span>
+          </Nav.Link>
+        </Nav>
+      </Navbar.Collapse>
+    </>
   );
 };

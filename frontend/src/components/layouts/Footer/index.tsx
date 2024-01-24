@@ -29,10 +29,10 @@ export const Footer = ({ className }: Props) => {
       className={joinClassnames(
         styles.base,
         accountType === "participant" ? styles.participant : styles.group,
-        className
+        className,
       )}
     >
-      <div>
+      <div className={styles.image}>
         <Image src={"/icon.svg"} alt="Icon" width={50} height={50} />
       </div>
       <div>
@@ -41,7 +41,7 @@ export const Footer = ({ className }: Props) => {
       <div>
         <Link href={URL_PATH.TERMS_OF_SERVICE}>利用規約</Link>
       </div>
-      <div>
+      <div className={styles.privacy_link}>
         <Link href={URL_PATH.PRIVACY_POLICY}>プライバシーポリシー</Link>
       </div>
       <div>
