@@ -19,6 +19,7 @@ pub trait GroupUserRepository: Send + Sync {
         phone: UserPhone,
         address: String,
         contents: String,
+        photo_keys: Vec<String>
     ) -> Result<()>;
 
     /// 団体アカウントを更新する
@@ -32,6 +33,14 @@ pub trait GroupUserRepository: Send + Sync {
         phone: UserPhone,
         address: String,
         contents: String,
+        photo_keys: Vec<String>
+    ) -> Result<()>;
+
+    /// 団体アカウントの有償・無償プランを変更する
+    async fn switch_plan(
+        &self,
+        gid: UserId,
+        is_paid: bool
     ) -> Result<()>;
 
     /// 団体アカウントを削除する

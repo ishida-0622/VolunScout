@@ -1,14 +1,13 @@
-use std::{str::FromStr, collections::HashMap};
+use std::str::FromStr;
 
 use axum::{extract::State, http::StatusCode, response::IntoResponse, Json};
 use serde::{Deserialize, Serialize};
-use serde_json::Value;
 use utoipa::ToSchema;
 
 use command_repository::activities::scout::ScoutRepository;
 use domain::model::{
         scout::ScoutId,
-        user_account::{user_id::UserId, user_name::UserName, user_name_furigana::{UserNameFurigana, self}}, volunteer::VolunteerId, group_participants::GroupParticipants, group_account::Group, gender::{Gender, gender_from_i8, self}
+        user_account::user_id::UserId, volunteer::VolunteerId
     };
 
 use super::{WriteApiResponseFailureBody, WriteApiResponseSuccessBody, AppData};
