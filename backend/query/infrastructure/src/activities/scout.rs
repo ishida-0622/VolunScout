@@ -81,18 +81,4 @@ impl ScoutRepository for ScoutImpl {
         .await?;
         Ok(scout)
     }
-
-    async fn find_all(&self) -> Result<Vec<Scout>> {
-        let scout = sqlx::query_as!(
-            Scout,
-            r#"
-            SELECT
-                sid, vid, uid, message, scouted_at, is_read as "is_read: bool", is_sent as "is_sent: bool", sent_at, is_denied as "is_denied: bool", denied_at
-            FROM scout
-            "#
-        )
-        .fetch_all(&self.pool)
-        .await?;
-        Ok(scout)
-    }
 }

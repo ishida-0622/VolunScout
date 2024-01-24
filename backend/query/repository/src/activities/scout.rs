@@ -71,7 +71,4 @@ pub trait ScoutRepository: Send + Sync {
 
     /// スカウト情報をボランティアIDで一括取得する
     async fn find_by_vid(&self, vid: &VolunteerId) -> Result<Vec<Scout>>;
-
-    /// スカウト情報を全て取得する
-    async fn find_all(&self) -> Result<Vec<Scout>>;
 }
