@@ -4,6 +4,7 @@ import { useLazyQuery } from "@apollo/client";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
+import styles from "./index.module.css";
 import { useTermsForm } from "./useTermsForm";
 import { useUserInfoForm } from "./useUserInfoForm";
 
@@ -11,6 +12,7 @@ import type { UpdateParticipantAccountRequestBody } from "@/__generated__/comman
 
 import { gql } from "@/__generated__/query";
 import { apiClientParticipant } from "@/api/command";
+import { joinClassnames } from "@/components/@joinClassnames";
 import { URL_PATH_PARTICIPANT } from "@/consts";
 import { useAuthContext } from "@/contexts/AuthContext";
 
@@ -57,7 +59,7 @@ export const EditMyPage = () => {
   } = useTermsForm({});
 
   const [fetchParticipantAccount, { loading, error, data }] = useLazyQuery(
-    GetParticipantAccountQuery
+    GetParticipantAccountQuery,
   );
 
   const onSubmit = async () => {
@@ -101,13 +103,13 @@ export const EditMyPage = () => {
         region: regions.map((region) => region.name),
         theme: themes.flatMap((theme) => (theme.isRequired ? [] : theme.name)),
         required_theme: themes.flatMap((theme) =>
-          theme.isRequired ? theme.name : []
+          theme.isRequired ? theme.name : [],
         ),
         condition: conditions.flatMap((condition) =>
-          condition.isRequired ? [] : condition.name
+          condition.isRequired ? [] : condition.name,
         ),
         required_condition: conditions.flatMap((condition) =>
-          condition.isRequired ? condition.name : []
+          condition.isRequired ? condition.name : [],
         ),
       });
     }
@@ -126,12 +128,21 @@ export const EditMyPage = () => {
     <>
       {UserInfoInputForm}
       {TermsInputForm}
-      <button className="btn btn-danger" onClick={() => router.back()}>
-        キャンセル
-      </button>
-      <button type="submit" className="btn btn-primary" onClick={onSubmit}>
-        更新
-      </button>
+      <div className={styles.button_wrapper}>
+        <button
+          className={joinClassnames("btn btn-danger btn-lg", styles.button)}
+          onClick={() => router.back()}
+        >
+          キャンセル
+        </button>
+        <button
+          type="submit"
+          className={joinClassnames("btn btn-primary btn-lg", styles.button)}
+          onClick={onSubmit}
+        >
+          更新
+        </button>
+      </div>
     </>
   );
 };

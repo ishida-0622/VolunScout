@@ -1,0 +1,26 @@
+.wrapper {
+    display: flex;
+    width: 100%;
+    max-width: 1080px;
+    margin: 0 auto;
+}
+
+.regions {
+    font-size: var(--fontsize-large);
+    width: calc(100% / 3);
+}
+
+.theme {
+    font-size: var(--fontsize-large);
+    width: calc(100% / 3);
+    /* margin-right: 5%; */
+}
+
+.condition {
+    font-size: var(--fontsize-large);
+    width: calc(100% / 3);
+}
+
+.toggle {
+    margin: auto 0 auto auto;
+}

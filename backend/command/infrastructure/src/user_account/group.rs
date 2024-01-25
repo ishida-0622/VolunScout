@@ -129,13 +129,32 @@ impl GroupUserRepository for GroupAccountImpl {
     }
 
     async fn delete(&self, gid: UserId) -> Result<()> {
-        sqlx::query!(
-            "UPDATE group_account SET is_deleted = true, deleted_at = ? WHERE gid = ?",
-            Utc::now(),
-            gid.to_string()
+        let id: String = gid.to_string();
+        struct IsExists {
+            is_deleted: bool
+        }
+
+        let is_deleted = sqlx::query_as!(
+            IsExists,
+            r#"
+            SELECT is_deleted as "is_deleted: bool" FROM group_account WHERE gid = ?
+            "#,
+            id
         )
-        .execute(&self.pool)
+        .fetch_one(&self.pool)
         .await?;
-        Ok(())
+
+        if is_deleted.is_deleted {
+            Err(anyhow::anyhow!("This group_account is already deleted".to_string()))
+        } else {
+            sqlx::query!(
+                "UPDATE group_account SET is_deleted = true, deleted_at = ? WHERE gid = ?",
+                Utc::now(),
+                gid.to_string()
+            )
+            .execute(&self.pool)
+            .await?;
+            Ok(())
+        }
     }
 }

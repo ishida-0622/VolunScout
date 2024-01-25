@@ -1,0 +1,44 @@
+ .profile {
+    width: 100%;
+    max-width: 720px;
+    margin: 10% 45%;
+    font-size: var(--fontsize-x-large);
+}
+/*
+.phone {
+    display: flex;
+}
+
+.gender {
+    display: flex;
+}
+
+.target {
+    position: relative;
+}
+
+.birth {
+    position: relative;
+    display: flex;
+    content: initial;
+} */
+
+.main {
+    width: 100%;
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+
+.textarea {
+    width: 720px;
+    height: 195px;
+    max-width: 720px;
+    margin: 0 -40%;
+    resize: none;
+
+}
+
+
+
+

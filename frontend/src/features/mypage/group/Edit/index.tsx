@@ -10,6 +10,7 @@ import styles from "./index.module.css";
 
 import type { UpdateGroupAccountRequestBody } from "@/__generated__/command";
 
+import { joinClassnames } from "@/components/@joinClassnames";
 import { gql } from "@/__generated__/query";
 import { apiClientGroup } from "@/api/command";
 import { URL_PATH_GROUP } from "@/consts";
@@ -112,95 +113,106 @@ export const EditMyPage = () => {
         />
       </div>
       <form onSubmit={handleSubmit(submit)}>
-        <div>
-          <label className="form-label">
-            <span>団体名</span>
-            <span>：</span>
-            <input
-              id="name"
-              className="form-control"
-              type="text"
-              {...register("name", { required: true })}
-            />
-          </label>
-        </div>
-        <div>
-          <label className="form-label">
-            <span>団体名（フリガナ）</span>
-            <span>：</span>
-            <input
-              id="furigana"
-              className="form-control"
-              type="text"
-              {...register("furigana", { required: true })}
-            />
-          </label>
-        </div>
-        <div>
-          <label className="form-label">
-            <span>代表者名</span>
-            <span>：</span>
-            <input
-              id="representativeName"
-              className="form-control"
-              type="text"
-              {...register("representative_name", { required: true })}
-            />
-          </label>
-        </div>
-        <div>
-          <label htmlFor="representativeFurigana" className="form-label">
-            <span>代表者名（フリガナ）</span>
-            <span>：</span>
-            <input
-              id="representativeFurigana"
-              className="form-control"
-              type="text"
-              {...register("representative_furigana", { required: true })}
-            />
-          </label>
-        </div>
-        <div>
-          <label className="form-label">
-            <span>所在地</span>
-            <span>：</span>
-            <input
-              id="address"
-              className="form-control"
-              type="text"
-              {...register("address", { required: true })}
-            />
-          </label>
-        </div>
-        <div>
-          <label className="form-label">
-            <span>電話番号</span>
-            <span>：</span>
-            <input
-              id="phone"
-              className="form-control"
-              type="text"
-              {...register("phone", { required: true })}
-            />
-          </label>
-        </div>
-        <div>
-          <label className="form-label">
-            紹介メッセージ
-            <textarea
-              id="contents"
-              className="form-control"
-              {...register("contents", { required: true })}
-            />
-          </label>
-        </div>
-        <div>
-          <button type="button" className="btn btn-danger" onClick={back}>
-            キャンセル
-          </button>
-          <button type="submit" className="btn btn-primary">
-            更新
-          </button>
+        <div className={styles.all}>
+          <div className={joinClassnames("row mb-3", styles.main)}>
+            <label htmlFor="name" className="col-sm-2 col-form-label">
+              <span>団体名</span>
+            </label>
+            <div className="col-sm-10">
+              <input
+                id="name"
+                className="form-control"
+                type="text"
+                {...register("name", { required: true })}
+              />
+            </div>
+            <label htmlFor="furigana" className="col-sm-2 col-form-label">
+              <span>団体名（フリガナ）</span>
+            </label>
+            <div className="col-sm-10">
+              <input
+                id="furigana"
+                className="form-control"
+                type="text"
+                {...register("furigana", { required: true })}
+              />
+            </div>
+            <label
+              htmlFor="representativeName"
+              className="col-sm-2 col-form-label"
+            >
+              <span>代表者名</span>
+            </label>
+            <div className="col-sm-10">
+              <input
+                id="representativeName"
+                className="form-control"
+                type="text"
+                {...register("representative_name", { required: true })}
+              />
+            </div>
+            <label
+              htmlFor="representativeFurigana"
+              className="col-sm-2 col-form-label"
+            >
+              <span>代表者名（フリガナ）</span>
+            </label>
+            <div className="col-sm-10">
+              <input
+                id="representativeFurigana"
+                className="form-control"
+                type="text"
+                {...register("representative_furigana", { required: true })}
+              />
+            </div>
+            <label htmlFor="address" className="col-sm-2 col-form-label">
+              <span>所在地</span>
+            </label>
+            <div className="col-sm-10">
+              <input
+                id="address"
+                className="form-control"
+                type="text"
+                {...register("address", { required: true })}
+              />
+            </div>
+            <label htmlFor="phone" className="col-sm-2 col-form-label">
+              <span>電話番号</span>
+            </label>
+            <div className={"col-sm-10"}>
+              <input
+                id="phone"
+                className="form-control"
+                type="text"
+                {...register("phone", { required: true })}
+              />
+            </div>
+          </div>
+          <div className={styles.contents}>
+            <label className="form-label">
+              紹介メッセージ
+              <textarea
+                id="contents"
+                {...register("contents", { required: true })}
+                className={joinClassnames("form-control", styles.textarea)}
+              />
+            </label>
+          </div>
+          <div className={styles.button_wrapper}>
+            <button
+              type="button"
+              className={joinClassnames("btn btn-danger", styles.button)}
+              onClick={back}
+            >
+              キャンセル
+            </button>
+            <button
+              type="submit"
+              className={joinClassnames("btn btn-primary", styles.button)}
+            >
+              更新
+            </button>
+          </div>
         </div>
       </form>
     </div>

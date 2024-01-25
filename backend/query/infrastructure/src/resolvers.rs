@@ -8,30 +8,35 @@ use async_graphql::{
 use redis::Client;
 use sqlx::MySqlPool;
 
-use domain::model::{scout::ScoutId, user_account::user_id::UserId, volunteer::VolunteerId};
+use domain::model::{user_account::user_id::UserId, scout::ScoutId, volunteer::VolunteerId, apply::ApplyId};
 use query_repository::{
-    activities::scout::{Scout, ScoutRepository},
-    user_account::{
-        group::{GroupAccount, GroupUserRepository},
-        participant::{
-            ParticipantAccount, ParticipantCondition, ParticipantRegion, ParticipantTargetStatus,
-            ParticipantTheme, ParticipantUserRepository,
-        },
-    },
-    volunteer::{VolunteerQueryRepository, VolunteerReadModel},
+        user_account::{
+            group::{GroupAccount, GroupUserRepository},
+                participant::{
+                    ParticipantAccount, ParticipantCondition, ParticipantRegion, ParticipantTargetStatus,
+                    ParticipantTheme, ParticipantUserRepository,
+                },
+        }, activities::{
+            scout::{ScoutRepository, Scout},
+            apply::{Apply, ApplyRepository},
+            volunteer::{VolunteerQueryRepository, VolunteerReadModel},
+            review::{Review, ParticipantReviewRepository, VolunteerReviewRepository}
+        }
 };
 
 use crate::{
-    activities::scout::ScoutImpl,
     user_account::{group::GroupAccountImpl, participant::ParticipantAccountImpl},
-    volunteer::VolunteerQueryRepositoryImpl,
+    activities::{scout::ScoutImpl, apply::ApplyImpl, volunteer::VolunteerQueryRepositoryImpl, review::ReviewImpl}
 };
 
 pub struct ServiceContext {
     group_account_dao: Arc<dyn GroupUserRepository>,
     participant_account_dao: Arc<dyn ParticipantUserRepository>,
     scout_dao: Arc<dyn ScoutRepository>,
+    apply_dao: Arc<dyn ApplyRepository>,
     volunteer_dao: Arc<dyn VolunteerQueryRepository>,
+    participant_review_dao: Arc<dyn ParticipantReviewRepository>,
+    volunteer_review_dao: Arc<dyn VolunteerReviewRepository>
 }
 
 impl ServiceContext {
@@ -39,13 +44,19 @@ impl ServiceContext {
         group_account_dao: Arc<dyn GroupUserRepository>,
         participant_account_dao: Arc<dyn ParticipantUserRepository>,
         scout_dao: Arc<dyn ScoutRepository>,
+        apply_dao: Arc<dyn ApplyRepository>,
         volunteer_dao: Arc<dyn VolunteerQueryRepository>,
+        participant_review_dao: Arc<dyn ParticipantReviewRepository>,
+        volunteer_review_dao: Arc<dyn VolunteerReviewRepository>
     ) -> Self {
         Self {
             group_account_dao,
             participant_account_dao,
             scout_dao,
+            apply_dao,
             volunteer_dao,
+            participant_review_dao,
+            volunteer_review_dao
         }
     }
 }
@@ -315,6 +326,86 @@ impl QueryRoot {
         Ok(scout)
     }
 
+    /// 指定されたaidの応募情報を取得する
+    ///
+    /// ## 引数
+    /// - `aid` - aid
+    ///
+    /// ## 返り値
+    /// - `Apply` - 応募情報
+    async fn get_apply_by_aid<'ctx>(
+        &self,
+        ctx: &Context<'ctx>,
+        aid: String,
+    ) -> Result<Apply> {
+        let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
+        let aid: ApplyId = ApplyId::from_str(&aid);
+        let apply: Apply =
+            ctx.apply_dao.find_by_sid(&aid).await?;
+
+        Ok(apply)
+    }
+
+    /// 指定されたgidの団体が登録したボランティアの応募情報を取得する
+    ///
+    /// ## 引数
+    /// - `gid` - gid
+    ///
+    /// ## 返り値
+    /// - `Vec<Apply>` - 応募情報の配列
+    async fn get_apply_by_gid<'ctx>(
+        &self,
+        ctx: &Context<'ctx>,
+        gid: String,
+    ) -> Result<Vec<Apply>> {
+        let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
+        let gid: UserId = UserId::new(&gid).unwrap();
+        let scout: Vec<Apply> =
+            ctx.apply_dao.find_by_gid(&gid).await?;
+
+        Ok(scout)
+    }
+
+    /// 指定されたvidの応募情報を取得する
+    ///
+    /// ## 引数
+    /// - `vid` - vid
+    ///
+    /// ## 返り値
+/// - `Vec<Apply>` - 応募情報の配列
+    async fn get_apply_by_vid<'ctx>(
+        &self,
+        ctx: &Context<'ctx>,
+        vid: String,
+    ) -> Result<Vec<Apply>> {
+        let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
+        let vid: VolunteerId = VolunteerId::from_str(&vid);
+        let scout: Vec<Apply> =
+            ctx.apply_dao.find_by_vid(&vid).await?;
+
+        Ok(scout)
+    }
+
+    /// 指定されたuidに送られた応募情報を取得する
+    ///
+    /// ## 引数
+    /// - `uid` - uid
+    ///
+    /// ## 返り値
+    /// - `Vec<Apply>` - 応募情報の配列
+    async fn get_apply_by_uid<'ctx>(
+        &self,
+        ctx: &Context<'ctx>,
+        uid: String,
+    ) -> Result<Vec<Apply>> {
+        let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
+        let uid: UserId = UserId::new(&uid).unwrap();
+        let scout: Vec<Apply> =
+            ctx.apply_dao.find_by_uid(&uid).await?;
+
+        Ok(scout)
+    }
+
     /// 指定されたvidのボランティア情報を取得する
     ///
     /// ## 引数
@@ -352,6 +443,126 @@ impl QueryRoot {
 
         Ok(volunteers)
     }
+
+    /// 指定されたuidとvidの参加者レビュー情報を取得する
+    ///
+    /// ## 引数
+    /// - `uid` - uid
+    /// - `vid` - vid
+    ///
+    /// ## 返り値
+    /// - `Review` - レビュー情報
+    async fn get_participant_review_by_ids<'ctx>(
+        &self,
+        ctx: &Context<'ctx>,
+        uid: String,
+        vid: String
+    ) -> Result<Review> {
+        let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
+        let uid = UserId::from_str(&uid).unwrap();
+        let vid = VolunteerId::from_str(&vid);
+        let review: Review = ctx.participant_review_dao.find_by_ids(&uid, &vid).await?;
+
+        Ok(review)
+    }
+
+    /// 指定されたuidの参加者レビュー情報を取得する
+    ///
+    /// ## 引数
+    /// - `uid` - uid
+    ///
+    /// ## 返り値
+    /// - `Review` - レビュー情報
+    async fn get_participant_review_by_uid<'ctx>(
+        &self,
+        ctx: &Context<'ctx>,
+        uid: String
+    ) -> Result<Vec<Review>> {
+        let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
+        let uid = UserId::from_str(&uid).unwrap();
+        let review: Vec<Review> = ctx.participant_review_dao.find_by_uid(&uid).await?;
+
+        Ok(review)
+    }
+
+    /// 指定されたvidの参加者レビュー情報を取得する
+    ///
+    /// ## 引数
+    /// - `vid` - vid
+    ///
+    /// ## 返り値
+    /// - `Review` - レビュー情報
+    async fn get_participant_review_by_vid<'ctx>(
+        &self,
+        ctx: &Context<'ctx>,
+        vid: String
+    ) -> Result<Vec<Review>> {
+        let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
+        let vid = VolunteerId::from_str(&vid);
+        let review: Vec<Review> = ctx.participant_review_dao.find_by_vid(&vid).await?;
+
+        Ok(review)
+    }
+
+    /// 指定されたuidとvidのボランティアレビュー情報を取得する
+    ///
+    /// ## 引数
+    /// - `uid` - uid
+    /// - `vid` - vid
+    ///
+    /// ## 返り値
+    /// - `Review` - レビュー情報
+    async fn get_volunteer_review_by_ids<'ctx>(
+        &self,
+        ctx: &Context<'ctx>,
+        uid: String,
+        vid: String
+    ) -> Result<Review> {
+        let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
+        let uid = UserId::from_str(&uid).unwrap();
+        let vid = VolunteerId::from_str(&vid);
+        let review: Review = ctx.volunteer_review_dao.find_by_ids(&uid, &vid).await?;
+
+        Ok(review)
+    }
+
+    /// 指定されたuidのボランティアレビュー情報を取得する
+    ///
+    /// ## 引数
+    /// - `uid` - uid
+    ///
+    /// ## 返り値
+    /// - `Review` - レビュー情報
+    async fn get_volunteer_review_by_uid<'ctx>(
+        &self,
+        ctx: &Context<'ctx>,
+        uid: String
+    ) -> Result<Vec<Review>> {
+        let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
+        let uid = UserId::from_str(&uid).unwrap();
+        let review: Vec<Review> = ctx.volunteer_review_dao.find_by_uid(&uid).await?;
+
+        Ok(review)
+    }
+
+    /// 指定されたvidのボランティアレビュー情報を取得する
+    ///
+    /// ## 引数
+    /// - `vid` - vid
+    ///
+    /// ## 返り値
+    /// - `Review` - レビュー情報
+    async fn get_volunteer_review_by_vid<'ctx>(
+        &self,
+        ctx: &Context<'ctx>,
+        vid: String
+    ) -> Result<Vec<Review>> {
+        let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
+        let vid = VolunteerId::from_str(&vid);
+        let review: Vec<Review> = ctx.volunteer_review_dao.find_by_vid(&vid).await?;
+
+        Ok(review)
+    }
 }
 
 pub struct SubscriptionRoot;
@@ -378,14 +589,20 @@ pub fn create_schema(pool: MySqlPool) -> ApiSchema {
     let group_account_dao: GroupAccountImpl = GroupAccountImpl::new(pool.clone());
     let participant_account_dao: ParticipantAccountImpl = ParticipantAccountImpl::new(pool.clone());
     let scout_dao: ScoutImpl = ScoutImpl::new(pool.clone());
+    let apply_dao: ApplyImpl = ApplyImpl::new(pool.clone());
     let volunteer_dao: VolunteerQueryRepositoryImpl =
         VolunteerQueryRepositoryImpl::new(pool.clone());
+    let participant_review_dao: ReviewImpl = ReviewImpl::new(pool.clone());
+    let volunteer_review_dao: ReviewImpl = ReviewImpl::new(pool.clone());
 
     let ctx: ServiceContext = ServiceContext::new(
         Arc::new(group_account_dao),
         Arc::new(participant_account_dao),
         Arc::new(scout_dao),
+        Arc::new(apply_dao),
         Arc::new(volunteer_dao),
+        Arc::new(participant_review_dao),
+        Arc::new(volunteer_review_dao)
     );
 
     create_schema_builder().data(ctx).finish()
