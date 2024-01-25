@@ -122,6 +122,42 @@ INSERT INTO volunteer_region VALUES (
   2
 );
 
+INSERT INTO volunteer_element VALUES (
+  "01HKXVVVKBR6G8240N7HWSPR7M",
+  "theme_1",
+  false
+);
+
+INSERT INTO volunteer_element VALUES (
+  "01HKXVVVKBR6G8240N7HWSPR7M",
+  "theme_2",
+  true
+);
+
+INSERT INTO volunteer_element VALUES (
+  "01HKXVVVKBR6G8240N7HWSPR7M",
+  "condition_1",
+  false
+);
+
+INSERT INTO volunteer_element VALUES (
+  "01HKXVVVKBR6G8240N7HWSPR7M",
+  "condition_2",
+  true
+);
+
+INSERT INTO volunteer_element VALUES (
+  "01HKXVVVKBR6G8240N7HWSPR7M",
+  "target_status_0",
+  false
+);
+
+INSERT INTO volunteer_element VALUES (
+  "01HKXVVVKBR6G8240N7HWSPR7M",
+  "target_status_1",
+  false
+);
+
 INSERT INTO volunteer_region VALUES (
   "01HKXZRM5AF35HHXJ8284PN0B7",
   3

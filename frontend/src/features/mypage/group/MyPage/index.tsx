@@ -38,13 +38,13 @@ export const MyPage = () => {
     GetGroupAccountQuery,
     {
       fetchPolicy: "cache-and-network",
-    }
+    },
   );
 
   useEffect(() => {
     if (typeof user?.uid === "string") {
       getGroupAccount({ variables: { gid: user.uid } }).catch((e) =>
-        console.error(e)
+        console.error(e),
       );
     }
   }, [getGroupAccount, user?.uid]);
@@ -74,35 +74,48 @@ export const MyPage = () => {
           />
         </div>
         <div>
-          <p>{userInfo.furigana}</p>
-          <h2>{userInfo.name}</h2>
-          <p>
-            <span>代表者</span>
-            <span>：</span>
-            <span>{userInfo.representativeName}</span>
-            <span>（{userInfo.representativeFurigana}）</span>
-          </p>
-          <p>
-            <span>所在地</span>
-            <span>：</span>
-            <span>{userInfo.address}</span>
-          </p>
-          <p>
-            <span>電話番号</span>
-            <span>：</span>
-            <span>{userInfo.phone}</span>
-          </p>
+          <div className={styles.groupname}>
+            <p>{userInfo.furigana}</p>
+            <h2>{userInfo.name}</h2>
+          </div>
+          <div className={styles.main}>
+            <p>
+              <div className={styles.name}>
+                <span>代表者</span>
+                <span>：</span>
+                <span>{userInfo.representativeName}</span>
+                <span>（{userInfo.representativeFurigana}）</span>
+              </div>
+            </p>
+            <div>
+              <p className={styles.address}>
+                <span className={styles.set}>所在地</span>
+                <span>：</span>
+                <span>{userInfo.address}</span>
+              </p>
+              <p className={styles.phone}>
+                <span className={styles.set}>電話番号</span>
+                <span>：</span>
+                <span>{userInfo.phone}</span>
+              </p>
+            </div>
+          </div>
+          <div>
+            {/* TODO:レビュー */}
+            <p className={styles.review}>★★★★☆</p>
+          </div>
+          <div className={styles.edit}>
+            <button
+              className={joinClassnames("btn btn-info", styles.edit)}
+              onClick={toEditPage}
+            >
+              編集
+            </button>
+          </div>
         </div>
         <div>
-          {/* TODO:レビュー */}
-          <p>★★★★☆</p>
+          <p className={styles.profile}>{userInfo.contents}</p>
         </div>
-        <button className={joinClassnames("btn btn-info")} onClick={toEditPage}>
-          編集
-        </button>
-      </div>
-      <div>
-        <p>{userInfo.contents}</p>
       </div>
     </div>
   );
