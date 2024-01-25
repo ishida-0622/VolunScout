@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Navbar, Nav } from "react-bootstrap";
 
 import styles from "./index.module.css";
 
@@ -11,17 +11,18 @@ type Props = {
 
 export const GroupHeader = ({ className }: Props) => {
   return (
-    <div className={joinClassnames(styles.base, className)}>
-      <div>
-        <Link href={URL_PATH_GROUP.VOLUNTEER_CREATE}>
-          <span>ボランティア掲載</span>
-        </Link>
-      </div>
-      <div>
-        <Link href={URL_PATH_GROUP.VOLUNTEER}>
-          <span>掲載したボランティア</span>
-        </Link>
-      </div>
-    </div>
+    <>
+      <Navbar.Toggle aria-controls="links" />
+      <Navbar.Collapse id="links" className={joinClassnames(className)}>
+        <Nav className={joinClassnames(styles.base, className)}>
+          <Nav.Link href={URL_PATH_GROUP.VOLUNTEER_CREATE}>
+            <span>ボランティア掲載</span>
+          </Nav.Link>
+          <Nav.Link href={URL_PATH_GROUP.VOLUNTEER}>
+            <span>掲載したボランティア</span>
+          </Nav.Link>
+        </Nav>
+      </Navbar.Collapse>
+    </>
   );
 };
