@@ -17,7 +17,7 @@ use query_repository::{
                     ParticipantTheme, ParticipantUserRepository,
                 },
         }, activities::{
-            scout::{ScoutRepository, Scout}, 
+            scout::{ScoutRepository, Scout},
             apply::{Apply, ApplyRepository}
         },
         volunteer::{VolunteerQueryRepository, VolunteerReadModel},
@@ -25,15 +25,14 @@ use query_repository::{
 
 use crate::{
     user_account::{group::GroupAccountImpl, participant::ParticipantAccountImpl},
-    activities::{scout::ScoutImpl, apply::ApplyImpl},
-    volunteer::VolunteerQueryRepositoryImpl
+    activities::{scout::ScoutImpl, apply::ApplyImpl, volunteer::VolunteerQueryRepositoryImpl}
 };
 
 pub struct ServiceContext {
     group_account_dao: Arc<dyn GroupUserRepository>,
     participant_account_dao: Arc<dyn ParticipantUserRepository>,
     scout_dao: Arc<dyn ScoutRepository>,
-    apply_dao: Arc<dyn ApplyRepository>
+    apply_dao: Arc<dyn ApplyRepository>,
     volunteer_dao: Arc<dyn VolunteerQueryRepository>,
 }
 
@@ -42,14 +41,14 @@ impl ServiceContext {
         group_account_dao: Arc<dyn GroupUserRepository>,
         participant_account_dao: Arc<dyn ParticipantUserRepository>,
         scout_dao: Arc<dyn ScoutRepository>,
-        apply_dao: Arc<dyn ApplyRepository>
+        apply_dao: Arc<dyn ApplyRepository>,
         volunteer_dao: Arc<dyn VolunteerQueryRepository>,
     ) -> Self {
         Self {
             group_account_dao,
             participant_account_dao,
             scout_dao,
-            apply_dao
+            apply_dao,
             volunteer_dao,
         }
     }
@@ -398,6 +397,7 @@ impl QueryRoot {
             ctx.apply_dao.find_by_uid(&uid).await?;
 
         Ok(scout)
+    }
 
     /// 指定されたvidのボランティア情報を取得する
     ///
@@ -470,9 +470,9 @@ pub fn create_schema(pool: MySqlPool) -> ApiSchema {
         Arc::new(group_account_dao),
         Arc::new(participant_account_dao),
         Arc::new(scout_dao),
-        Arc::new(apply_dao)
-        Arc::new(volunteer_dao),
-      
+        Arc::new(apply_dao),
+        Arc::new(volunteer_dao)
+
     );
 
     create_schema_builder().data(ctx).finish()
