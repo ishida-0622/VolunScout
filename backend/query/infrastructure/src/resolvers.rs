@@ -18,9 +18,9 @@ use query_repository::{
                 },
         }, activities::{
             scout::{ScoutRepository, Scout},
-            apply::{Apply, ApplyRepository}
-        },
-        volunteer::{VolunteerQueryRepository, VolunteerReadModel},
+            apply::{Apply, ApplyRepository},
+            volunteer::{VolunteerQueryRepository, VolunteerReadModel},
+        }
 };
 
 use crate::{
