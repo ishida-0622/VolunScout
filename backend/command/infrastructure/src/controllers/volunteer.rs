@@ -50,6 +50,7 @@ pub struct CreateVolunteerRequestBody {
     pub reward: Option<String>,
     #[schema(required = true)]
     pub target_status: String,
+    pub photos: Option<Vec<String>>,
 }
 
 /// ボランティアの更新時のリクエストボディを表す構造体
@@ -91,6 +92,7 @@ pub struct UpdateVolunteerRequestBody {
     pub reward: Option<String>,
     #[schema(required = true)]
     pub target_status: String,
+    pub photos: Option<Vec<String>>,
 }
 
 /// ボランティアの削除時のリクエストボディを表す構造体
@@ -209,6 +211,11 @@ pub async fn create_volunteer(
         target_status,
     );
 
+    let s3_keys: Vec<String> = match body.photos {
+        None => Vec::new(),
+        Some(s3_keys) => s3_keys
+    };
+
     match repository
         .create(
             vid,
@@ -224,6 +231,7 @@ pub async fn create_volunteer(
             as_group,
             reward,
             terms,
+            s3_keys
         )
         .await
     {
@@ -324,6 +332,11 @@ pub async fn update_volunteer(
         target_status,
     );
 
+    let s3_keys: Vec<String> = match body.photos {
+        None => Vec::new(),
+        Some(s3_keys) => s3_keys
+    };
+
     match repository
         .update(
             vid,
@@ -338,6 +351,7 @@ pub async fn update_volunteer(
             as_group,
             reward,
             terms,
+            s3_keys
         )
         .await
     {

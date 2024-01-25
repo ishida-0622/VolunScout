@@ -7,7 +7,7 @@ use sqlx::MySqlPool;
 use command_repository::activities::apply::ApplyRepository;
 use domain::model::{
     apply::ApplyId,
-    user_account::user_id::UserId, volunteer::VolunteerId, group_participants::GroupParticipants, gender::{gender_from_i8, gender_to_i8}
+    user_account::user_id::UserId, volunteer::VolunteerId, group_participants::GroupParticipants, gender::gender_to_i8
 };
 
 pub struct ApplyImpl {

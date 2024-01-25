@@ -6,7 +6,7 @@ use sqlx::MySqlPool;
 use command_repository::activities::scout::ScoutRepository;
 use domain::model::{
     scout::ScoutId,
-    user_account::user_id::UserId, volunteer::VolunteerId, group_participants::GroupParticipants, gender::{gender_from_i8, gender_to_i8}
+    user_account::user_id::UserId, volunteer::VolunteerId
 };
 
 pub struct ScoutImpl {

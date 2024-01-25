@@ -9,7 +9,6 @@ use domain::model::{
     condition::Condition,
     gender::Gender,
     region::Region,
-    target_status::TargetStatus,
     terms::Terms,
     theme::Theme,
     user_account::{

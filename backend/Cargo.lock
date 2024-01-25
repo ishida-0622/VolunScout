@@ -1693,6 +1693,7 @@ dependencies = [
  "axum",
  "chrono",
  "domain",
+ "futures",
  "query-repository",
  "redis",
  "sqlx",

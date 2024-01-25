@@ -61,6 +61,7 @@ pub enum Endpoints {
     CreateGroupAccount,
     UpdateGroupAccount,
     DeleteGroupAccount,
+    SwitchGroupAccountPlan,
     CreateParticipantAccount,
     UpdateParticipantAccount,
     DeleteParticipantAccount,
@@ -86,6 +87,7 @@ impl Endpoints {
             Endpoints::CreateGroupAccount => "/group-account/create",
             Endpoints::UpdateGroupAccount => "/group-account/update",
             Endpoints::DeleteGroupAccount => "/group-account/delete",
+            Endpoints::SwitchGroupAccountPlan => "/group-account/switch-plan",
             Endpoints::CreateParticipantAccount => "/participant-account/create",
             Endpoints::UpdateParticipantAccount => "/participant-account/update",
             Endpoints::DeleteParticipantAccount => "/participant-account/delete",
@@ -124,6 +126,10 @@ pub fn create_router(pool: MySqlPool) -> Router {
         .route(
             Endpoints::DeleteGroupAccount.as_str(),
             post(group::delete_group_account),
+        )
+        .route(
+            Endpoints::SwitchGroupAccountPlan.as_str(),
+            post(group::switch_group_account_plan),
         )
         .route(
             Endpoints::CreateParticipantAccount.as_str(),

@@ -6,7 +6,7 @@ use sqlx::MySqlPool;
 
 use command_repository::activities::volunteer::VolunteerRepository;
 use domain::model::{
-    condition::Condition, region::Region, target_status::TargetStatus, terms::Terms, theme::Theme,
+    condition::Condition, region::Region, terms::Terms, theme::Theme,
     user_account::user_id::UserId, volunteer::VolunteerId,
 };
 
@@ -37,6 +37,7 @@ impl VolunteerRepository for VolunteerImpl {
         as_group: bool,
         reward: Option<String>,
         terms: Terms,
+        s3_keys: Vec<String>
     ) -> Result<()> {
         let id: String = vid.to_string();
 
@@ -133,13 +134,26 @@ impl VolunteerRepository for VolunteerImpl {
             })
             .collect::<Vec<_>>();
 
+        let insert_photo_query: Vec<_> = s3_keys
+            .iter()
+            .map(|p: &String| {
+                sqlx::query!(
+                    "INSERT INTO volunteer_photo VALUES (?, ?)",
+                    p,
+                    id
+                )
+                .execute(&self.pool)
+            })
+            .collect::<Vec<_>>();
+
         future::try_join_all(
             insert_region_query
                 .into_iter()
                 .chain(insert_theme_query)
                 .chain(insert_theme_required_query)
                 .chain(insert_condition_query)
-                .chain(insert_condition_required_query),
+                .chain(insert_condition_required_query)
+                .chain(insert_photo_query),
         )
         .await?;
 
@@ -160,6 +174,7 @@ impl VolunteerRepository for VolunteerImpl {
         as_group: bool,
         reward: Option<String>,
         terms: Terms,
+        s3_keys: Vec<String>
     ) -> Result<()> {
         let id: String = vid.to_string();
 
@@ -186,7 +201,10 @@ impl VolunteerRepository for VolunteerImpl {
         let delete_element_query =
             sqlx::query!("DELETE FROM volunteer_element WHERE vid = ?", id).execute(&self.pool);
 
-        future::try_join3(update_query, delete_region_query, delete_element_query).await?;
+        let delete_photo_query =
+            sqlx::query!("DELETE FROM volunteer_photo WHERE vid = ?", id).execute(&self.pool);
+
+        future::try_join4(update_query, delete_region_query, delete_element_query, delete_photo_query).await?;
 
         sqlx::query!(
             "INSERT INTO volunteer_element (vid, eid) VALUES (?, ?)",
@@ -263,16 +281,28 @@ impl VolunteerRepository for VolunteerImpl {
             })
             .collect::<Vec<_>>();
 
+        let insert_photo_query: Vec<_> = s3_keys
+            .iter()
+            .map(|p: &String| {
+                sqlx::query!(
+                    "INSERT INTO volunteer_photo VALUES (?, ?)",
+                    p,
+                    id
+                )
+                .execute(&self.pool)
+            })
+            .collect::<Vec<_>>();
+
         future::try_join_all(
             insert_region_query
                 .into_iter()
                 .chain(insert_theme_query)
                 .chain(insert_theme_required_query)
                 .chain(insert_condition_query)
-                .chain(insert_condition_required_query),
+                .chain(insert_condition_required_query)
+                .chain(insert_photo_query),
         )
         .await?;
-
         Ok(())
     }
 

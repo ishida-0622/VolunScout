@@ -36,6 +36,20 @@ INSERT INTO group_account VALUES (
   NULL
 );
 
+INSERT INTO group_account VALUES (
+  "group_account000000000000001",
+  "VolunScoutSub",
+  "boran sukauto sabu",
+  "09012345678",
+  "Kanagawa",
+  "Nice to meet you",
+  "sakamoto",
+  "sakamoto",
+  DEFAULT,
+  DEFAULT,
+  NULL
+);
+
 INSERT INTO volunteer(
   vid,
   gid,
@@ -106,6 +120,42 @@ INSERT INTO volunteer_region VALUES (
 INSERT INTO volunteer_region VALUES (
   "01HKXVVVKBR6G8240N7HWSPR7M",
   2
+);
+
+INSERT INTO volunteer_element VALUES (
+  "01HKXVVVKBR6G8240N7HWSPR7M",
+  "theme_1",
+  false
+);
+
+INSERT INTO volunteer_element VALUES (
+  "01HKXVVVKBR6G8240N7HWSPR7M",
+  "theme_2",
+  true
+);
+
+INSERT INTO volunteer_element VALUES (
+  "01HKXVVVKBR6G8240N7HWSPR7M",
+  "condition_1",
+  false
+);
+
+INSERT INTO volunteer_element VALUES (
+  "01HKXVVVKBR6G8240N7HWSPR7M",
+  "condition_2",
+  true
+);
+
+INSERT INTO volunteer_element VALUES (
+  "01HKXVVVKBR6G8240N7HWSPR7M",
+  "target_status_0",
+  false
+);
+
+INSERT INTO volunteer_element VALUES (
+  "01HKXVVVKBR6G8240N7HWSPR7M",
+  "target_status_1",
+  false
 );
 
 INSERT INTO volunteer_region VALUES (
@@ -232,4 +282,39 @@ INSERT INTO participant_review VALUES (
   "participant_account000000001",
   5,
   NULL
+);
+
+INSERT INTO group_photo VALUES (
+  "photo/group/group0_1.png",
+  "group_account000000000000000"
+);
+
+INSERT INTO group_photo VALUES (
+  "photo/group/group0_2.png",
+  "group_account000000000000000"
+);
+
+INSERT INTO group_photo VALUES (
+  "photo/group/group1_0.png",
+  "group_account000000000000001"
+);
+
+INSERT INTO group_photo VALUES (
+  "photo/group/group1_1.png",
+  "group_account000000000000001"
+);
+
+INSERT INTO volunteer_photo VALUES (
+  "photo/volunteer/volunteer0_0.png",
+  "01HKXVVVKBR6G8240N7HWSPR7M"
+);
+
+INSERT INTO volunteer_photo VALUES (
+  "photo/volunteer/volunteer0_1.png",
+  "01HKXVVVKBR6G8240N7HWSPR7M"
+);
+
+INSERT INTO volunteer_photo VALUES (
+  "photo/volunteer/volunteer1_0.png",
+  "01HKXZRM5AF35HHXJ8284PN0B7"
 );
