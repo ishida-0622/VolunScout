@@ -1,4 +1,4 @@
-use std::{iter::Rev, str::FromStr, sync::Arc};
+use std::{str::FromStr, sync::Arc};
 
 use anyhow::Result;
 use async_graphql::{

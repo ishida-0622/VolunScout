@@ -2,7 +2,7 @@ use anyhow::Result;
 use async_graphql::SimpleObject;
 use async_trait::async_trait;
 
-use domain::model::{user_account::user_id::UserId, scout::ScoutId, volunteer::VolunteerId};
+use domain::model::{user_account::user_id::UserId, volunteer::VolunteerId};
 
 /// レビューリードモデル
 #[derive(SimpleObject, sqlx::Type)]
