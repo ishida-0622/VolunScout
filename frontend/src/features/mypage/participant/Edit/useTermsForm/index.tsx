@@ -1,6 +1,10 @@
 import { useForm } from "react-hook-form";
 
+import styles from "./index.module.css";
+
 import type { UpdateParticipantAccountRequestBody } from "@/__generated__/command";
+
+
 
 import { CheckBoxControl } from "@/components/ui-parts/CheckBoxControl";
 import { ToggleSwitchControl } from "@/components/ui-parts/ToggleSwitchControl";
@@ -31,65 +35,75 @@ export const useTermsForm = ({ initialValues, onSubmit = noop }: Props) => {
 
   const InputForm = (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <label className="form-label">
-        <details open>
-          <summary>地域</summary>
-          {REGIONS.map((region) => (
-            <div key={region}>
-              <label>
-                <input type="checkbox" value={region} {...register("region")} />
-                {region}
-              </label>
-            </div>
-          ))}
-        </details>
-      </label>
-      <label className="form-label">
-        <details open>
-          <summary>テーマ</summary>
-          {THEMES.map((theme) => (
-            <div key={theme} style={{ display: "flex" }}>
-              <label>
-                <CheckBoxControl
-                  name="theme"
-                  value={theme}
-                  register={register}
-                  label={theme}
-                />
-                <ToggleSwitchControl
-                  name="required_theme"
-                  value={theme}
-                  register={register}
-                  label=""
-                />
-              </label>
-            </div>
-          ))}
-        </details>
-      </label>
-      <label className="form-label">
-        <details open>
-          <summary>条件</summary>
-          {CONDITIONS.map((condition) => (
-            <div key={condition} style={{ display: "flex" }}>
-              <label>
-                <CheckBoxControl
-                  name="condition"
-                  value={condition}
-                  register={register}
-                  label={condition}
-                />
-                <ToggleSwitchControl
-                  name="required_condition"
-                  value={condition}
-                  register={register}
-                  label=""
-                />
-              </label>
-            </div>
-          ))}
-        </details>
-      </label>
+      <div className={styles.wrapper}>
+        <div className={styles.regions}>
+          <label className="form-label">
+            <details open>
+              <summary>地域</summary>
+              {REGIONS.map((region) => (
+                <div key={region}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      value={region}
+                      {...register("region")}
+                    />
+                    {region}
+                  </label>
+                </div>
+              ))}
+            </details>
+          </label>
+        </div>
+        <div className={styles.theme}>
+          <label className="form-label">
+            <details open>
+              <summary>テーマ</summary>
+              {THEMES.map((theme) => (
+                <div key={theme} style={{ display: "flex" }}>
+                    <CheckBoxControl
+                      name="theme"
+                      value={theme}
+                      register={register}
+                      label={theme}
+                    />
+                    <ToggleSwitchControl
+                      name="required_theme"
+                      value={theme}
+                      register={register}
+                      label=""
+                      className={styles.toggle}
+                    />
+                </div>
+              ))}
+            </details>
+          </label>
+        </div>
+        <div className={styles.condition}>
+          <label className="form-label">
+            <details open>
+              <summary>条件</summary>
+              {CONDITIONS.map((condition) => (
+                <div key={condition} style={{ display: "flex" }}>
+                    <CheckBoxControl
+                      name="condition"
+                      value={condition}
+                      register={register}
+                      label={condition}
+                    />
+                    <ToggleSwitchControl
+                      name="required_condition"
+                      value={condition}
+                      register={register}
+                      label=""
+                      className={styles.toggle}
+                    />
+                </div>
+              ))}
+            </details>
+          </label>
+        </div>
+      </div>
     </form>
   );
   return {

@@ -84,5 +84,6 @@ textarea:not([rows]) {
   --fontsize-small: 12px;
   --fontsize-medium: 16px;
   --fontsize-large: 24px;
+  --fontsize-x-large: 26px;
   --boxchange-radius: 20px;
 }
