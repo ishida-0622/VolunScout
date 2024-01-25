@@ -307,14 +307,33 @@ impl VolunteerRepository for VolunteerImpl {
     }
 
     async fn delete(&self, vid: VolunteerId) -> Result<()> {
-        sqlx::query!(
-            "UPDATE volunteer SET is_deleted = true, deleted_at = ? WHERE vid = ?",
-            Utc::now(),
-            vid.to_string()
+        let id: String = vid.to_string();
+        struct IsExists {
+            is_deleted: bool
+        }
+
+        let is_deleted = sqlx::query_as!(
+            IsExists,
+            r#"
+            SELECT is_deleted as "is_deleted: bool" FROM volunteer WHERE vid = ?
+            "#,
+            id
         )
-        .execute(&self.pool)
+        .fetch_one(&self.pool)
         .await?;
-        Ok(())
+
+        if is_deleted.is_deleted {
+            Err(anyhow::anyhow!("This volunteer is already deleted".to_string()))
+        } else {
+            sqlx::query!(
+                "UPDATE volunteer SET is_deleted = true, deleted_at = ? WHERE vid = ?",
+                Utc::now(),
+                vid.to_string()
+            )
+            .execute(&self.pool)
+            .await?;
+            Ok(())
+        }
     }
 
     async fn register_favorite(&self, uid: UserId, vid: VolunteerId) -> Result<()> {
