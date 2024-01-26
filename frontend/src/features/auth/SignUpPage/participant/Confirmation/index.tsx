@@ -9,6 +9,7 @@ import type { FormValues } from "..";
 import { apiClientParticipant } from "@/api/command";
 import { CheckBox } from "@/components/ui-parts/CheckBox";
 import { CONDITIONS, THEMES, URL_PATH_PARTICIPANT } from "@/consts";
+import { joinClassnames } from "@/components/@joinClassnames";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { TermsOfUseAndPrivacyPolicyModal } from "@/features/auth/SignUpPage/TermsOfUseAndPrivacyPolicyModal";
 import { stringToNumber } from "@/utils/stringToNumber";
@@ -69,7 +70,10 @@ export const Confirmation = ({ values, prevPage }: Props) => {
 
   return (
     <section>
-      <button onClick={prevPage} className={styles.button}>
+      <button
+        onClick={prevPage}
+        className={joinClassnames("btn btn-secondary", styles.return)}
+      >
         戻る
       </button>
       <div className={styles.main_contents}>
@@ -90,8 +94,8 @@ export const Confirmation = ({ values, prevPage }: Props) => {
               {values.gender === "0"
                 ? "男性"
                 : values.gender === "1"
-                ? "女性"
-                : "その他"}
+                  ? "女性"
+                  : "その他"}
             </span>
           </p>
           <p className={styles.profile_contents_wrapper}>
@@ -153,7 +157,10 @@ export const Confirmation = ({ values, prevPage }: Props) => {
           <CheckBox label="" onChange={handleAgreed} />
           <TermsOfUseAndPrivacyPolicyModal />
         </label>
-        <button onClick={handleSubmit} className={styles.button}>
+        <button
+          onClick={handleSubmit}
+          className={joinClassnames("btn btn-success", styles.button)}
+        >
           会員登録する
         </button>
       </div>

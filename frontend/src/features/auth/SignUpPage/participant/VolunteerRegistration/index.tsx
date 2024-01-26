@@ -8,6 +8,7 @@ import type { FormValues } from "..";
 
 import { CheckBoxControl } from "@/components/ui-parts/CheckBoxControl";
 import { ToggleSwitchControl } from "@/components/ui-parts/ToggleSwitchControl";
+import { joinClassnames } from "@/components/@joinClassnames";
 import { CONDITIONS, REGIONS, THEMES } from "@/consts";
 
 type Volunteer = Pick<
@@ -43,7 +44,7 @@ export const VolunteerRegistration = ({
       <form onSubmit={handleSubmit(onSubmit)}>
         <button
           type="button"
-          className={styles.return}
+          className={joinClassnames("btn btn-secondary", styles.return)}
           onClick={handleSubmit(onSubmitPrev)}
         >
           戻る
@@ -115,7 +116,10 @@ export const VolunteerRegistration = ({
             </details>
           </div>
           <div className={styles.container}>
-            <button type="submit" className={styles.button}>
+            <button
+              type="submit"
+              className={joinClassnames("btn btn-success", styles.button)}
+            >
               入力情報の確認へ
             </button>
           </div>

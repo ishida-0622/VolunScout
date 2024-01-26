@@ -1,7 +1,5 @@
 /* .index.module.css */
 .userIcon {
-  /* position: absolute; */
-  /* top */
   margin-bottom: -170px;
   margin-left: 6rem;
 }
@@ -11,7 +9,6 @@
 }
 
 .section {
-  /*float: left; */
   margin-top: 200px;
 }
 
@@ -32,6 +29,7 @@
   flex-direction: column;
   text-align: center;
   font-size: var(--fontsize-large);
+
 }
 
 .label {
@@ -51,25 +49,6 @@
 .input {
   border-radius: 0.5rem;
 }
-
-.button {
-  padding: 8px;
-  background-color: #4caf50;
-  color: var(--color-black);
-  border: none;
-  cursor: pointer;
-  border-radius: 8rem; /* 丸みを帯びた形に調整 */
-  transition: background-color 0.3s ease, box-shadow 0.3s ease; /* ホバーエフェクトをスムーズにする */
-
-  background-color: #4caf50;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.button:hover {
-  background-color: #45a049;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.9); /* ホバーエフェクト時の影 */
-}
-
 .required {
   color: var(--color-red);
   margin: 0 1rem;

@@ -6,6 +6,7 @@ import styles from "./index.module.css"; // CSSモジュールのインポート
 
 import type { FormValues } from "..";
 
+import { joinClassnames } from "@/components/@joinClassnames";
 import { TARGET_STATUSES } from "@/consts";
 
 type Personal = Pick<
@@ -110,7 +111,10 @@ export const PersonalRegistration = ({ onNextPage, values }: Props) => {
             </select>
           </label>
 
-          <button type="submit" className={styles.button}>
+          <button
+            type="submit"
+            className={joinClassnames("btn btn-success", styles.button)}
+          >
             ボランティア希望の入力へ ➤
           </button>
         </form>
