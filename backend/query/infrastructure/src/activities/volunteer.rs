@@ -29,7 +29,7 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
             r#"
             SELECT
                 vid, gid, title, message, overview, recruited_num, place, start_at, finish_at, deadline_on, as_group as "as_group: bool", is_deleted as "is_deleted: bool", deleted_at, registered_at, updated_at
-            FROM volunteer WHERE vid = ?
+            FROM volunteer WHERE vid = ? AND "is_deleted: bool" = false
             "#,
             vid.to_string()
         )
@@ -164,6 +164,62 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
 
         let volunteers = future::try_join_all(vids.iter().map(|vid| self.find_by_id(&vid))).await?;
 
+        Ok(volunteers)
+    }
+
+    async fn find_favorite_by_id(&self, pid: &UserId) -> Result<Vec<VolunteerReadModel>> {
+        let vids = sqlx::query!(
+            r#"
+            SELECT vid FROM favorite WHERE uid = ?
+            "#,
+            pid.to_string()
+        )
+        .fetch_all(&self.pool)
+        .await?;
+
+        let vids: Vec<VolunteerId> = vids.iter().map(|v| VolunteerId::from_str(&v.vid)).collect();
+
+        let volunteers = future::try_join_all(vids.iter().map(|vid| self.find_by_id(&vid))).await?;
+        Ok(volunteers)
+    }
+
+    async fn find_activity_by_id(&self, pid: &UserId) -> Result<Vec<VolunteerReadModel>> {
+        let vids = sqlx::query!(
+            r#"
+            SELECT
+            volunteer.vid FROM volunteer, apply WHERE
+                volunteer.vid = apply.vid AND
+                apply.uid = ? AND
+                volunteer.finish_at < now();
+            "#,
+            pid.to_string()
+        )
+        .fetch_all(&self.pool)
+        .await?;
+
+        let vids: Vec<VolunteerId> = vids.iter().map(|v| VolunteerId::from_str(&v.vid)).collect();
+
+        let volunteers = future::try_join_all(vids.iter().map(|vid| self.find_by_id(&vid))).await?;
+        Ok(volunteers)
+    }
+
+    async fn find_scheduled_activity_by_id(&self, pid: &UserId) -> Result<Vec<VolunteerReadModel>> {
+        let vids = sqlx::query!(
+            r#"
+            SELECT
+            volunteer.vid FROM volunteer, apply WHERE
+                volunteer.vid = apply.vid AND
+                apply.uid = ? AND
+                volunteer.finish_at > now();
+            "#,
+            pid.to_string()
+        )
+        .fetch_all(&self.pool)
+        .await?;
+
+        let vids: Vec<VolunteerId> = vids.iter().map(|v| VolunteerId::from_str(&v.vid)).collect();
+
+        let volunteers = future::try_join_all(vids.iter().map(|vid| self.find_by_id(&vid))).await?;
         Ok(volunteers)
     }
 }
