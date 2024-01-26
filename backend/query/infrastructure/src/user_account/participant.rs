@@ -6,14 +6,15 @@ use domain::consts::themes::ThemeMap;
 use sqlx::MySqlPool;
 
 use domain::consts::region::RegionMap;
-use domain::model::{user_account::user_id::UserId, volunteer::Volunteer};
-use query_repository::user_account::participant::{
+use domain::model::user_account::user_id::UserId;
+use query_repository::
+    user_account::participant::{
     ParticipantAccount, ParticipantCondition, ParticipantRegion, ParticipantTargetStatus,
     ParticipantTheme, ParticipantUserRepository,
 };
 
 pub struct ParticipantAccountImpl {
-    pool: MySqlPool,
+    pool: MySqlPool
 }
 
 impl ParticipantAccountImpl {
@@ -151,18 +152,6 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
         Ok(ParticipantTargetStatus {
             name: target_status,
         })
-    }
-
-    async fn find_favorite_by_id(&self, pid: &UserId) -> Result<Vec<Volunteer>> {
-        todo!()
-    }
-
-    async fn find_activity_by_id(&self, pid: &UserId) -> Result<Vec<Volunteer>> {
-        todo!()
-    }
-
-    async fn find_scheduled_activity_by_id(&self, pid: &UserId) -> Result<Vec<Volunteer>> {
-        todo!()
     }
 
     async fn exists(&self, pid: &UserId) -> Result<bool> {

@@ -3,7 +3,7 @@ use async_graphql::SimpleObject;
 use async_trait::async_trait;
 use chrono::{NaiveDate, NaiveDateTime};
 
-use domain::model::{user_account::user_id::UserId, volunteer::Volunteer};
+use domain::model::user_account::user_id::UserId;
 
 /// 参加者アカウントリードモデル
 #[derive(SimpleObject, sqlx::Type)]
@@ -80,15 +80,6 @@ pub trait ParticipantUserRepository: Send + Sync {
 
     /// 参加者の区分を取得する
     async fn find_target_status_by_id(&self, pid: &UserId) -> Result<ParticipantTargetStatus>;
-
-    /// 参加者のお気に入りを取得する
-    async fn find_favorite_by_id(&self, pid: &UserId) -> Result<Vec<Volunteer>>;
-
-    /// 参加者の活動履歴を取得する
-    async fn find_activity_by_id(&self, pid: &UserId) -> Result<Vec<Volunteer>>;
-
-    /// 参加者の予定を取得する
-    async fn find_scheduled_activity_by_id(&self, pid: &UserId) -> Result<Vec<Volunteer>>;
 
     /// 参加者が存在するか確認する
     async fn exists(&self, pid: &UserId) -> Result<bool>;
