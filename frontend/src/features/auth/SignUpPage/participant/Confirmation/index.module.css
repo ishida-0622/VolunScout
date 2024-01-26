@@ -29,24 +29,6 @@
   text-align: left;
 }
 
-.button {
-  padding: 8px;
-  background-color: #4caf50;
-  color: var(--color-black);
-  border: none;
-  cursor: pointer;
-  border-radius: 8rem; /* 丸みを帯びた形に調整 */
-  transition: background-color 0.3s ease, box-shadow 0.3s ease; /* ホバーエフェクトをスムーズにする */
-
-  background-color: #4caf50;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.button:hover {
-  background-color: #45a049;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.9); /* ホバーエフェクト時の影 */
-}
-
 .asterisk {
   color: var(--color-red);
 }
@@ -66,4 +48,8 @@
 
 .profile_contents_wrapper .contents {
   overflow-wrap: anywhere;
+}
+
+.button {
+  margin-left: 40px;
 }
