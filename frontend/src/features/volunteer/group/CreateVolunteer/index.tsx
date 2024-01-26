@@ -3,11 +3,13 @@ import { get, set } from "idb-keyval";
 import { useCallback, useEffect, useRef } from "react";
 import { Button } from "react-bootstrap";
 
+import styles from "./index.module.css";
 import { useInfoForm, type FormValues } from "./useInfoForm";
 
 import type { CreateVolunteerRequestBody } from "@/__generated__/command";
 
 import { apiClientVolunteer, s3 } from "@/api/command";
+import { joinClassnames } from "@/components/@joinClassnames";
 import { useAuthContext } from "@/contexts/AuthContext";
 import {
   useTermsForm,
@@ -141,12 +143,14 @@ export const CreateVolunteer = () => {
     <div>
       {InfoForm}
       {TermsForm}
-      <div>
-        <Button variant="danger">キャンセル</Button>
-        <Button variant="secondary" onClick={handleOnSave}>
+      <div className={joinClassnames("mb-3", styles.button_wrapper)}>
+        <Button variant="danger" size="lg" className="w-">
+          キャンセル
+        </Button>
+        <Button variant="secondary" size="lg" onClick={handleOnSave}>
           一時保存（写真は保存されません）
         </Button>
-        <Button variant="primary" onClick={handleOnSubmit}>
+        <Button variant="primary" size="lg" onClick={handleOnSubmit}>
           作成する
         </Button>
       </div>
