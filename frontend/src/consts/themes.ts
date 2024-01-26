@@ -1,4 +1,4 @@
-export const THEMES: string[] = [
+export const THEMES = [
   "国際",
   "教育・こども",
   "災害支援",
@@ -9,4 +9,4 @@ export const THEMES: string[] = [
   "自然・農業",
   "動物愛護",
   "その他",
-];
+] as const;
