@@ -4,7 +4,6 @@ use async_trait::async_trait;
 use chrono::{NaiveDate, NaiveDateTime};
 
 use domain::model::{user_account::user_id::UserId, volunteer::VolunteerId};
-
 /// ボランティアリードモデル
 #[derive(SimpleObject, sqlx::Type)]
 pub struct VolunteerReadModel {
@@ -88,4 +87,13 @@ pub trait VolunteerQueryRepository: Send + Sync {
 
     /// ボランティアをグループidで取得する
     async fn find_by_gid(&self, gid: &UserId) -> Result<Vec<VolunteerReadModel>>;
+
+    /// 参加者のお気に入りを取得する
+    async fn find_favorite_by_id(&self, pid: &UserId) -> Result<Vec<VolunteerReadModel>>;
+
+    /// 参加者の活動履歴を取得する
+    async fn find_activity_by_id(&self, pid: &UserId) -> Result<Vec<VolunteerReadModel>>;
+
+    /// 参加者の予定を取得する
+    async fn find_scheduled_activity_by_id(&self, pid: &UserId) -> Result<Vec<VolunteerReadModel>>;
 }

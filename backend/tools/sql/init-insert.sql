@@ -112,6 +112,36 @@ INSERT INTO volunteer(
   NOW()
 );
 
+INSERT INTO volunteer(
+  vid,
+  gid,
+  title,
+  message,
+  overview,
+  recruited_num,
+  place,
+  start_at,
+  finish_at,
+  as_group,
+  deadline_on,
+  registered_at,
+  updated_at
+) VALUES (
+  "01HN22FWVK9949XC4KP8P517C3",
+  "group_account000000000000000",
+  "Scheduled volunteer",
+  "Scheduled message",
+  "Scheduled overview",
+  5,
+  "front of Tokyo Station",
+  "2024-4-1 11:00:00",
+  "2024-4-1 17:00:00",
+  false,
+  "2024-3-20",
+  NOW(),
+  NOW()
+);
+
 INSERT INTO volunteer_region VALUES (
   "01HKXVVVKBR6G8240N7HWSPR7M",
   1
@@ -196,6 +226,18 @@ INSERT INTO apply VALUES (
   "01HKXVVVKBR6G8240N7HWSPR7M",
   "participant_account000000001",
   "2024-1-13 12:00:00",
+  false,
+  0,
+  NULL,
+  false
+);
+
+
+INSERT INTO apply VALUES (
+  "01HN22NKTWY3SHA4SMC8GQX83T",
+  "01HN22FWVK9949XC4KP8P517C3",
+  "participant_account000000000",
+  "2024-1-23 12:00:00",
   false,
   0,
   NULL,

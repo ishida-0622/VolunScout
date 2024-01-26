@@ -444,6 +444,63 @@ impl QueryRoot {
         Ok(volunteers)
     }
 
+    /// 指定されたuidがお気に入りに登録しているボランティア情報を取得する
+    ///
+    /// ## 引数
+    /// - `uid` - uid
+    ///
+    /// ## 返り値
+    /// - `Vec<VolunteerReadModel>` - ボランティア情報の配列
+    async fn get_favorite_by_uid<'ctx>(
+        &self,
+        ctx: &Context<'ctx>,
+        uid: String,
+    ) -> Result<Vec<VolunteerReadModel>> {
+        let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
+        let uid = UserId::from_str(&uid).unwrap();
+        let volunteers: Vec<VolunteerReadModel> = ctx.volunteer_dao.find_favorite_by_id(&uid).await?;
+
+        Ok(volunteers)
+    }
+
+    /// 指定されたuidが過去に活動したボランティア情報を取得する
+    ///
+    /// ## 引数
+    /// - `uid` - uid
+    ///
+    /// ## 返り値
+    /// - `Vec<VolunteerReadModel>` - ボランティア情報の配列
+    async fn get_activities_by_uid<'ctx>(
+        &self,
+        ctx: &Context<'ctx>,
+        uid: String,
+    ) -> Result<Vec<VolunteerReadModel>> {
+        let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
+        let uid = UserId::from_str(&uid).unwrap();
+        let volunteers: Vec<VolunteerReadModel> = ctx.volunteer_dao.find_activity_by_id(&uid).await?;
+
+        Ok(volunteers)
+    }
+
+    /// 指定されたuidがこれから活動を予定しているボランティア情報を取得する
+    ///
+    /// ## 引数
+    /// - `uid` - uid
+    ///
+    /// ## 返り値
+    /// - `Vec<VolunteerReadModel>` - ボランティア情報の配列
+    async fn get_scheduled_activities_by_uid<'ctx>(
+        &self,
+        ctx: &Context<'ctx>,
+        uid: String,
+    ) -> Result<Vec<VolunteerReadModel>> {
+        let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
+        let uid = UserId::from_str(&uid).unwrap();
+        let volunteers: Vec<VolunteerReadModel> = ctx.volunteer_dao.find_scheduled_activity_by_id(&uid).await?;
+
+        Ok(volunteers)
+    }
+  
     /// 指定されたuidとvidの参加者レビュー情報を取得する
     ///
     /// ## 引数
