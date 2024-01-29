@@ -49,7 +49,7 @@ pub struct CreateVolunteerRequestBody {
     #[schema()]
     pub reward: Option<String>,
     #[schema(required = true)]
-    pub target_status: String,
+    pub target_status: Vec<String>,
     pub photos: Option<Vec<String>>,
 }
 
@@ -91,7 +91,7 @@ pub struct UpdateVolunteerRequestBody {
     #[schema()]
     pub reward: Option<String>,
     #[schema(required = true)]
-    pub target_status: String,
+    pub target_status: Vec<String>,
     pub photos: Option<Vec<String>>,
 }
 
@@ -187,19 +187,21 @@ pub async fn create_volunteer(
         .map(|t: &String| Condition::from_str(t).unwrap())
         .collect::<Vec<Condition>>();
     let reward: Option<String> = body.reward;
-    let target_status: TargetStatus = match TargetStatus::from_str(&body.target_status) {
-        Ok(target_status) => target_status,
-        Err(error) => {
-            log::warn!("error = {}", error);
-            return (
+    let target_status: Vec<TargetStatus> = body
+        .target_status
+        .iter()
+        .map(|t: &String| TargetStatus::from_str(t).unwrap())
+        .collect::<Vec<TargetStatus>>();
+
+    if target_status.len() == 0 {
+        return (
                 StatusCode::BAD_REQUEST,
                 Json(WriteApiResponseFailureBody {
-                    message: error.to_string(),
+                    message: "target status is null".to_string(),
                 }),
             )
                 .into_response();
-        }
-    };
+    }
 
     let terms: Terms = Terms::new(
         region,
@@ -207,7 +209,6 @@ pub async fn create_volunteer(
         required_theme,
         condition,
         required_condition,
-        // reward,
         target_status,
     );
 
@@ -309,19 +310,21 @@ pub async fn update_volunteer(
         .map(|t: &String| Condition::from_str(t).unwrap())
         .collect::<Vec<Condition>>();
     let reward: Option<String> = body.reward;
-    let target_status: TargetStatus = match TargetStatus::from_str(&body.target_status) {
-        Ok(target_status) => target_status,
-        Err(error) => {
-            log::warn!("error = {}", error);
-            return (
+    let target_status: Vec<TargetStatus> = body
+        .target_status
+        .iter()
+        .map(|t: &String| TargetStatus::from_str(t).unwrap())
+        .collect::<Vec<TargetStatus>>();
+
+    if target_status.len() == 0 {
+        return (
                 StatusCode::BAD_REQUEST,
                 Json(WriteApiResponseFailureBody {
-                    message: error.to_string(),
+                    message: "target status is null".to_string(),
                 }),
             )
                 .into_response();
-        }
-    };
+    }
 
     let terms: Terms = Terms::new(
         region,
