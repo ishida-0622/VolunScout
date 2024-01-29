@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 
-import { Volunteer } from "../../Volunteer";
+import { VolunteerItem } from "../../VolunteerItem";
 
 import styles from "./index.module.css";
 
@@ -97,7 +97,7 @@ export const VolunteerList = () => {
         </Button>
       </div>
       {showVolunteers.map((volunteer) => (
-        <Volunteer
+        <VolunteerItem
           key={volunteer.vid}
           volunteer={volunteer}
           accountType="group"
