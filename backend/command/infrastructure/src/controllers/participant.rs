@@ -227,7 +227,7 @@ pub async fn create_participant_account(
         required_theme,
         condition,
         required_condition,
-        target_status,
+        vec![target_status],
     );
 
     match repository
@@ -390,7 +390,7 @@ pub async fn update_participant_account(
         required_theme,
         condition,
         required_condition,
-        target_status,
+        vec![target_status],
     );
 
     match repository
