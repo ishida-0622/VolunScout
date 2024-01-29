@@ -10,7 +10,7 @@ use domain::{
     },
     model::{user_account::user_id::UserId, volunteer::VolunteerId},
 };
-use query_repository::activities::volunteer::{VolunteerQueryRepository, VolunteerReadModel};
+use query_repository::activities::volunteer::{VolunteerElementsReadModel, VolunteerQueryRepository, VolunteerReadModel};
 
 pub struct VolunteerQueryRepositoryImpl {
     pool: MySqlPool,
@@ -24,17 +24,7 @@ impl VolunteerQueryRepositoryImpl {
 
 #[async_trait]
 impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
-    async fn find_by_id(&self, vid: &VolunteerId) -> Result<VolunteerReadModel> {
-        let volunteer_query = sqlx::query!(
-            r#"
-            SELECT
-                vid, gid, title, message, overview, recruited_num, place, start_at, finish_at, deadline_on, as_group as "as_group: bool", is_deleted as "is_deleted: bool", deleted_at, registered_at, updated_at
-            FROM volunteer WHERE vid = ? AND "is_deleted: bool" = false
-            "#,
-            vid.to_string()
-        )
-        .fetch_one(&self.pool);
-
+    async fn find_elements_by_id(&self, vid: &VolunteerId) -> Result<VolunteerElementsReadModel> {
         let region_query = sqlx::query!(
             r#"
             SELECT rid FROM volunteer_region WHERE vid = ?
@@ -51,8 +41,8 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
         )
         .fetch_all(&self.pool);
 
-        let (volunteer, regions, elements) =
-            future::try_join3(volunteer_query, region_query, element_query).await?;
+        let (regions, elements) =
+            future::try_join(region_query, element_query).await?;
 
         let regions_map = RegionMap::new().regions_index_to_name;
         let regions = regions
@@ -119,6 +109,33 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
             })
             .collect();
 
+        let volunteer_elements = VolunteerElementsReadModel::new(
+            vid.to_string(),
+            regions,
+            themes,
+            required_themes,
+            conditions,
+            required_conditions,
+            target_status,
+        );
+
+        Ok(volunteer_elements)
+    }
+
+    async fn find_by_id(&self, vid: &VolunteerId) -> Result<VolunteerReadModel> {
+        let volunteer = sqlx::query!(
+            r#"
+            SELECT
+                vid, gid, title, message, overview, recruited_num, place, start_at, finish_at, deadline_on, as_group as "as_group: bool", is_deleted as "is_deleted: bool", deleted_at, registered_at, updated_at
+            FROM volunteer WHERE vid = ? AND "is_deleted: bool" = false
+            "#,
+            vid.to_string()
+        )
+        .fetch_one(&self.pool)
+        .await?;
+
+        let elements: VolunteerElementsReadModel = self.find_elements_by_id(&vid).await?;
+
         let volunteer = VolunteerReadModel::new(
             volunteer.vid,
             volunteer.gid,
@@ -139,12 +156,12 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
             },
             volunteer.registered_at,
             volunteer.updated_at,
-            regions,
-            themes,
-            required_themes,
-            conditions,
-            required_conditions,
-            target_status,
+            elements.regions,
+            elements.themes,
+            elements.required_themes,
+            elements.conditions,
+            elements.required_conditions,
+            elements.target_status,
         );
 
         Ok(volunteer)
