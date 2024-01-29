@@ -16,7 +16,7 @@ type Props = {
   accountType: AccountType;
 };
 
-export const Volunteer = ({ volunteer, accountType }: Props) => {
+export const VolunteerItem = ({ volunteer, accountType }: Props) => {
   const router = useRouter();
   const toVolunteer = () => {
     switch (accountType) {
