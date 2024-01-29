@@ -19,7 +19,7 @@ use query_repository::{
         }, activities::{
             scout::{ScoutRepository, Scout},
             apply::{Apply, ApplyRepository},
-            volunteer::{VolunteerQueryRepository, VolunteerReadModel},
+            volunteer::{VolunteerElementsReadModel, VolunteerQueryRepository, VolunteerReadModel},
             review::{Review, ParticipantReviewRepository, VolunteerReviewRepository}
         }
 };
@@ -406,6 +406,25 @@ impl QueryRoot {
         Ok(scout)
     }
 
+    /// 指定されたvidのボランティア要素情報を取得する
+    ///
+    /// ## 引数
+    /// - `vid` - vid
+    ///
+    /// ## 返り値
+    /// - `VolunteerElementsReadModel` - ボランティア要素情報
+    async fn get_volunteer_elements_by_id<'ctx>(
+        &self,
+        ctx: &Context<'ctx>,
+        vid: String,
+    ) -> Result<VolunteerElementsReadModel> {
+        let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
+        let vid = VolunteerId::from_str(&vid);
+        let volunteer: VolunteerElementsReadModel = ctx.volunteer_dao.find_elements_by_id(&vid).await?;
+
+        Ok(volunteer)
+    }
+
     /// 指定されたvidのボランティア情報を取得する
     ///
     /// ## 引数
@@ -500,7 +519,7 @@ impl QueryRoot {
 
         Ok(volunteers)
     }
-  
+
     /// 指定されたuidとvidの参加者レビュー情報を取得する
     ///
     /// ## 引数

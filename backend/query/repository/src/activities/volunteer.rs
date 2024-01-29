@@ -3,7 +3,7 @@ use async_graphql::SimpleObject;
 use async_trait::async_trait;
 use chrono::{NaiveDate, NaiveDateTime};
 
-use domain::model::{user_account::user_id::UserId, volunteer::VolunteerId};
+use domain::model::{user_account::user_id::UserId, volunteer::{Volunteer, VolunteerId}};
 /// ボランティアリードモデル
 #[derive(SimpleObject, sqlx::Type)]
 pub struct VolunteerReadModel {
@@ -80,8 +80,45 @@ impl VolunteerReadModel {
     }
 }
 
+/// ボランティア要素類リードモデル
+#[derive(SimpleObject, sqlx::Type)]
+pub struct VolunteerElementsReadModel {
+    pub vid: String,
+    pub regions: Vec<String>,
+    pub themes: Vec<String>,
+    pub required_themes: Vec<String>,
+    pub conditions: Vec<String>,
+    pub required_conditions: Vec<String>,
+    pub target_status: Vec<String>,
+}
+
+impl VolunteerElementsReadModel {
+    pub fn new(
+        vid: String,
+        regions: Vec<String>,
+        themes: Vec<String>,
+        required_themes: Vec<String>,
+        conditions: Vec<String>,
+        required_conditions: Vec<String>,
+        target_status: Vec<String>,
+    ) -> VolunteerElementsReadModel {
+        VolunteerElementsReadModel {
+            vid,
+            regions,
+            themes,
+            required_themes,
+            conditions,
+            required_conditions,
+            target_status,
+        }
+    }
+}
+
 #[async_trait]
 pub trait VolunteerQueryRepository: Send + Sync {
+    /// ボランティアに関連する要素をボランティアIDから取得する
+    async fn find_elements_by_id(&self, vid: &VolunteerId) -> Result<VolunteerElementsReadModel>;
+
     /// ボランティアをボランティアidで取得する
     async fn find_by_id(&self, vid: &VolunteerId) -> Result<VolunteerReadModel>;
 
