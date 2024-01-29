@@ -170,7 +170,7 @@ CREATE TABLE IF NOT EXISTS `participant_review`
 
 CREATE TABLE IF NOT EXISTS `group_photo`
 (
-  `s3_key` VARCHAR(100),
+  `s3_key` VARCHAR(255),
   `gid` CHAR(28) NOT NULL,
   PRIMARY KEY (`s3_key`),
   FOREIGN KEY(`gid`) REFERENCES `group_account`(`gid`)
@@ -178,7 +178,7 @@ CREATE TABLE IF NOT EXISTS `group_photo`
 
 CREATE TABLE IF NOT EXISTS `volunteer_photo`
 (
-  `s3_key` VARCHAR(100),
+  `s3_key` VARCHAR(255),
   `vid` CHAR(26) NOT NULL,
   PRIMARY KEY (`s3_key`),
   FOREIGN KEY(`vid`) REFERENCES `volunteer`(`vid`)

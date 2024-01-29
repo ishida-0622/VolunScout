@@ -1,6 +1,7 @@
 "use client";
 
 import { useLazyQuery } from "@apollo/client";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 
@@ -12,6 +13,7 @@ import type { GetVolunteerByGidQuery } from "@/__generated__/query/graphql";
 
 import { gql } from "@/__generated__/query";
 import { SearchBar } from "@/components/ui-parts/SearchBar/index";
+import { URL_PATH_GROUP } from "@/consts";
 import { useAuthContext } from "@/contexts/AuthContext";
 
 const GetVolunteersQuery = gql(/* GraphQL */ `
@@ -32,6 +34,11 @@ const GetVolunteersQuery = gql(/* GraphQL */ `
 
 export const VolunteerList = () => {
   const authContext = useAuthContext();
+  const router = useRouter();
+
+  const toCreatePage = () => {
+    router.push(URL_PATH_GROUP.VOLUNTEER_CREATE);
+  };
 
   const [getVolunteers, { data, loading, error }] =
     useLazyQuery(GetVolunteersQuery);
@@ -80,7 +87,12 @@ export const VolunteerList = () => {
     <div>
       <div className={styles.search_bar_wrapper}>
         <SearchBar onChange={search} className={styles.search_bar} />
-        <Button variant="primary" size="lg" className={styles.create_button}>
+        <Button
+          variant="primary"
+          size="lg"
+          className={styles.create_button}
+          onClick={toCreatePage}
+        >
           新規掲載
         </Button>
       </div>
