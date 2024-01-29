@@ -47,8 +47,12 @@ export const useTermsForm = ({
     <Form onSubmit={submitHandler}>
       <Form.Group
         as={Row}
-        className="w-100"
-        style={{ maxWidth: "1140px", margin: "0 auto" }}
+        className="w-100 h-100 overflow-scroll"
+        style={{
+          maxWidth: "1140px",
+          maxHeight: "60vh",
+          margin: "0 auto",
+        }}
       >
         <Col>
           <Form.Label>地域</Form.Label>
