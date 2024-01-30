@@ -20,7 +20,7 @@ export const SignUpPage = () => {
         <div className={styles.user_icon}>
           {/* TODO:アイコンを差し替える */}
           <Image
-            src={"/icon.svg"}
+            src={"/logo_color.png"}
             alt="user icon"
             width={200}
             height={150}

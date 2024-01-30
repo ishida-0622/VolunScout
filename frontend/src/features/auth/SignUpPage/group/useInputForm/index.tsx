@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 
 import styles from "./index.module.css"; // CSSモジュールのインポート
+import { joinClassnames } from "@/components/@joinClassnames";
 
 export type FormValues = {
   name: string;
@@ -91,7 +92,8 @@ export const useInputForm = ({ onSubmit = noop }: Props) => {
             className={styles.textarea}
           ></textarea>
         </label>
-        <button type="submit" className={styles.button}>
+        <button type="submit" className={joinClassnames("btn btn-primary", styles.button)}
+          >
           入力情報の確認へ
         </button>
       </div>

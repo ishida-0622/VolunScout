@@ -72,7 +72,7 @@ export const Confirmation = ({ values, prevPage }: Props) => {
     <section>
       <button
         onClick={prevPage}
-        className={joinClassnames("btn btn-secondary", styles.return)}
+        className={joinClassnames("btn btn-secondary")}
       >
         戻る
       </button>
