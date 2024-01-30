@@ -6,8 +6,7 @@ use sqlx::MySqlPool;
 
 use command_repository::activities::volunteer::VolunteerRepository;
 use domain::model::{
-    condition::Condition, region::Region, terms::Terms, theme::Theme,
-    user_account::user_id::UserId, volunteer::VolunteerId,
+    condition::Condition, region::Region, target_status::TargetStatus, terms::Terms, theme::Theme, user_account::user_id::UserId, volunteer::VolunteerId
 };
 
 pub struct VolunteerImpl {
@@ -59,13 +58,18 @@ impl VolunteerRepository for VolunteerImpl {
             Utc::now()
         ).execute(&self.pool).await?;
 
-        sqlx::query!(
-            "INSERT INTO volunteer_element (vid, eid) VALUES (?, ?)",
-            id,
-            terms.target_status.to_id()
-        )
-        .execute(&self.pool)
-        .await?;
+        let insert_target_status_query: Vec<_> = terms
+            .target_status
+            .iter()
+            .map(|t: &TargetStatus| {
+                sqlx::query!(
+                    "INSERT INTO volunteer_element (vid, eid) VALUES (?, ?)",
+                    id,
+                    t.to_id()
+                )
+                .execute(&self.pool)
+            })
+            .collect::<Vec<_>>();
 
         let insert_region_query: Vec<_> = terms
             .regions
@@ -147,8 +151,9 @@ impl VolunteerRepository for VolunteerImpl {
             .collect::<Vec<_>>();
 
         future::try_join_all(
-            insert_region_query
+            insert_target_status_query
                 .into_iter()
+                .chain(insert_region_query)
                 .chain(insert_theme_query)
                 .chain(insert_theme_required_query)
                 .chain(insert_condition_query)
@@ -206,13 +211,18 @@ impl VolunteerRepository for VolunteerImpl {
 
         future::try_join4(update_query, delete_region_query, delete_element_query, delete_photo_query).await?;
 
-        sqlx::query!(
-            "INSERT INTO volunteer_element (vid, eid) VALUES (?, ?)",
-            id,
-            terms.target_status.to_id()
-        )
-        .execute(&self.pool)
-        .await?;
+        let insert_target_status_query: Vec<_> = terms
+            .target_status
+            .iter()
+            .map(|t: &TargetStatus| {
+                sqlx::query!(
+                    "INSERT INTO volunteer_element (vid, eid) VALUES (?, ?)",
+                    id,
+                    t.to_id()
+                )
+                .execute(&self.pool)
+            })
+            .collect::<Vec<_>>();
 
         let insert_region_query: Vec<_> = terms
             .regions
@@ -294,8 +304,9 @@ impl VolunteerRepository for VolunteerImpl {
             .collect::<Vec<_>>();
 
         future::try_join_all(
-            insert_region_query
+            insert_target_status_query
                 .into_iter()
+                .chain(insert_region_query)
                 .chain(insert_theme_query)
                 .chain(insert_theme_required_query)
                 .chain(insert_condition_query)

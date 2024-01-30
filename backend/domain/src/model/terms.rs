@@ -11,7 +11,7 @@ pub struct Terms {
     pub required_themes: Vec<Theme>,
     pub conditions: Vec<Condition>,
     pub required_conditions: Vec<Condition>,
-    pub target_status: TargetStatus,
+    pub target_status: Vec<TargetStatus>,
 }
 
 impl Terms {
@@ -21,7 +21,7 @@ impl Terms {
         required_themes: Vec<Theme>,
         conditions: Vec<Condition>,
         required_conditions: Vec<Condition>,
-        target_status: TargetStatus,
+        target_status: Vec<TargetStatus>,
     ) -> Terms {
         Terms {
             regions,

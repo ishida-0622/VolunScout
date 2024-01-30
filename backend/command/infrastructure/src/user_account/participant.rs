@@ -55,7 +55,7 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
         sqlx::query!(
             "INSERT INTO participant_element (uid, eid) VALUES (?, ?)",
             id,
-            terms.target_status.to_id()
+            terms.target_status[0].to_id()
         )
         .execute(&self.pool)
         .await?;
@@ -182,7 +182,7 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
         sqlx::query!(
             "INSERT INTO participant_element (uid, eid) VALUES (?, ?)",
             id,
-            terms.target_status.to_id()
+            terms.target_status[0].to_id()
         )
         .execute(&self.pool)
         .await?;
