@@ -10,7 +10,22 @@
  * @returns yyyy/MM/dd形式の文字列
  */
 export const formatDate = (date: Date | string): string => {
-  return (typeof date === "string" ? new Date(date) : date).toLocaleDateString(
-    "ja-JP"
-  );
+  if (typeof date === "string") {
+    const reg = new RegExp(/Z|[+-](0\d|1[012])(:?[012345]\d)/);
+    // MEMO: バックエンドからのレスポンスは UTC で返ってくるため, タイムゾーンが指定されていない場合はここで UTC と明示的に指定する
+    if (!reg.test(date)) {
+      // ESLint を黙らせる
+      // eslint-disable-next-line no-param-reassign
+      date += "Z";
+    }
+    // eslint-disable-next-line no-param-reassign
+    date = new Date(date);
+  }
+
+  return new Intl.DateTimeFormat("ja-JP", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    timeZone: "Asia/Tokyo",
+  }).format(date);
 };
