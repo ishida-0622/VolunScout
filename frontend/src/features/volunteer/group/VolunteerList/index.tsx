@@ -40,8 +40,12 @@ export const VolunteerList = () => {
     router.push(URL_PATH_GROUP.VOLUNTEER_CREATE);
   };
 
-  const [getVolunteers, { data, loading, error }] =
-    useLazyQuery(GetVolunteersQuery);
+  const [getVolunteers, { data, loading, error }] = useLazyQuery(
+    GetVolunteersQuery,
+    {
+      fetchPolicy: "cache-and-network",
+    }
+  );
 
   const volunteers = data?.volunteers ?? [];
 
