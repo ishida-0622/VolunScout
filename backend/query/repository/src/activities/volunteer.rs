@@ -3,7 +3,7 @@ use async_graphql::SimpleObject;
 use async_trait::async_trait;
 use chrono::{NaiveDate, NaiveDateTime};
 
-use domain::model::{user_account::user_id::UserId, volunteer::{Volunteer, VolunteerId}};
+use domain::model::{user_account::user_id::UserId, volunteer::VolunteerId};
 /// ボランティアリードモデル
 #[derive(SimpleObject, sqlx::Type)]
 pub struct VolunteerReadModel {

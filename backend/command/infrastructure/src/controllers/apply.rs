@@ -1,4 +1,4 @@
-use std::{str::FromStr, collections::HashMap};
+use std::{collections::HashMap, str::FromStr};
 
 use axum::{extract::State, http::StatusCode, response::IntoResponse, Json};
 use serde::{Deserialize, Serialize};
@@ -7,11 +7,14 @@ use utoipa::ToSchema;
 
 use command_repository::activities::apply::ApplyRepository;
 use domain::model::{
-        apply::ApplyId,
-        user_account::{user_id::UserId, user_name::UserName, user_name_furigana::UserNameFurigana}, volunteer::VolunteerId, group_participants::GroupParticipants, gender::{Gender, gender_from_i8}
-    };
+    apply::ApplyId,
+    gender::{gender_from_i8, Gender},
+    group_participants::GroupParticipants,
+    user_account::{user_id::UserId, user_name::UserName, user_name_furigana::UserNameFurigana},
+    volunteer::VolunteerId,
+};
 
-use super::{WriteApiResponseFailureBody, WriteApiResponseSuccessBody, AppData};
+use super::{AppData, WriteApiResponseFailureBody, WriteApiResponseSuccessBody};
 
 /// ボランティア応募時のリクエストボディを表す構造体
 #[derive(Debug, Serialize, Deserialize, ToSchema)]
@@ -20,7 +23,7 @@ pub struct CreateApplyRequestBody {
     pub vid: String,
     #[schema(required = true)]
     pub uid: String,
-    pub members: Option<Vec<HashMap<String, Value>>>
+    pub members: Option<Vec<HashMap<String, Value>>>,
 }
 
 /// 応募承認更新時のリクエストボディを表す構造体
@@ -29,14 +32,14 @@ pub struct UpdateApplyAllowedStatusRequestBody {
     #[schema(required = true)]
     pub aid: String,
     #[schema(required = true)]
-    pub allowed_status: u8
+    pub allowed_status: u8,
 }
 
 /// 応募メール送信更新時のリクエストボディを表す構造体
 #[derive(Debug, Serialize, Deserialize, ToSchema)]
 pub struct UpdateApplyIsSentRequestBody {
     #[schema(required = true)]
-    pub aid: String
+    pub aid: String,
 }
 
 #[utoipa::path(
@@ -86,7 +89,8 @@ pub async fn create_apply(
                     Json(WriteApiResponseFailureBody {
                         message: "name is none".to_string(),
                     }),
-                ).into_response();
+                )
+                    .into_response();
             } else {
                 let user_name = UserName::from_str(&body_name.unwrap().to_string());
                 if let Err(error) = user_name {
@@ -96,7 +100,8 @@ pub async fn create_apply(
                         Json(WriteApiResponseFailureBody {
                             message: error.to_string(),
                         }),
-                    ).into_response();
+                    )
+                        .into_response();
                 } else {
                     user_name.unwrap()
                 }
@@ -107,9 +112,11 @@ pub async fn create_apply(
                     Json(WriteApiResponseFailureBody {
                         message: "furigana is none".to_string(),
                     }),
-                ).into_response();
+                )
+                    .into_response();
             } else {
-                let user_name_furigana = UserNameFurigana::from_str(&body_furigana.unwrap().to_string());
+                let user_name_furigana =
+                    UserNameFurigana::from_str(&body_furigana.unwrap().to_string());
                 if let Err(error) = user_name_furigana {
                     log::warn!("error = {}", error);
                     return (
@@ -117,7 +124,8 @@ pub async fn create_apply(
                         Json(WriteApiResponseFailureBody {
                             message: error.to_string(),
                         }),
-                    ).into_response();
+                    )
+                        .into_response();
                 } else {
                     user_name_furigana.unwrap()
                 }
@@ -128,7 +136,8 @@ pub async fn create_apply(
                     Json(WriteApiResponseFailureBody {
                         message: "gender is none".to_string(),
                     }),
-                ).into_response();
+                )
+                    .into_response();
             } else {
                 let user_gender = gender_from_i8(&(body_gender.unwrap().as_i64().unwrap() as i8));
                 if let Err(error) = user_gender {
@@ -138,7 +147,8 @@ pub async fn create_apply(
                         Json(WriteApiResponseFailureBody {
                             message: error.to_string(),
                         }),
-                    ).into_response();
+                    )
+                        .into_response();
                 } else {
                     user_gender.unwrap()
                 }
@@ -149,7 +159,8 @@ pub async fn create_apply(
                     Json(WriteApiResponseFailureBody {
                         message: "age is none".to_string(),
                     }),
-                ).into_response();
+                )
+                    .into_response();
             } else {
                 let user_age = body_age.unwrap().as_u64();
                 if user_age == None {
@@ -159,18 +170,13 @@ pub async fn create_apply(
                         Json(WriteApiResponseFailureBody {
                             message: "age is not integer".to_string(),
                         }),
-                    ).into_response();
+                    )
+                        .into_response();
                 } else {
                     user_age.unwrap() as u8
                 }
             };
-            let gp = GroupParticipants::new(
-                ind as u16,
-                name,
-                furigana,
-                gender,
-                age
-            );
+            let gp = GroupParticipants::new(ind as u16, name, furigana, gender, age);
             return_member.push(gp);
         }
         Some(return_member)
@@ -180,14 +186,10 @@ pub async fn create_apply(
 
     let as_group: bool = match members {
         None => false,
-        Some(_) => true
+        Some(_) => true,
     };
 
-
-    match repository
-        .create(aid, vid, uid, as_group, members)
-        .await
-    {
+    match repository.create(aid, vid, uid, as_group, members).await {
         Ok(_) => (
             StatusCode::OK,
             Json(WriteApiResponseSuccessBody {
@@ -228,10 +230,7 @@ pub async fn update_apply_allowed_status(
 
     let allowed_status: u8 = body.allowed_status;
 
-    match repository
-        .update_allowed_status(aid, allowed_status)
-        .await
-    {
+    match repository.update_allowed_status(aid, allowed_status).await {
         Ok(_) => (
             StatusCode::OK,
             Json(WriteApiResponseSuccessBody {
@@ -255,7 +254,7 @@ pub async fn update_apply_allowed_status(
 #[utoipa::path(
     post,
     path="/apply/update/is-sent",
-    request_body=UpdateApplyIsSent,
+    request_body=UpdateApplyIsSentRequestBody,
     responses(
         (status=200, description="Update apply's is-sent successfully.", body=WriteApiResponseSuccessBody),
         (status=500, description="Update apply's is-sent failed.", body=WriteApiResponseFailureBody)

@@ -2,13 +2,14 @@ use anyhow::Result;
 use async_trait::async_trait;
 use futures::future;
 use sqlx::MySqlPool;
+use axum::{extract::State, http::StatusCode, response::IntoResponse, Json};
 
 use domain::{
     consts::{
         conditions::ConditionMap, region::RegionMap, target_status::TargetStatusMap,
         themes::ThemeMap,
     },
-    model::{user_account::user_id::UserId, volunteer::VolunteerId},
+    model::{user_account::user_id::UserId, volunteer::{self, VolunteerId}},
 };
 use query_repository::activities::volunteer::{
     VolunteerElementsReadModel, VolunteerQueryRepository, VolunteerReadModel,
@@ -128,12 +129,14 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
             r#"
             SELECT
                 vid, gid, title, message, overview, recruited_num, place, start_at, finish_at, deadline_on, as_group as "as_group: bool", is_deleted as "is_deleted: bool", deleted_at, registered_at, updated_at
-            FROM volunteer WHERE vid = ? AND "is_deleted: bool" = false
+            FROM volunteer WHERE vid = ?
             "#,
             vid.to_string()
         )
         .fetch_one(&self.pool)
         .await?;
+
+        if volunteer.is_deleted {return Err(anyhow::anyhow!("the volunteer is deleted"));}
 
         let elements: VolunteerElementsReadModel = self.find_elements_by_id(&vid).await?;
 
