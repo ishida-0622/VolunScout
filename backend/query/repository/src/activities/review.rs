@@ -14,22 +14,32 @@ pub struct Review {
     /// レビューポイント
     pub point: i8,
     /// コメント
-    pub comment: Option<String>
+    pub comment: Option<String>,
+}
+
+/// レビューリードモデル（平均）
+#[derive(SimpleObject, sqlx::Type)]
+pub struct ParticipantReviewPointAverage {
+    /// 参加者ID
+    pub uid: String,
+    /// レビューポイント
+    pub point: f64,
 }
 
 impl Review {
-    pub fn new(
-        uid: String,
-        vid: String,
-        point: i8,
-        comment: Option<String>
-    ) -> Review {
+    pub fn new(uid: String, vid: String, point: i8, comment: Option<String>) -> Review {
         Review {
             uid,
             vid,
             point,
-            comment
+            comment,
         }
+    }
+}
+
+impl ParticipantReviewPointAverage {
+    pub fn new(uid: String, point: f64) -> ParticipantReviewPointAverage {
+        ParticipantReviewPointAverage { uid, point }
     }
 }
 
@@ -43,6 +53,9 @@ pub trait ParticipantReviewRepository: Send + Sync {
 
     /// 参加者へのレビュー情報をボランティアIDで一括取得する
     async fn find_by_vid(&self, vid: &VolunteerId) -> Result<Vec<Review>>;
+
+    /// 複数の参加者のレビュー情報を一括取得する
+    async fn find_by_uids(&self, uids: &[UserId]) -> Result<Vec<ParticipantReviewPointAverage>>;
 }
 
 #[async_trait]

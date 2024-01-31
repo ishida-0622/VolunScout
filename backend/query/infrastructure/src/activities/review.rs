@@ -3,7 +3,9 @@ use async_trait::async_trait;
 use sqlx::MySqlPool;
 
 use domain::model::{user_account::user_id::UserId, volunteer::VolunteerId};
-use query_repository::activities::review::{Review, ParticipantReviewRepository, VolunteerReviewRepository};
+use query_repository::activities::review::{
+    ParticipantReviewPointAverage, ParticipantReviewRepository, Review, VolunteerReviewRepository,
+};
 
 pub struct ReviewImpl {
     pool: MySqlPool,
@@ -55,6 +57,40 @@ impl ParticipantReviewRepository for ReviewImpl {
         .fetch_all(&self.pool)
         .await?;
         Ok(review)
+    }
+
+    async fn find_by_uids(&self, uids: &[UserId]) -> Result<Vec<ParticipantReviewPointAverage>> {
+        let uids = uids
+            .iter()
+            .map(|uid| uid.to_string())
+            .collect::<Vec<String>>()
+            .join(",");
+
+        let reviews = sqlx::query!(
+            r#"
+            SELECT uid, AVG(point) as point
+            FROM participant_review
+            WHERE uid IN (?)
+            GROUP BY uid
+            "#,
+            uids
+        )
+        .fetch_all(&self.pool)
+        .await?;
+
+        let reviews = reviews
+            .into_iter()
+            .map(|review| {
+                ParticipantReviewPointAverage::new(
+                    review.uid,
+                    // 小数点第二位で四捨五入
+                    (review.point.unwrap().to_string().parse::<f64>().unwrap() * 100.0).round()
+                        / 100.0,
+                )
+            })
+            .collect::<Vec<ParticipantReviewPointAverage>>();
+
+        Ok(reviews)
     }
 }
 

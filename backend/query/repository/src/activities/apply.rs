@@ -3,7 +3,7 @@ use async_graphql::SimpleObject;
 use async_trait::async_trait;
 use chrono::NaiveDateTime;
 
-use domain::model::{user_account::user_id::UserId, apply::ApplyId, volunteer::VolunteerId};
+use domain::model::{apply::ApplyId, user_account::user_id::UserId, volunteer::VolunteerId};
 
 /// スカウトリードモデル
 #[derive(SimpleObject, sqlx::Type)]
@@ -18,12 +18,12 @@ pub struct Apply {
     pub applied_at: NaiveDateTime,
     /// 集団応募有無
     pub as_group: bool,
-    /// 認証データ
+    /// 認証データ 0:未認証 1:承認済み 2:棄却済み
     pub allowed_status: i8,
     /// 認証日時
     pub decided_at: Option<NaiveDateTime>,
     /// 送信日時
-    pub is_sent: bool
+    pub is_sent: bool,
 }
 
 impl Apply {
@@ -35,7 +35,7 @@ impl Apply {
         as_group: bool,
         allowed_status: i8,
         decided_at: Option<NaiveDateTime>,
-        is_sent: bool
+        is_sent: bool,
     ) -> Apply {
         Apply {
             aid,
