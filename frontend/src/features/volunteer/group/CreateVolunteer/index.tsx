@@ -111,6 +111,11 @@ export const CreateVolunteer = () => {
     const infoValues = getInfoValues();
     const termsValues = getTermsValues();
 
+    if (infoValues.target_status.length === 0) {
+      alert("募集対象を選択してください");
+      return;
+    }
+
     const body: CreateVolunteerRequestBody = {
       gid,
       ...infoValues,
