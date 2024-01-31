@@ -33,7 +33,7 @@ const initialValues: FormValues = {
   finish_at: "",
   deadline_on: "",
   as_group: true,
-  target_status: "",
+  target_status: [],
 };
 
 type Props = {
@@ -131,16 +131,16 @@ export const useInfoForm = ({
           募集対象
         </Form.Label>
         <Col>
-          <Form.Select {...register("target_status", { required: true })}>
-            <option value="" disabled>
-              選択してください
-            </option>
-            {TARGET_STATUSES.map((status) => (
-              <option key={status} value={status}>
-                {status}
-              </option>
-            ))}
-          </Form.Select>
+          {TARGET_STATUSES.map((status) => (
+            <Form.Check
+              key={status}
+              id={`target-status-${status}`}
+              type="checkbox"
+              value={status}
+              label={status}
+              {...register("target_status", { required: true })}
+            />
+          ))}
         </Col>
       </Form.Group>
       <Form.Group as={Row} className="mb-3 align-items-center">
