@@ -1,6 +1,6 @@
 use anyhow::Result;
 use async_trait::async_trait;
-use sqlx::MySqlPool;
+use sqlx::{query, MySqlPool, Row};
 
 use domain::model::{user_account::user_id::UserId, volunteer::VolunteerId};
 use query_repository::activities::review::{
@@ -60,31 +60,37 @@ impl ParticipantReviewRepository for ReviewImpl {
     }
 
     async fn find_by_uids(&self, uids: &[UserId]) -> Result<Vec<ParticipantReviewPointAverage>> {
-        let uids = uids
-            .iter()
-            .map(|uid| uid.to_string())
-            .collect::<Vec<String>>()
-            .join(",");
-
-        let reviews = sqlx::query!(
+        let params = format!("?{}", ", ?".repeat(uids.len() - 1));
+        let query_str = format!(
             r#"
             SELECT uid, AVG(point) as point
             FROM participant_review
-            WHERE uid IN (?)
+            WHERE uid IN ({})
             GROUP BY uid
             "#,
-            uids
-        )
-        .fetch_all(&self.pool)
-        .await?;
+            params
+        );
+
+        let mut query = sqlx::query(&query_str);
+        for uid in uids {
+            query = query.bind(uid.to_string());
+        }
+
+        let reviews = query.fetch_all(&self.pool).await?;
 
         let reviews = reviews
             .into_iter()
             .map(|review| {
                 ParticipantReviewPointAverage::new(
-                    review.uid,
+                    review.get("uid"),
                     // 小数点第二位で四捨五入
-                    (review.point.unwrap().to_string().parse::<f64>().unwrap() * 100.0).round()
+                    (review
+                        .get::<sqlx::types::BigDecimal, &str>("point")
+                        .to_string()
+                        .parse::<f64>()
+                        .unwrap()
+                        * 100.0)
+                        .round()
                         / 100.0,
                 )
             })

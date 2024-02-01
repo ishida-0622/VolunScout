@@ -3,18 +3,17 @@ use async_trait::async_trait;
 use domain::consts::conditions::ConditionMap;
 use domain::consts::target_status::{TargetStatusMap, TARGET_STATUSES_PREFIX};
 use domain::consts::themes::ThemeMap;
-use sqlx::MySqlPool;
+use sqlx::{MySqlPool, Row};
 
 use domain::consts::region::RegionMap;
 use domain::model::user_account::user_id::UserId;
-use query_repository::
-    user_account::participant::{
+use query_repository::user_account::participant::{
     ParticipantAccount, ParticipantCondition, ParticipantRegion, ParticipantTargetStatus,
     ParticipantTheme, ParticipantUserRepository,
 };
 
 pub struct ParticipantAccountImpl {
-    pool: MySqlPool
+    pool: MySqlPool,
 }
 
 impl ParticipantAccountImpl {
@@ -42,21 +41,37 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
     }
 
     async fn find_by_ids(&self, pids: &[UserId]) -> Result<Vec<ParticipantAccount>> {
-        let users = sqlx::query_as!(
-            ParticipantAccount,
+        let params = format!("?{}", ", ?".repeat(pids.len() - 1));
+        let query_str = format!(
             r#"
-            SELECT
-                uid, name, furigana, phone, gender, birthday, profile, is_deleted as "is_deleted: bool", deleted_at
+            SELECT *
             FROM participant_account
-            WHERE uid IN (?)
+            WHERE uid IN ({}) AND is_deleted = false
             "#,
-            pids.iter()
-                .map(|pid| pid.to_string())
-                .collect::<Vec<String>>()
-                .join(",")
-        )
-        .fetch_all(&self.pool)
-        .await?;
+            params
+        );
+
+        let mut query = sqlx::query(&query_str);
+        for pid in pids {
+            query = query.bind(pid.to_string());
+        }
+
+        let users = query.fetch_all(&self.pool).await?;
+
+        let users = users
+            .into_iter()
+            .map(|user| ParticipantAccount {
+                uid: user.get("uid"),
+                name: user.get("name"),
+                furigana: user.get("furigana"),
+                phone: user.get("phone"),
+                gender: user.get("gender"),
+                birthday: user.get("birthday"),
+                profile: user.get("profile"),
+                is_deleted: user.get("is_deleted"),
+                deleted_at: user.get("deleted_at"),
+            })
+            .collect();
 
         Ok(users)
     }
