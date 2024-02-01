@@ -1,5 +1,6 @@
 use anyhow::Result;
 use async_trait::async_trait;
+use futures::future;
 use chrono::Utc;
 use sqlx::MySqlPool;
 
@@ -31,10 +32,12 @@ impl GroupUserRepository for GroupAccountImpl {
         phone: UserPhone,
         address: String,
         contents: String,
+        s3_keys: Vec<String>
     ) -> Result<()> {
+        let id: String = gid.to_string();
         sqlx::query!(
             "INSERT INTO group_account (gid, name, furigana, representative_name, representative_furigana, phone, address, contents) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-            gid.to_string(),
+            id,
             name.to_string(),
             furigana.to_string(),
             representative_name.to_string(),
@@ -45,6 +48,21 @@ impl GroupUserRepository for GroupAccountImpl {
         )
         .execute(&self.pool)
         .await?;
+
+        let insert_photo_query: Vec<_> = s3_keys
+            .iter()
+            .map(|p: &String| {
+                sqlx::query!(
+                    "INSERT INTO group_photo VALUES (?, ?)",
+                    p,
+                    id
+                )
+                .execute(&self.pool)
+            })
+            .collect::<Vec<_>>();
+
+        future::try_join_all(insert_photo_query.into_iter()).await?;
+
         Ok(())
     }
 
@@ -58,7 +76,9 @@ impl GroupUserRepository for GroupAccountImpl {
         phone: UserPhone,
         address: String,
         contents: String,
+        s3_keys: Vec<String>
     ) -> Result<()> {
+        let id: String = gid.to_string();
         sqlx::query!(
             "UPDATE group_account SET name = ?, furigana = ?, representative_name = ?, representative_furigana = ?, phone = ?, address = ?, contents = ? WHERE gid = ?",
             name.to_string(),
@@ -68,6 +88,39 @@ impl GroupUserRepository for GroupAccountImpl {
             phone.to_string(),
             address,
             contents,
+            id
+        )
+        .execute(&self.pool)
+        .await?;
+
+        sqlx::query!(
+            "DELETE FROM group_photo WHERE gid = ?",
+            id
+        )
+        .execute(&self.pool)
+        .await?;
+
+        let insert_photo_query: Vec<_> = s3_keys
+            .iter()
+            .map(|p: &String| {
+                sqlx::query!(
+                    "INSERT INTO group_photo VALUES (?, ?)",
+                    p,
+                    id
+                )
+                .execute(&self.pool)
+            })
+            .collect::<Vec<_>>();
+
+        future::try_join_all(insert_photo_query.into_iter()).await?;
+
+        Ok(())
+    }
+
+    async fn switch_plan(&self, gid: UserId, is_paid: bool) -> Result<()> {
+        sqlx::query!(
+            "UPDATE group_account SET is_paid = ? WHERE gid = ?",
+            is_paid,
             gid.to_string()
         )
         .execute(&self.pool)
@@ -76,13 +129,32 @@ impl GroupUserRepository for GroupAccountImpl {
     }
 
     async fn delete(&self, gid: UserId) -> Result<()> {
-        sqlx::query!(
-            "UPDATE group_account SET is_deleted = true, deleted_at = ? WHERE gid = ?",
-            Utc::now(),
-            gid.to_string()
+        let id: String = gid.to_string();
+        struct IsExists {
+            is_deleted: bool
+        }
+
+        let is_deleted = sqlx::query_as!(
+            IsExists,
+            r#"
+            SELECT is_deleted as "is_deleted: bool" FROM group_account WHERE gid = ?
+            "#,
+            id
         )
-        .execute(&self.pool)
+        .fetch_one(&self.pool)
         .await?;
-        Ok(())
+
+        if is_deleted.is_deleted {
+            Err(anyhow::anyhow!("This group_account is already deleted".to_string()))
+        } else {
+            sqlx::query!(
+                "UPDATE group_account SET is_deleted = true, deleted_at = ? WHERE gid = ?",
+                Utc::now(),
+                gid.to_string()
+            )
+            .execute(&self.pool)
+            .await?;
+            Ok(())
+        }
     }
 }

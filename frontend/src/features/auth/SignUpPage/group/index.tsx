@@ -1,9 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
 
 import { Confirmation } from "./Confirmation";
+import styles from "./index.module.css"; // CSSモジュールのインポート
 import { useInputForm } from "./useInputForm";
 
 export const SignUpPage = () => {
@@ -14,15 +14,13 @@ export const SignUpPage = () => {
   const { formValues, InputForm } = useInputForm({ onSubmit: toConfirm });
 
   return (
-    <div>
+    <section className={styles.section}>
       <div>
-        {/* TODO:アイコンを差し替える */}
-        <Image src={"/icon.svg"} alt="user icon" width={100} height={100} />
+        {page === "input" && InputForm}
+        {page === "confirm" && (
+          <Confirmation values={formValues} onPrevPage={toInput} />
+        )}
       </div>
-      {page === "input" && InputForm}
-      {page === "confirm" && (
-        <Confirmation values={formValues} onPrevPage={toInput} />
-      )}
-    </div>
+    </section>
   );
 };

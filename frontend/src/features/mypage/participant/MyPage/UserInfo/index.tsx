@@ -1,0 +1,127 @@
+"use client";
+
+import { useLazyQuery } from "@apollo/client";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+
+import styles from "./index.module.css";
+
+import { gql } from "@/__generated__/query";
+import { joinClassnames } from "@/components/@joinClassnames";
+import { URL_PATH_PARTICIPANT } from "@/consts";
+import { useAuthContext } from "@/contexts/AuthContext";
+import { formatDate } from "@/utils/formatDate";
+import { numberToGender } from "@/utils/numberToGender";
+
+const GetParticipantAccountInfoQuery = gql(/* GraphQL */ `
+  query GetParticipantAccountInfo($uid: String!) {
+    user: getParticipantAccount(uid: $uid) {
+      name
+      furigana
+      phone
+      gender
+      birthday
+      profile
+    }
+    targetStatus: getParticipantTargetStatus(uid: $uid) {
+      name
+    }
+    # TODO: レビューの取得
+  }
+`);
+
+export const UserInfo = () => {
+  const router = useRouter();
+  const toEditPage = () => {
+    router.push(URL_PATH_PARTICIPANT.ACCOUNT_EDIT);
+  };
+
+  const { user } = useAuthContext();
+
+  const [fetchParticipantAccount, { loading, error, data }] = useLazyQuery(
+    GetParticipantAccountInfoQuery,
+    {
+      fetchPolicy: "cache-and-network",
+    },
+  );
+
+  useEffect(() => {
+    if (typeof user?.uid === "string") {
+      fetchParticipantAccount({ variables: { uid: user.uid } }).catch((e) => {
+        console.error(e);
+      });
+    }
+  }, [fetchParticipantAccount, user?.uid]);
+
+  if (loading || data === undefined) {
+    return null;
+  }
+
+  const userInfo = data.user;
+  const targetStatus = data.targetStatus;
+
+  if (error) {
+    console.error(error);
+    return null;
+  }
+
+  return (
+    <div className={styles.main_contents}>
+      <div>
+        <div>
+          <Image
+            src={user?.photoURL ?? ""}
+            alt="User icon"
+            width={100}
+           height={100}
+            className={styles.user_icon}
+          />
+        </div>
+        <div>
+          <div className={styles.name}>
+            <p>{userInfo.furigana}</p>
+            <h2>{userInfo.name}</h2>
+          </div>
+          <div className={styles.main}>
+          <p className={styles.birth}>
+            <span>生年月日</span>
+            <span>：</span>
+            <span>{formatDate(userInfo.birthday)}</span>
+          </p>
+          <p>
+            <span>区分</span>
+            <span>：</span>
+            <span>{targetStatus.name}</span>
+          </p>
+          <p>
+            <span>性別</span>
+            <span>：</span>
+            <span>{numberToGender(userInfo.gender)}</span>
+          </p>
+          <p>
+            <span>電話番号</span>
+            <span>：</span>
+            <span>{userInfo.phone}</span>
+          </p>
+          </div>
+        </div>
+        <div>
+          {/* TODO:レビュー */}
+          <p className={styles.review}>★★★★☆</p>
+        </div>
+        <div className={styles.edit}>
+          <button
+            className={joinClassnames("btn btn-info", styles.edit)}
+            onClick={toEditPage}
+          >
+            編集
+          </button>
+        </div>
+      </div>
+      <div>
+        <p className={styles.profile}>{userInfo.profile}</p>
+      </div>
+    </div>
+  );
+};

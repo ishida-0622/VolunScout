@@ -1,6 +1,8 @@
 use serde::{Deserialize, Serialize};
 
-use crate::model::{region::Region, target_status::TargetStatus, theme::Theme, condition::Condition};
+use crate::model::{
+    condition::Condition, region::Region, target_status::TargetStatus, theme::Theme,
+};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Terms {

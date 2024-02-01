@@ -27,6 +27,7 @@ pub trait VolunteerRepository: Send + Sync {
         as_group: bool,
         reward: Option<String>,
         terms: Terms,
+        photo_keys: Vec<String>
     ) -> Result<()>;
 
     /// ボランティアを更新する
@@ -44,8 +45,15 @@ pub trait VolunteerRepository: Send + Sync {
         as_group: bool,
         reward: Option<String>,
         terms: Terms,
+        photo_keys: Vec<String>
     ) -> Result<()>;
 
     /// ボランティアを削除する
     async fn delete(&self, vid: VolunteerId) -> Result<()>;
+
+    // お気に入りに登録する
+    async fn register_favorite(&self, uid: UserId, vid: VolunteerId) -> Result<()>;
+
+    // お気に入りの登録を解除する
+    async fn unregister_favorite(&self, uid: UserId, vid: VolunteerId) -> Result<()>;
 }

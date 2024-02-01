@@ -1,0 +1,7 @@
+.wrapper {
+  cursor: pointer;
+  width: 100%;
+  max-width: 1080px;
+  padding: 8px;
+  margin: 8px auto;
+}

@@ -1693,6 +1693,7 @@ dependencies = [
  "axum",
  "chrono",
  "domain",
+ "futures",
  "query-repository",
  "redis",
  "sqlx",
@@ -1708,6 +1709,7 @@ dependencies = [
  "async-trait",
  "chrono",
  "domain",
+ "sqlx",
 ]
 
 [[package]]

@@ -1,6 +1,9 @@
 pub mod group;
 pub mod participant;
 pub mod volunteer;
+pub mod apply;
+pub mod scout;
+pub mod review;
 
 use axum::{routing::post, Router};
 use lambda_http::Body;
@@ -10,8 +13,10 @@ use std::sync::Arc;
 use tokio::sync::RwLock;
 use utoipa::ToSchema;
 
-use crate::activities::volunteer::VolunteerImpl;
-use crate::user_account::{group::GroupAccountImpl, participant::ParticipantAccountImpl};
+use crate::{
+    activities::{volunteer::VolunteerImpl, apply::ApplyImpl, scout::ScoutImpl, review::ReviewImpl},
+    user_account::{group::GroupAccountImpl, participant::ParticipantAccountImpl}
+};
 
 /// 失敗時のAPIレスポンスのボディを表す構造体
 #[derive(Debug, Serialize, Deserialize, ToSchema)]
@@ -30,6 +35,9 @@ pub struct AppState {
     group_account_repository: GroupAccountImpl,
     participant_account_repository: ParticipantAccountImpl,
     volunteer_repository: VolunteerImpl,
+    apply_repository: ApplyImpl,
+    scout_repository: ScoutImpl,
+    review_repository: ReviewImpl
 }
 
 impl AppState {
@@ -38,6 +46,9 @@ impl AppState {
             group_account_repository: GroupAccountImpl::new(pool.clone()),
             participant_account_repository: ParticipantAccountImpl::new(pool.clone()),
             volunteer_repository: VolunteerImpl::new(pool.clone()),
+            apply_repository: ApplyImpl::new(pool.clone()),
+            scout_repository: ScoutImpl::new(pool.clone()),
+            review_repository: ReviewImpl::new(pool.clone()),
         }
     }
 }
@@ -50,12 +61,24 @@ pub enum Endpoints {
     CreateGroupAccount,
     UpdateGroupAccount,
     DeleteGroupAccount,
+    SwitchGroupAccountPlan,
     CreateParticipantAccount,
     UpdateParticipantAccount,
     DeleteParticipantAccount,
     CreateVolunteer,
     UpdateVolunteer,
     DeleteVolunteer,
+    RegisterVolunteerFavorite,
+    UnregisterVolunteerFavorite,
+    CreateApply,
+    UpdateApplyAllowedStatus,
+    UpdateApplyIsSent,
+    CreateScout,
+    UpdateScoutIsSent,
+    UpdateScoutIsRead,
+    UpdateScoutDenied,
+    ReviewToVolunteer,
+    ReviewToParticipant
 }
 
 impl Endpoints {
@@ -64,12 +87,24 @@ impl Endpoints {
             Endpoints::CreateGroupAccount => "/group-account/create",
             Endpoints::UpdateGroupAccount => "/group-account/update",
             Endpoints::DeleteGroupAccount => "/group-account/delete",
+            Endpoints::SwitchGroupAccountPlan => "/group-account/switch-plan",
             Endpoints::CreateParticipantAccount => "/participant-account/create",
             Endpoints::UpdateParticipantAccount => "/participant-account/update",
             Endpoints::DeleteParticipantAccount => "/participant-account/delete",
             Endpoints::CreateVolunteer => "/volunteer/create",
             Endpoints::UpdateVolunteer => "/volunteer/update",
             Endpoints::DeleteVolunteer => "/volunteer/delete",
+            Endpoints::RegisterVolunteerFavorite => "/volunteer/favorite/register",
+            Endpoints::UnregisterVolunteerFavorite => "/volunteer/favorite/unregister",
+            Endpoints::CreateApply => "/apply/create",
+            Endpoints::UpdateApplyAllowedStatus => "/apply/update/allowed-status",
+            Endpoints::UpdateApplyIsSent => "/apply/update/is-sent",
+            Endpoints::CreateScout => "/scout/create",
+            Endpoints::UpdateScoutIsSent => "/scout/update/is-sent",
+            Endpoints::UpdateScoutIsRead => "/scout/update/is-read",
+            Endpoints::UpdateScoutDenied => "/scout/update/denied",
+            Endpoints::ReviewToVolunteer => "/review/to-volunteer",
+            Endpoints::ReviewToParticipant => "/review/to-participant"
         }
     }
 }
@@ -91,6 +126,10 @@ pub fn create_router(pool: MySqlPool) -> Router {
         .route(
             Endpoints::DeleteGroupAccount.as_str(),
             post(group::delete_group_account),
+        )
+        .route(
+            Endpoints::SwitchGroupAccountPlan.as_str(),
+            post(group::switch_group_account_plan),
         )
         .route(
             Endpoints::CreateParticipantAccount.as_str(),
@@ -115,6 +154,50 @@ pub fn create_router(pool: MySqlPool) -> Router {
         .route(
             Endpoints::DeleteVolunteer.as_str(),
             post(volunteer::delete_volunteer),
+        )
+        .route(
+            Endpoints::RegisterVolunteerFavorite.as_str(),
+            post(volunteer::register_favorite),
+        )
+        .route(
+            Endpoints::UnregisterVolunteerFavorite.as_str(),
+            post(volunteer::unregister_favorite),
+        )
+        .route(
+            Endpoints::CreateApply.as_str(),
+            post(apply::create_apply),
+        )
+        .route(
+            Endpoints::UpdateApplyAllowedStatus.as_str(),
+            post(apply::update_apply_allowed_status),
+        )
+        .route(
+            Endpoints::UpdateApplyIsSent.as_str(),
+            post(apply::update_apply_is_sent),
+        )
+        .route(
+            Endpoints::CreateScout.as_str(),
+            post(scout::create_scout),
+        )
+        .route(
+            Endpoints::UpdateScoutIsSent.as_str(),
+            post(scout::update_scout_is_sent),
+        )
+        .route(
+            Endpoints::UpdateScoutIsRead.as_str(),
+            post(scout::update_scout_is_read),
+        )
+        .route(
+            Endpoints::UpdateScoutDenied.as_str(),
+            post(scout::update_scout_denied),
+        )
+        .route(
+            Endpoints::ReviewToVolunteer.as_str(),
+            post(review::review_to_volunteer),
+        )
+        .route(
+            Endpoints::ReviewToParticipant.as_str(),
+            post(review::review_to_participant),
         )
         .with_state(state);
 

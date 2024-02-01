@@ -1,0 +1,14 @@
+.search_bar_wrapper {
+  width: 100%;
+  max-width: 1080px;
+  margin: 1rem auto;
+  display: flex;
+}
+
+.search_bar {
+  flex-grow: 1;
+}
+
+.create_button {
+  margin: 0 0 0 1rem;
+}
