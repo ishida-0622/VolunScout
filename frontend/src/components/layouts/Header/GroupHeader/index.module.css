@@ -1,3 +1,13 @@
+/* index.module.css */
+
 .base {
+  margin: 0 auto;
+}
+
+/* マウスカーソルを合わせた時のスタイルを変更 */
+.base .nav-link:hover,
+.base .nav-link:hover span,
+.text:hover {
+  color: white !important; /* 白色に変更 */
   margin: 0 auto;
 }
