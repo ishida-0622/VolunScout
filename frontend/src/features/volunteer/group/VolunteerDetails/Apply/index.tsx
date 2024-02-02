@@ -75,6 +75,16 @@ export const Apply = ({ vid }: Props) => {
   };
   const closeModal = () => setShowParticipantModal(false);
 
+  const {
+    data: applyData,
+    loading: applyLoading,
+    error: applyError,
+    refetch,
+  } = useQuery(GetApplyQuery, {
+    variables: { vid },
+    fetchPolicy: "cache-and-network",
+  });
+
   const accept = async (aid: string) => {
     if (!confirm("承認しますか？")) return;
 
@@ -86,6 +96,7 @@ export const Apply = ({ vid }: Props) => {
     try {
       await apiClientApply.updateApplyAllowedStatus(body);
       alert("承認しました");
+      await refetch();
     } catch (error) {
       console.error(error);
     }
@@ -102,6 +113,7 @@ export const Apply = ({ vid }: Props) => {
     try {
       await apiClientApply.updateApplyAllowedStatus(body);
       alert("棄却しました");
+      await refetch();
     } catch (error) {
       console.error(error);
     }
@@ -110,15 +122,6 @@ export const Apply = ({ vid }: Props) => {
   const [applyAndParticipantDataMap, setState] = useState(
     new Map<string, ApplyAndParticipantDataType>()
   );
-
-  const {
-    data: applyData,
-    loading: applyLoading,
-    error: applyError,
-  } = useQuery(GetApplyQuery, {
-    variables: { vid },
-    fetchPolicy: "cache-and-network",
-  });
 
   const [getParticipantAccounts, { data: participantData }] = useLazyQuery(
     GetParticipantAccountsQuery
