@@ -54,11 +54,7 @@ export const ParticipantModal = ({
     skip: !show,
   });
 
-  const {
-    data: membersData,
-    loading: membersLoading,
-    error: membersError,
-  } = useQuery(GetMembersQuery, {
+  const { data: membersData } = useQuery(GetMembersQuery, {
     variables: { aid },
     skip: !show || !asGroup,
   });
@@ -121,11 +117,12 @@ export const ParticipantModal = ({
             <details>
               <summary>団体メンバー</summary>
               {membersData.members.map((m) => (
-                <Row>
-                  <Col>{m.furigana}</Col>
-                  <Col>{m.name}</Col>
-                  <Col>{numberToGender(m.gender)}</Col>
-                  <Col>{m.age}歳</Col>
+                <Row key={`${m.name}-${m.gender}-${m.age}`}>
+                  <Col sm={8}>
+                    {m.name}（{m.furigana}）
+                  </Col>
+                  <Col sm={2}>{numberToGender(m.gender)}</Col>
+                  <Col sm={2}>{m.age}歳</Col>
                 </Row>
               ))}
             </details>
