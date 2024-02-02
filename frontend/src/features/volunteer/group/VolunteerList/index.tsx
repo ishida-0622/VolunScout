@@ -3,7 +3,7 @@
 import { useLazyQuery } from "@apollo/client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Button } from "react-bootstrap";
+import { Button, Spinner } from "react-bootstrap";
 
 import { VolunteerItem } from "../../VolunteerItem";
 
@@ -78,10 +78,6 @@ export const VolunteerList = () => {
     );
   };
 
-  if (loading) {
-    return null;
-  }
-
   if (error) {
     console.error(error);
     return null;
@@ -100,6 +96,7 @@ export const VolunteerList = () => {
           新規掲載
         </Button>
       </div>
+      {loading && <Spinner />}
       {showVolunteers.map((volunteer) => (
         <VolunteerItem
           key={volunteer.vid}
