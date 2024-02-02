@@ -1,6 +1,6 @@
 use anyhow::Result;
 use async_trait::async_trait;
-use sqlx::{query, MySqlPool, Row};
+use sqlx::{MySqlPool, Row};
 
 use domain::model::{user_account::user_id::UserId, volunteer::VolunteerId};
 use query_repository::activities::review::{

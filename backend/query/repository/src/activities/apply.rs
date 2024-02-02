@@ -5,7 +5,7 @@ use chrono::NaiveDateTime;
 
 use domain::model::{apply::ApplyId, user_account::user_id::UserId, volunteer::VolunteerId};
 
-/// スカウトリードモデル
+/// 応募リードモデル
 #[derive(SimpleObject, sqlx::Type)]
 pub struct Apply {
     /// 応募ID
