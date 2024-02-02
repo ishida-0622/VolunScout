@@ -1,10 +1,7 @@
-// "use client" 以下のコード
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Container, Navbar } from "react-bootstrap";
+import { usePathname, useRouter } from "next/navigation";
+import { Container, Image, Navbar } from "react-bootstrap";
 
 import { GroupHeader } from "./GroupHeader";
 import { ParticipantHeader } from "./ParticipantHeader";
@@ -33,38 +30,34 @@ export const Header = ({ className }: Props) => {
 
   const accountType: AccountType = getAccountTypeFromPath(pathname);
 
+  const router = useRouter();
+  const toHome = () =>
+    router.push(
+      accountType === "group" ? URL_PATH_GROUP.HOME : URL_PATH_PARTICIPANT.HOME
+    );
+
   const isNoLink = !isLogged || isNoHeaderLink(pathname);
   const isNoIcon = isNoHeaderIcon(pathname);
-
-  const linkHref =
-    accountType === "group" ? URL_PATH_GROUP.HOME : URL_PATH_PARTICIPANT.HOME;
 
   return (
     <header className={joinClassnames(styles.header_container, className)}>
       <Navbar expand="lg" className={joinClassnames(className)}>
         <Container>
-          {/* Icon and Text */}
           <div
-            onClick={() => {
-              window.location.href = linkHref;
-            }}
-            className={joinClassnames(
-              "headerItem",
-              "d-flex align-items-center cursor-pointer me-2",
-            )}
+            onClick={toHome}
+            className="d-flex align-items-center cursor-pointer me-2 w-25"
+            role="button"
           >
             <Image
-              src={"/icon.svg"}
+              src={"/icons/banner_color.png"}
               alt="Icon"
-              width={80} // Adjust the width as needed for a larger icon
-              height={80} // Adjust the height as needed for a larger icon
-              className="d-inline-block align-top"
+              className="d-inline-block align-top h-100 w-auto"
+              fluid
             />
-            <span className="ms-2 fs-1">VolunScout</span>
           </div>
 
           {!isNoLink && accountType === "group" && (
-            <GroupHeader className="headerItem me-2" />
+            <GroupHeader className="me-2" />
           )}
           {!isNoLink && accountType === "participant" && (
             <ParticipantHeader className="me-2" />

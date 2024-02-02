@@ -1,4 +1,4 @@
-import { Navbar, Nav } from "react-bootstrap";
+import { Nav, Navbar } from "react-bootstrap";
 
 import styles from "./index.module.css";
 
@@ -33,7 +33,7 @@ export const ParticipantHeader = ({ className }: Props) => {
             font-weight: bold; /* 太文字に変更 */
           }
 
-                    /* 追加: ナビゲーションリンクに対する左の余白を調整 */
+          /* 追加: ナビゲーションリンクに対する左の余白を調整 */
           .text {
             margin: 0 25px;
           }

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { ListGroup, OverlayTrigger, Popover } from "react-bootstrap";
 import { AiOutlineQuestionCircle } from "react-icons/ai";
 import { HiOutlineCurrencyYen } from "react-icons/hi2";
 import { IoDocumentTextOutline, IoLogOutOutline } from "react-icons/io5";
@@ -24,9 +24,6 @@ export const UserIcon = ({ accountType }: Props) => {
   const { user, initializing } = useAuthContext();
   const { logout } = useLogout();
 
-  const [isTooltipOpen, setIsTooltipOpen] = useState(false);
-  const toggleTooltip = () => setIsTooltipOpen((prev) => !prev);
-
   const toMyPage = () => {
     if (accountType === "group") {
       return URL_PATH_GROUP.ACCOUNT;
@@ -42,46 +39,54 @@ export const UserIcon = ({ accountType }: Props) => {
   return (
     <IconConfig>
       <div>
-        <Image
-          src={user?.photoURL ?? "/icon.svg"}
-          alt="user icon"
-          // TODO: 画像のサイズを調整する
-          width={80}
-          height={80}
-          onClick={toggleTooltip}
-          className={styles.base}
-        />
+        <OverlayTrigger
+          trigger={"click"}
+          placement="bottom"
+          overlay={
+            <Popover>
+              <ListGroup>
+                <ListGroup.Item>
+                  <Link href={toMyPage()}>
+                    <IoDocumentTextOutline />
+                    マイページ
+                  </Link>
+                </ListGroup.Item>
+                <ListGroup.Item>
+                  <Link href={URL_PATH.CONTACT}>
+                    <AiOutlineQuestionCircle />
+                    お問い合わせ
+                  </Link>
+                </ListGroup.Item>
+                <ListGroup.Item>
+                  <Link href={URL_PATH.DONATE}>
+                    <HiOutlineCurrencyYen />
+                    運営への寄付
+                  </Link>
+                </ListGroup.Item>
+                <ListGroup.Item>
+                  <span
+                    onClick={logout}
+                    className={styles.logout}
+                    role="button"
+                  >
+                    <IoLogOutOutline />
+                    ログアウト
+                  </span>
+                </ListGroup.Item>
+              </ListGroup>
+            </Popover>
+          }
+        >
+          <Image
+            src={user?.photoURL ?? "/icon.svg"}
+            alt="user icon"
+            // TODO: 画像のサイズを調整する
+            width={80}
+            height={80}
+            className={styles.base}
+          />
+        </OverlayTrigger>
       </div>
-      {isTooltipOpen && (
-        <div className={styles.tooltip}>
-          <ul>
-            <li>
-              <Link href={toMyPage()}>
-                <IoDocumentTextOutline />
-                マイページ
-              </Link>
-            </li>
-            <li>
-              <Link href={URL_PATH.CONTACT}>
-                <AiOutlineQuestionCircle />
-                お問い合わせ
-              </Link>
-            </li>
-            <li>
-              <Link href={URL_PATH.DONATE}>
-                <HiOutlineCurrencyYen />
-                運営への寄付
-              </Link>
-            </li>
-            <li>
-              <span onClick={logout} className={styles.logout}>
-                <IoLogOutOutline />
-                ログアウト
-              </span>
-            </li>
-          </ul>
-        </div>
-      )}
     </IconConfig>
   );
 };
