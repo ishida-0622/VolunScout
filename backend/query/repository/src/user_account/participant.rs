@@ -3,7 +3,7 @@ use async_graphql::SimpleObject;
 use async_trait::async_trait;
 use chrono::{NaiveDate, NaiveDateTime};
 
-use domain::model::user_account::user_id::UserId;
+use domain::model::{apply::ApplyId, user_account::user_id::UserId};
 
 /// 参加者アカウントリードモデル
 #[derive(SimpleObject, sqlx::Type)]
@@ -61,6 +61,23 @@ pub struct ParticipantTargetStatus {
     pub name: String,
 }
 
+/// 集団応募者リードモデル
+#[derive(SimpleObject)]
+pub struct GroupParticipant {
+    /// シリアル（連番）
+    pub serial: u16,
+    /// 名前
+    pub name: String,
+    /// フリガナ
+    pub furigana: String,
+    /// 性別
+    ///
+    /// 0: 男性, 1: 女性, 2: その他
+    pub gender: u8,
+    /// 年齢
+    pub age: u8,
+}
+
 #[async_trait]
 pub trait ParticipantUserRepository: Send + Sync {
     /// 参加者アカウントをIDで取得する
@@ -83,4 +100,7 @@ pub trait ParticipantUserRepository: Send + Sync {
 
     /// 参加者が存在するか確認する
     async fn exists(&self, pid: &UserId) -> Result<bool>;
+
+    /// 集団応募者の詳細情報を取得する
+    async fn find_group_participants(&self, aid: &ApplyId) -> Result<Vec<GroupParticipant>>;
 }

@@ -24,8 +24,8 @@ use query_repository::{
     user_account::{
         group::{GroupAccount, GroupUserRepository},
         participant::{
-            ParticipantAccount, ParticipantCondition, ParticipantRegion, ParticipantTargetStatus,
-            ParticipantTheme, ParticipantUserRepository,
+            GroupParticipant, ParticipantAccount, ParticipantCondition, ParticipantRegion,
+            ParticipantTargetStatus, ParticipantTheme, ParticipantUserRepository,
         },
     },
 };
@@ -273,6 +273,28 @@ impl QueryRoot {
         let exists: bool = ctx.participant_account_dao.exists(&uid).await?;
 
         Ok(exists)
+    }
+
+    /// 指定されたaidの集団応募者の詳細情報を取得する
+    ///
+    /// ## 引数
+    /// - `aid` - aid
+    ///
+    /// ## 返り値
+    /// - `Vec<GroupParticipant>` - 集団応募者の詳細情報の配列
+    async fn get_group_participants<'ctx>(
+        &self,
+        ctx: &Context<'ctx>,
+        aid: String,
+    ) -> Result<Vec<GroupParticipant>> {
+        let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
+        let aid: ApplyId = ApplyId::from_str(&aid);
+        let participants: Vec<GroupParticipant> = ctx
+            .participant_account_dao
+            .find_group_participants(&aid)
+            .await?;
+
+        Ok(participants)
     }
 
     /// 指定されたsidのスカウト情報を取得する

@@ -3,13 +3,14 @@ use async_trait::async_trait;
 use domain::consts::conditions::ConditionMap;
 use domain::consts::target_status::{TargetStatusMap, TARGET_STATUSES_PREFIX};
 use domain::consts::themes::ThemeMap;
+use domain::model::apply::ApplyId;
 use sqlx::{MySqlPool, Row};
 
 use domain::consts::region::RegionMap;
 use domain::model::user_account::user_id::UserId;
 use query_repository::user_account::participant::{
-    ParticipantAccount, ParticipantCondition, ParticipantRegion, ParticipantTargetStatus,
-    ParticipantTheme, ParticipantUserRepository,
+    GroupParticipant, ParticipantAccount, ParticipantCondition, ParticipantRegion,
+    ParticipantTargetStatus, ParticipantTheme, ParticipantUserRepository,
 };
 
 pub struct ParticipantAccountImpl {
@@ -180,5 +181,21 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
         .await?;
 
         Ok(response.exist == 1)
+    }
+
+    async fn find_group_participants(&self, aid: &ApplyId) -> Result<Vec<GroupParticipant>> {
+        let response = sqlx::query_as!(
+            GroupParticipant,
+            r#"
+            SELECT serial as "serial: u16", name, furigana, gender as "gender: u8", age as "age: u8"
+            FROM group_participants
+            WHERE gpid = ?
+            "#,
+            aid.to_string()
+        )
+        .fetch_all(&self.pool)
+        .await?;
+
+        Ok(response)
     }
 }
