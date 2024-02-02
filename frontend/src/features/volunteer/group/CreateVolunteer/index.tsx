@@ -154,7 +154,7 @@ export const CreateVolunteer = () => {
       {InfoForm}
       {TermsForm}
       <div className={joinClassnames("mb-3", styles.button_wrapper)}>
-        <Button variant="danger" size="lg" className="w-">
+        <Button variant="danger" size="lg" onClick={() => router.back()}>
           キャンセル
         </Button>
         <Button variant="secondary" size="lg" onClick={handleOnSave}>
