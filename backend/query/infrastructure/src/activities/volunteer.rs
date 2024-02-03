@@ -11,7 +11,9 @@ use domain::{
     },
     model::{user_account::user_id::UserId, volunteer::{self, VolunteerId}},
 };
-use query_repository::activities::volunteer::{VolunteerElementsReadModel, VolunteerQueryRepository, VolunteerReadModel};
+use query_repository::activities::volunteer::{
+    VolunteerElementsReadModel, VolunteerQueryRepository, VolunteerReadModel,
+};
 
 pub struct VolunteerQueryRepositoryImpl {
     pool: MySqlPool,
@@ -42,8 +44,7 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
         )
         .fetch_all(&self.pool);
 
-        let (regions, elements) =
-            future::try_join(region_query, element_query).await?;
+        let (regions, elements) = future::try_join(region_query, element_query).await?;
 
         let regions_map = RegionMap::new().regions_index_to_name;
         let regions = regions
@@ -173,7 +174,7 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
     async fn find_by_gid(&self, gid: &UserId) -> Result<Vec<VolunteerReadModel>> {
         let vids = sqlx::query!(
             r#"
-            SELECT vid FROM volunteer WHERE gid = ?
+            SELECT vid FROM volunteer WHERE gid = ? AND is_deleted = false
             "#,
             gid.to_string()
         )

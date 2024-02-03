@@ -1,15 +1,15 @@
 /**
- * Date型の日付を文字列に変換する
+ * Date型の日付時刻を文字列に変換する
  *
  * なお, ロケールはja-JPを使用するため, UTCとJSTで日付が違う場合は注意
  *
- * - `Date(2024-01-01T00:00:00Z)` -> `2024/1/1`
- * - `Date(2024-01-01T20:00:00Z)` -> `2024/1/2`
+ * - `Date(2024-01-01T00:00:00Z)` -> `2024/1/1 09:00`
+ * - `Date(2024-01-01T20:00:00Z)` -> `2024/1/2 05:00`
  *
- * @param date Date型の日付
- * @returns yyyy/MM/dd形式の文字列
+ * @param date Date型もしくはパース前の日付時刻(string)
+ * @returns yyyy/MM/dd hh:mm 形式の文字列
  */
-export const formatDate = (date: Date | string): string => {
+export const formatDateTime = (date: Date | string): string => {
   if (typeof date === "string") {
     const reg = new RegExp(/Z|[+-](0\d|1[012])(:?[012345]\d)/);
     // MEMO: バックエンドからのレスポンスは UTC で返ってくるため, タイムゾーンが指定されていない場合はここで UTC と明示的に指定する
@@ -26,6 +26,8 @@ export const formatDate = (date: Date | string): string => {
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
     timeZone: "Asia/Tokyo",
   }).format(date);
 };
