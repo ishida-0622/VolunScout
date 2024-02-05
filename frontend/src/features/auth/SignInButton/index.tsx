@@ -15,7 +15,9 @@ import { CheckBox } from "@/components/ui-parts/CheckBox";
 import { URL_PATH_PARTICIPANT } from "@/consts";
 import { auth } from "@/firebaseConfig";
 
-Modal.setAppElement(document.querySelector("body")!);
+if (document !== undefined) {
+  Modal.setAppElement(document.querySelector("body")!);
+}
 
 const ExistsParticipantAccountQuery = gql(/* GraphQL */ `
   query ExistsParticipantAccount($uid: String!) {
@@ -44,7 +46,7 @@ export const SignInButton = () => {
   };
 
   const [existsParticipantAccount] = useLazyQuery(
-    ExistsParticipantAccountQuery,
+    ExistsParticipantAccountQuery
   );
   // TODO: バックエンド未完成
   // const [existsGroupAccount] = useLazyQuery(ExistsGroupAccountQuery);
