@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button, Spinner } from "react-bootstrap";
 
-import { VolunteerItem } from "../../VolunteerItem";
+import { VolunteerItem } from "../VolunteerItem";
 
 import styles from "./index.module.css";
 
@@ -44,7 +44,7 @@ export const VolunteerList = () => {
     GetVolunteersQuery,
     {
       fetchPolicy: "cache-and-network",
-    }
+    },
   );
 
   const volunteers = data?.volunteers ?? [];
@@ -73,8 +73,8 @@ export const VolunteerList = () => {
           reg.test(v.title) ||
           reg.test(v.message) ||
           reg.test(v.overview) ||
-          reg.test(v.place)
-      )
+          reg.test(v.place),
+      ),
     );
   };
 
@@ -98,11 +98,7 @@ export const VolunteerList = () => {
       </div>
       {loading && <Spinner />}
       {showVolunteers.map((volunteer) => (
-        <VolunteerItem
-          key={volunteer.vid}
-          volunteer={volunteer}
-          accountType="group"
-        />
+        <VolunteerItem key={volunteer.vid} volunteer={volunteer} />
       ))}
     </div>
   );
