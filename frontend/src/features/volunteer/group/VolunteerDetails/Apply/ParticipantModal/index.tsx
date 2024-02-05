@@ -108,7 +108,8 @@ export const ParticipantModal = ({
           <Col sm={3}>レビュー</Col>
           <Col sm={9}>
             {formatReview(
-              review.map((r) => r.point).reduce((a, b) => a + b) / review.length
+              review.map((r) => r.point).reduce((a, b) => a + b) /
+                review.length,
             )}
           </Col>
         </Row>

@@ -127,10 +127,10 @@ export const CreateVolunteer = () => {
       start_at: new Date(infoValues.start_at).toISOString(),
       finish_at: new Date(infoValues.finish_at).toISOString(),
       theme: termsValues.theme.flatMap((theme) =>
-        termsValues.required_theme.includes(theme) ? [] : [theme]
+        termsValues.required_theme.includes(theme) ? [] : [theme],
       ),
       condition: termsValues.condition.flatMap((condition) =>
-        termsValues.required_condition.includes(condition) ? [] : [condition]
+        termsValues.required_condition.includes(condition) ? [] : [condition],
       ),
     };
 

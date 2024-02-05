@@ -1,6 +1,7 @@
 .user_icon {
   border-radius: 50%;
-  position: relative; left: 7%;
+  position: relative;
+  left: 7%;
 }
 
 .main_contents {
@@ -10,8 +11,8 @@
 .name {
   position: relative;
   left: 18%;
-  bottom:  120px;
-  font-size:xx-large;
+  bottom: 120px;
+  font-size: xx-large;
 }
 
 .review {
@@ -44,4 +45,3 @@
   font-size: xx-large;
   bottom: 200px;
 }
-

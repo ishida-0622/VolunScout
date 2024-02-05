@@ -1,6 +1,5 @@
 declare const styles: {
   readonly "birthday": string;
-  readonly "button": string;
   readonly "colon": string;
   readonly "form": string;
   readonly "furigana": string;

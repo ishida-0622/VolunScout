@@ -74,7 +74,7 @@ export const UserInfo = () => {
             src={user?.photoURL ?? ""}
             alt="User icon"
             width={100}
-           height={100}
+            height={100}
             className={styles.user_icon}
           />
         </div>
@@ -84,26 +84,26 @@ export const UserInfo = () => {
             <h2>{userInfo.name}</h2>
           </div>
           <div className={styles.main}>
-          <p className={styles.birth}>
-            <span>生年月日</span>
-            <span>：</span>
-            <span>{formatDate(userInfo.birthday)}</span>
-          </p>
-          <p>
-            <span>区分</span>
-            <span>：</span>
-            <span>{targetStatus.name}</span>
-          </p>
-          <p>
-            <span>性別</span>
-            <span>：</span>
-            <span>{numberToGender(userInfo.gender)}</span>
-          </p>
-          <p>
-            <span>電話番号</span>
-            <span>：</span>
-            <span>{userInfo.phone}</span>
-          </p>
+            <p className={styles.birth}>
+              <span>生年月日</span>
+              <span>：</span>
+              <span>{formatDate(userInfo.birthday)}</span>
+            </p>
+            <p>
+              <span>区分</span>
+              <span>：</span>
+              <span>{targetStatus.name}</span>
+            </p>
+            <p>
+              <span>性別</span>
+              <span>：</span>
+              <span>{numberToGender(userInfo.gender)}</span>
+            </p>
+            <p>
+              <span>電話番号</span>
+              <span>：</span>
+              <span>{userInfo.phone}</span>
+            </p>
           </div>
         </div>
         <div>

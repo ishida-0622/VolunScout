@@ -53,7 +53,7 @@ export const Confirmation = ({ values, prevPage }: Props) => {
       theme: values.themes.filter((theme) => !themesRequiredSet.has(theme)),
       required_theme: values.themesRequired,
       condition: values.conditions.filter(
-        (condition) => !conditionsRequiredSet.has(condition)
+        (condition) => !conditionsRequiredSet.has(condition),
       ),
       required_condition: values.conditionsRequired,
       target_status: values.targetStatuses,
@@ -94,8 +94,8 @@ export const Confirmation = ({ values, prevPage }: Props) => {
               {values.gender === "0"
                 ? "男性"
                 : values.gender === "1"
-                  ? "女性"
-                  : "その他"}
+                ? "女性"
+                : "その他"}
             </span>
           </p>
           <p className={styles.profile_contents_wrapper}>

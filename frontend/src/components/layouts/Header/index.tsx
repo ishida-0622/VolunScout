@@ -41,7 +41,7 @@ export const Header = ({ className }: Props) => {
       className={joinClassnames(
         styles.base,
         accountType === "participant" ? styles.participant : styles.group,
-        className
+        className,
       )}
     >
       <div>

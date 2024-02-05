@@ -24,7 +24,7 @@ describe("CheckBox コンポーネント", () => {
   it("onChange ハンドラが正しく動作しているか", async () => {
     const onChangeMock = jest.fn();
     const { getByLabelText } = render(
-      <CheckBox label="テスト" onChange={onChangeMock} />
+      <CheckBox label="テスト" onChange={onChangeMock} />,
     );
     const checkbox = getByLabelText("テスト");
 

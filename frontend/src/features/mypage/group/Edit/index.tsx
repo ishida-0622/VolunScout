@@ -53,7 +53,7 @@ export const EditMyPage = () => {
   useEffect(() => {
     if (typeof user?.uid === "string") {
       getGroupAccount({ variables: { gid: user.uid } }).catch((e) =>
-        console.error(e)
+        console.error(e),
       );
     }
   }, [getGroupAccount, user?.uid]);
