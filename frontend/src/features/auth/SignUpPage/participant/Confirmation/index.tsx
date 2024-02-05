@@ -7,9 +7,9 @@ import type { CreateParticipantAccountRequestBody } from "@/__generated__/comman
 import type { FormValues } from "..";
 
 import { apiClientParticipant } from "@/api/command";
+import { joinClassnames } from "@/components/@joinClassnames";
 import { CheckBox } from "@/components/ui-parts/CheckBox";
 import { CONDITIONS, THEMES, URL_PATH_PARTICIPANT } from "@/consts";
-import { joinClassnames } from "@/components/@joinClassnames";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { TermsOfUseAndPrivacyPolicyModal } from "@/features/auth/SignUpPage/TermsOfUseAndPrivacyPolicyModal";
 import { stringToNumber } from "@/utils/stringToNumber";
@@ -53,7 +53,7 @@ export const Confirmation = ({ values, prevPage }: Props) => {
       theme: values.themes.filter((theme) => !themesRequiredSet.has(theme)),
       required_theme: values.themesRequired,
       condition: values.conditions.filter(
-        (condition) => !conditionsRequiredSet.has(condition),
+        (condition) => !conditionsRequiredSet.has(condition)
       ),
       required_condition: values.conditionsRequired,
       target_status: values.targetStatuses,
@@ -72,7 +72,7 @@ export const Confirmation = ({ values, prevPage }: Props) => {
     <section>
       <button
         onClick={prevPage}
-        className={joinClassnames("btn btn-secondary", styles.return)}
+        className={joinClassnames("btn btn-secondary")}
       >
         戻る
       </button>

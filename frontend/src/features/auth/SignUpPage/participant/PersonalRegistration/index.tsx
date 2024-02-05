@@ -111,10 +111,7 @@ export const PersonalRegistration = ({ onNextPage, values }: Props) => {
             </select>
           </label>
 
-          <button
-            type="submit"
-            className={joinClassnames("btn btn-success", styles.button)}
-          >
+          <button type="submit" className={joinClassnames("btn btn-success")}>
             ボランティア希望の入力へ ➤
           </button>
         </form>
