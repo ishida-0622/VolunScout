@@ -46,7 +46,7 @@ export const SignInButton = () => {
   };
 
   const [existsParticipantAccount] = useLazyQuery(
-    ExistsParticipantAccountQuery
+    ExistsParticipantAccountQuery,
   );
   // TODO: バックエンド未完成
   // const [existsGroupAccount] = useLazyQuery(ExistsGroupAccountQuery);

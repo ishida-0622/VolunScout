@@ -43,7 +43,7 @@ export const UserInfo = () => {
     GetParticipantAccountInfoQuery,
     {
       fetchPolicy: "cache-and-network",
-    }
+    },
   );
 
   useEffect(() => {

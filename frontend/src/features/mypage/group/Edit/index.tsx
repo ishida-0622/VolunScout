@@ -10,9 +10,9 @@ import styles from "./index.module.css";
 
 import type { UpdateGroupAccountRequestBody } from "@/__generated__/command";
 
-import { joinClassnames } from "@/components/@joinClassnames";
 import { gql } from "@/__generated__/query";
 import { apiClientGroup } from "@/api/command";
+import { joinClassnames } from "@/components/@joinClassnames";
 import { URL_PATH_GROUP } from "@/consts";
 import { useAuthContext } from "@/contexts/AuthContext";
 
