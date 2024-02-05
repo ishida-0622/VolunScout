@@ -43,7 +43,7 @@ export const UserInfo = () => {
     GetParticipantAccountInfoQuery,
     {
       fetchPolicy: "cache-and-network",
-    },
+    }
   );
 
   useEffect(() => {
@@ -84,7 +84,7 @@ export const UserInfo = () => {
             <h2>{userInfo.name}</h2>
           </div>
           <div className={styles.main}>
-            <p className={styles.birth}>
+            <p>
               <span>生年月日</span>
               <span>：</span>
               <span>{formatDate(userInfo.birthday)}</span>
