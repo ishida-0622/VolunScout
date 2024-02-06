@@ -5,7 +5,7 @@ import { FirebaseError } from "firebase/app";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
-import { Col, Image, Modal, Row } from "react-bootstrap";
+import { Button, Col, Image, Modal, Row } from "react-bootstrap";
 
 import { gql } from "@/__generated__/query";
 import { CheckBox } from "@/components/ui-parts/CheckBox";
@@ -94,11 +94,9 @@ export const SignInButton = () => {
 
   return (
     <>
-      <div>
-        <button type="button" onClick={openModal}>
-          ログイン/会員登録
-        </button>
-      </div>
+      <Button variant="none" onClick={openModal}>
+        ログイン/会員登録
+      </Button>
       <Modal
         show={isModalOpen}
         onHide={closeModal}
