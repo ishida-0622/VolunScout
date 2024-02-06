@@ -48,15 +48,13 @@ export const Header = ({ className }: Props) => {
     >
       <Navbar expand="lg" className={joinClassnames(className)}>
         <Container>
-          <div
-            onClick={toHome}
-            className="d-flex align-items-center cursor-pointer me-2 w-25"
-            role="button"
-          >
+          <div className="d-flex align-items-center cursor-pointer me-2 w-25">
             <Image
               src={"/icons/banner_color.png"}
               alt="Icon"
               className="d-inline-block align-top h-100 w-auto"
+              onClick={toHome}
+              role="button"
               fluid
             />
           </div>
