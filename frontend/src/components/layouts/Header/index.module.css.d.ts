@@ -1,5 +1,6 @@
 declare const styles: {
-  readonly "header_container": string;
+  readonly "group": string;
+  readonly "participant": string;
 };
 export = styles;
 

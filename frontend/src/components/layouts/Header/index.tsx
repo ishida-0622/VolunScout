@@ -40,7 +40,12 @@ export const Header = ({ className }: Props) => {
   const isNoIcon = isNoHeaderIcon(pathname);
 
   return (
-    <header className={joinClassnames(styles.header_container, className)}>
+    <header
+      className={joinClassnames(
+        accountType === "participant" ? styles.participant : styles.group,
+        className
+      )}
+    >
       <Navbar expand="lg" className={joinClassnames(className)}>
         <Container>
           <div

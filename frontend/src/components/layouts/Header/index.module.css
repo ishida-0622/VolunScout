@@ -1,5 +1,15 @@
-/* index.module.css */
+.participant {
+  background-color: var(--color-participant);
+}
 
-.header_container {
-  background-color: var(--color-green);
+.group {
+  background-color: var(--color-group);
+}
+
+.group a {
+  color: var(--color-white);
+}
+
+.group a:hover {
+  color: var(--color-white);
 }
