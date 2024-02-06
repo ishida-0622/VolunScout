@@ -27,7 +27,7 @@ export const PersonalRegistration = ({ onNextPage, values }: Props) => {
   const onSubmit: SubmitHandler<Personal> = (data) => onNextPage(data);
 
   return (
-    <section className={styles.section}>
+    <section className="mt-4">
       <div className={styles.main_contents}>
         <h2 className={styles.h2}>新規会員登録</h2>
         <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>

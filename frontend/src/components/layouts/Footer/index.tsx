@@ -34,34 +34,37 @@ export const Footer = ({ className }: Props) => {
   };
 
   return (
-    <footer
-      className={joinClassnames(
-        "fixed-bottom",
-        accountType === "participant" ? styles.participant : styles.group,
-        className
-      )}
-    >
-      <Container className="d-flex align-items-center p-2">
-        <div className="w-25">
-          <Image
-            src={"/icons/banner_color.png"}
-            alt="Icon"
-            role="button"
-            onClick={toHome}
-          />
-        </div>
-        <div className="w-75 d-flex justify-content-end">
-          <Link href={URL_PATH.TERMS_OF_SERVICE} className="mx-4">
-            利用規約
-          </Link>
-          <Link href={URL_PATH.PRIVACY_POLICY} className="mx-4">
-            プライバシーポリシー
-          </Link>
-          <Link href={URL_PATH.CONTACT} className="mx-4">
-            お問い合わせ
-          </Link>
-        </div>
-      </Container>
-    </footer>
+    <>
+      <div style={{ minHeight: "12vh" }} />
+      <footer
+        className={joinClassnames(
+          "fixed-bottom",
+          accountType === "participant" ? styles.participant : styles.group,
+          className
+        )}
+      >
+        <Container className="d-flex align-items-center p-2">
+          <div className="w-25">
+            <Image
+              src={"/icons/banner_color.png"}
+              alt="Icon"
+              role="button"
+              onClick={toHome}
+            />
+          </div>
+          <div className="w-75 d-flex justify-content-end">
+            <Link href={URL_PATH.TERMS_OF_SERVICE} className="mx-4">
+              利用規約
+            </Link>
+            <Link href={URL_PATH.PRIVACY_POLICY} className="mx-4">
+              プライバシーポリシー
+            </Link>
+            <Link href={URL_PATH.CONTACT} className="mx-4">
+              お問い合わせ
+            </Link>
+          </div>
+        </Container>
+      </footer>
+    </>
   );
 };
