@@ -91,6 +91,8 @@ textarea:not([rows]) {
   --color-green: #00cc66;
   --color-light-green: #00ff99;
   --color-dark-green: #009933;
+  --color-participant: #4fef6d;
+  --color-group: #629bec;
 
   --fontsize-small: 12px;
   --fontsize-medium: 16px;
