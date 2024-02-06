@@ -40,7 +40,7 @@ export const useUserInfoForm = ({ initialValues, onSubmit = noop }: Props) => {
   const InputForm = (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className={joinClassnames(styles.main)}>
-        <div className={joinClassnames("row mb-3", styles.name)}>
+        <div className={joinClassnames("row mb-3")}>
           <label htmlFor="name" className="col-sm-2 col-form-label">
             <span>氏名</span>
           </label>
@@ -115,15 +115,15 @@ export const useUserInfoForm = ({ initialValues, onSubmit = noop }: Props) => {
         <div className="row mb-3">
           <label htmlFor="phone" className="col-sm-2 col-form-label">
             <span>電話番号</span>
-            </label>
-            <div className="col-sm-10">
+          </label>
+          <div className="col-sm-10">
             <input
               type="text"
               {...register("phone", { required: true })}
               className={joinClassnames("form-control")}
               placeholder="09012345678"
             />
-        </div>
+          </div>
         </div>
       </div>
       <div className={styles.profile}>

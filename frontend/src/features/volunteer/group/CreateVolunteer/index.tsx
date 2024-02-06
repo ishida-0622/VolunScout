@@ -1,5 +1,6 @@
 "use client";
 import { get, set } from "idb-keyval";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef } from "react";
 import { Button } from "react-bootstrap";
 
@@ -10,6 +11,7 @@ import type { CreateVolunteerRequestBody } from "@/__generated__/command";
 
 import { apiClientVolunteer, s3 } from "@/api/command";
 import { joinClassnames } from "@/components/@joinClassnames";
+import { URL_PATH_GROUP } from "@/consts";
 import { useAuthContext } from "@/contexts/AuthContext";
 import {
   useTermsForm,
@@ -17,6 +19,7 @@ import {
 } from "@/features/volunteer/useTermsForm";
 
 export const CreateVolunteer = () => {
+  const router = useRouter();
   const authContext = useAuthContext();
 
   const imageRef = useRef<HTMLInputElement>(null);
@@ -124,16 +127,18 @@ export const CreateVolunteer = () => {
       start_at: new Date(infoValues.start_at).toISOString(),
       finish_at: new Date(infoValues.finish_at).toISOString(),
       theme: termsValues.theme.flatMap((theme) =>
-        termsValues.required_theme.includes(theme) ? [] : [theme]
+        termsValues.required_theme.includes(theme) ? [] : [theme],
       ),
       condition: termsValues.condition.flatMap((condition) =>
-        termsValues.required_condition.includes(condition) ? [] : [condition]
+        termsValues.required_condition.includes(condition) ? [] : [condition],
       ),
     };
 
     try {
       await apiClientVolunteer.createVolunteer(body);
       clearLocalStorage();
+      alert("作成しました");
+      router.push(URL_PATH_GROUP.HOME);
     } catch (error) {
       console.error(error);
       alert("エラーが発生しました");
@@ -149,7 +154,7 @@ export const CreateVolunteer = () => {
       {InfoForm}
       {TermsForm}
       <div className={joinClassnames("mb-3", styles.button_wrapper)}>
-        <Button variant="danger" size="lg" className="w-">
+        <Button variant="danger" size="lg" onClick={() => router.back()}>
           キャンセル
         </Button>
         <Button variant="secondary" size="lg" onClick={handleOnSave}>

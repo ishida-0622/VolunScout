@@ -35,7 +35,7 @@ export const AccountDeletePage = () => {
   };
 
   return (
-    <div className={styles.base}>
+    <div>
       <BackButton className={joinClassnames("btn btn-primary")} />
       <h1 className={styles.top}>退会（アカウントの削除）に関する確認</h1>
       <div className={styles.main_contents}>

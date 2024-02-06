@@ -10,9 +10,9 @@ import styles from "./index.module.css";
 
 import type { UpdateGroupAccountRequestBody } from "@/__generated__/command";
 
-import { joinClassnames } from "@/components/@joinClassnames";
 import { gql } from "@/__generated__/query";
 import { apiClientGroup } from "@/api/command";
+import { joinClassnames } from "@/components/@joinClassnames";
 import { URL_PATH_GROUP } from "@/consts";
 import { useAuthContext } from "@/contexts/AuthContext";
 
@@ -53,7 +53,7 @@ export const EditMyPage = () => {
   useEffect(() => {
     if (typeof user?.uid === "string") {
       getGroupAccount({ variables: { gid: user.uid } }).catch((e) =>
-        console.error(e)
+        console.error(e),
       );
     }
   }, [getGroupAccount, user?.uid]);

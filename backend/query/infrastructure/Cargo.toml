@@ -14,7 +14,7 @@ axum = { workspace = true }
 chrono = { workspace = true }
 futures = { workspace = true }
 redis = { workspace = true, features = ["tokio-comp"] }
-sqlx = { workspace = true }
+sqlx = { workspace = true, features = ["bigdecimal"] }
 tower-http = { workspace = true, features = ["fs"] }
 
 domain = { path = "../../domain" }

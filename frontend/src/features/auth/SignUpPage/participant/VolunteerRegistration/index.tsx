@@ -6,9 +6,9 @@ import styles from "./index.module.css"; // CSSモジュールのインポート
 
 import type { FormValues } from "..";
 
+import { joinClassnames } from "@/components/@joinClassnames";
 import { CheckBoxControl } from "@/components/ui-parts/CheckBoxControl";
 import { ToggleSwitchControl } from "@/components/ui-parts/ToggleSwitchControl";
-import { joinClassnames } from "@/components/@joinClassnames";
 import { CONDITIONS, REGIONS, THEMES } from "@/consts";
 
 type Volunteer = Pick<
@@ -44,7 +44,7 @@ export const VolunteerRegistration = ({
       <form onSubmit={handleSubmit(onSubmit)}>
         <button
           type="button"
-          className={joinClassnames("btn btn-secondary", styles.return)}
+          className={joinClassnames("btn btn-secondary")}
           onClick={handleSubmit(onSubmitPrev)}
         >
           戻る

@@ -5,30 +5,19 @@ import { useRouter } from "next/navigation";
 import styles from "./index.module.css";
 
 import type { GetVolunteerByGidQuery } from "@/__generated__/query/graphql";
-import type { AccountType } from "@/features/auth/types";
 
 import { joinClassnames } from "@/components/@joinClassnames";
-import { URL_PATH_GROUP, URL_PATH_PARTICIPANT } from "@/consts";
+import { URL_PATH_GROUP } from "@/consts";
 import { formatDate } from "@/utils/formatDate";
 
 type Props = {
   volunteer: GetVolunteerByGidQuery["volunteers"][number];
-  accountType: AccountType;
 };
 
-export const Volunteer = ({ volunteer, accountType }: Props) => {
+export const VolunteerItem = ({ volunteer }: Props) => {
   const router = useRouter();
   const toVolunteer = () => {
-    switch (accountType) {
-      case "participant":
-        router.push(URL_PATH_PARTICIPANT.VOLUNTEER_DETAIL(volunteer.vid));
-        break;
-      case "group":
-        router.push(URL_PATH_GROUP.VOLUNTEER_DETAIL(volunteer.vid));
-        break;
-      default:
-        throw new Error("Invalid account type");
-    }
+    router.push(URL_PATH_GROUP.VOLUNTEER_DETAIL(volunteer.vid));
   };
 
   return (

@@ -3,9 +3,9 @@
 import { useLazyQuery } from "@apollo/client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Button } from "react-bootstrap";
+import { Button, Spinner } from "react-bootstrap";
 
-import { Volunteer } from "../../Volunteer";
+import { VolunteerItem } from "../VolunteerItem";
 
 import styles from "./index.module.css";
 
@@ -40,8 +40,12 @@ export const VolunteerList = () => {
     router.push(URL_PATH_GROUP.VOLUNTEER_CREATE);
   };
 
-  const [getVolunteers, { data, loading, error }] =
-    useLazyQuery(GetVolunteersQuery);
+  const [getVolunteers, { data, loading, error }] = useLazyQuery(
+    GetVolunteersQuery,
+    {
+      fetchPolicy: "cache-and-network",
+    },
+  );
 
   const volunteers = data?.volunteers ?? [];
 
@@ -69,14 +73,10 @@ export const VolunteerList = () => {
           reg.test(v.title) ||
           reg.test(v.message) ||
           reg.test(v.overview) ||
-          reg.test(v.place)
-      )
+          reg.test(v.place),
+      ),
     );
   };
-
-  if (loading) {
-    return null;
-  }
 
   if (error) {
     console.error(error);
@@ -96,12 +96,9 @@ export const VolunteerList = () => {
           新規掲載
         </Button>
       </div>
+      {loading && <Spinner />}
       {showVolunteers.map((volunteer) => (
-        <Volunteer
-          key={volunteer.vid}
-          volunteer={volunteer}
-          accountType="group"
-        />
+        <VolunteerItem key={volunteer.vid} volunteer={volunteer} />
       ))}
     </div>
   );
