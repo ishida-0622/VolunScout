@@ -11,7 +11,7 @@ import type { UpdateApplyAllowedStatusRequestBody } from "@/__generated__/comman
 
 import { gql } from "@/__generated__/query";
 import { apiClientApply } from "@/api/command/apiClient";
-import { ALLOWED_STATUS } from "@/consts/allowedStatus";
+import { ALLOWED_STATUS } from "@/consts";
 import { ageCalc } from "@/utils/ageCalc";
 import { formatReview } from "@/utils/formatReview";
 import { numberToGender } from "@/utils/numberToGender";
@@ -120,11 +120,11 @@ export const Apply = ({ vid }: Props) => {
   };
 
   const [applyAndParticipantDataMap, setState] = useState(
-    new Map<string, ApplyAndParticipantDataType>(),
+    new Map<string, ApplyAndParticipantDataType>()
   );
 
   const [getParticipantAccounts, { data: participantData }] = useLazyQuery(
-    GetParticipantAccountsQuery,
+    GetParticipantAccountsQuery
   );
 
   useEffect(() => {
@@ -144,10 +144,10 @@ export const Apply = ({ vid }: Props) => {
       const participantDataMap = new Map<string, ApplyAndParticipantDataType>();
       for (const apply of applys) {
         const participantAccount = participantAccounts.find(
-          (account) => account.uid === apply.uid,
+          (account) => account.uid === apply.uid
         );
         const participantReview = participantReviews.find(
-          (review) => review.uid === apply.uid,
+          (review) => review.uid === apply.uid
         );
         if (!participantAccount) {
           continue;
@@ -214,7 +214,7 @@ export const Apply = ({ vid }: Props) => {
               )}
             </Col>
           </Row>
-        ),
+        )
       )}
       <ParticipantModal
         show={showParticipantModal}
