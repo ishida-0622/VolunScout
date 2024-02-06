@@ -11,10 +11,7 @@ declare const styles: {
   readonly "name": string;
   readonly "phone": string;
   readonly "required": string;
-  readonly "section": string;
   readonly "target": string;
-  readonly "userIcon": string;
-  readonly "user_icon_image": string;
 };
 export = styles;
 
