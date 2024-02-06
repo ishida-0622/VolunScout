@@ -2,14 +2,13 @@ use anyhow::Result;
 use async_trait::async_trait;
 use futures::future;
 use sqlx::MySqlPool;
-use axum::{extract::State, http::StatusCode, response::IntoResponse, Json};
 
 use domain::{
     consts::{
         conditions::ConditionMap, region::RegionMap, target_status::TargetStatusMap,
         themes::ThemeMap,
     },
-    model::{user_account::user_id::UserId, volunteer::{self, VolunteerId}},
+    model::{user_account::user_id::UserId, volunteer::VolunteerId},
 };
 use query_repository::activities::volunteer::{
     VolunteerElementsReadModel, VolunteerQueryRepository, VolunteerReadModel,
@@ -136,9 +135,19 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
         .fetch_one(&self.pool)
         .await?;
 
-        if volunteer.is_deleted {return Err(anyhow::anyhow!("the volunteer is deleted"));}
+        if volunteer.is_deleted {
+            return Err(anyhow::anyhow!("the volunteer is deleted"));
+        }
 
         let elements: VolunteerElementsReadModel = self.find_elements_by_id(&vid).await?;
+        let photos = sqlx::query!(
+            r#"
+            SELECT s3_key FROM volunteer_photo WHERE vid = ?
+            "#,
+            vid.to_string()
+        )
+        .fetch_all(&self.pool)
+        .await?;
 
         let volunteer = VolunteerReadModel::new(
             volunteer.vid,
@@ -166,6 +175,7 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
             elements.conditions,
             elements.required_conditions,
             elements.target_status,
+            photos.into_iter().map(|p| p.s3_key).collect(),
         );
 
         Ok(volunteer)
