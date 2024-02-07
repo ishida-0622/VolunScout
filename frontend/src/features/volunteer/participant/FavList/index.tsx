@@ -17,13 +17,11 @@ const GetFavsQuery = gql(/* GraphQL */ `
     volunteers: getFavoriteByUid(uid: $uid) {
       vid
       title
-      message
       overview
       recruitedNum
       place
       startAt
       finishAt
-      isDeleted
     }
   }
 `);
@@ -59,11 +57,7 @@ export const FavList = () => {
     const reg = new RegExp(s, "i");
     setShowVolunteers(
       volunteers.filter(
-        (v) =>
-          reg.test(v.title) ||
-          reg.test(v.message) ||
-          reg.test(v.overview) ||
-          reg.test(v.place)
+        (v) => reg.test(v.title) || reg.test(v.overview) || reg.test(v.place)
       )
     );
   };
