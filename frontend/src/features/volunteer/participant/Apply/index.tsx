@@ -294,7 +294,6 @@ export const Apply = ({ vid }: Props) => {
                   <Form.Control
                     type="number"
                     value={member.age}
-                    defaultValue={""}
                     onChange={(e) => {
                       const newMembers = [...members];
                       newMembers[i].age = parseInt(e.target.value, 10);
