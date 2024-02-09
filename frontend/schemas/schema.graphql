@@ -264,6 +264,16 @@ type QueryRoot {
 	"""
 	getAllGroupAccounts: [GroupAccount!]!
 	"""
+	団体アカウントの存在チェックをする
+	
+	## 引数
+	- `gid` - gid
+	
+	## 返り値
+	- `bool` - 存在する場合はtrue
+	"""
+	existsGroupAccount(gid: String!): Boolean!
+	"""
 	指定されたuidのアカウント情報を取得する
 	
 	## 引数
