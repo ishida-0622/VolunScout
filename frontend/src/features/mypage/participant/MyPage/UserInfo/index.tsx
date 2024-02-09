@@ -66,7 +66,7 @@ export const UserInfo = () => {
   const targetStatus = data.targetStatus;
   const reviews = data.reviews.map((review: { point: number }) => review.point);
   const point = reviews.length
-    ? reviews.reduce((acc, cur) => acc + cur.point, 0) / reviews.length
+    ? reviews.reduce((acc, cur) => acc + cur, 0) / reviews.length
     : undefined;
 
   if (error) {
