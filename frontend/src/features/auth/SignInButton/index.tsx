@@ -18,12 +18,11 @@ const ExistsParticipantAccountQuery = gql(/* GraphQL */ `
   }
 `);
 
-// TODO: バックエンド未完成
-// const ExistsGroupAccountQuery = gql(/* GraphQL */ `
-//   query ExistsGroupAccount($uid: String!) {
-//     result: existsGroupAccount(uid: $uid)
-//   }
-// `);
+const ExistsGroupAccountQuery = gql(/* GraphQL */ `
+  query ExistsGroupAccount($gid: String!) {
+    result: existsGroupAccount(gid: $gid)
+  }
+`);
 
 export const SignInButton = () => {
   const router = useRouter();
@@ -41,8 +40,7 @@ export const SignInButton = () => {
   const [existsParticipantAccount] = useLazyQuery(
     ExistsParticipantAccountQuery
   );
-  // TODO: バックエンド未完成
-  // const [existsGroupAccount] = useLazyQuery(ExistsGroupAccountQuery);
+  const [existsGroupAccount] = useLazyQuery(ExistsGroupAccountQuery);
 
   const handleGoogleSignIn = async () => {
     try {
@@ -61,24 +59,17 @@ export const SignInButton = () => {
 
       const uid = user.uid;
 
-      if (isGroup.current) {
-        console.log("団体");
-        // TODO: バックエンド未完成
-        // const { data } = await existsGroupAccount({
-        //   variables: { uid },
-        // });
-      } else {
-        const { data } = await existsParticipantAccount({
-          variables: { uid },
-        });
+      const { data } = isGroup.current
+        ? await existsGroupAccount({ variables: { gid: uid } })
+        : await existsParticipantAccount({ variables: { uid } });
 
-        if (data === undefined) {
-          throw new Error("data is undefined");
-        }
+      if (data === undefined) {
+        throw new Error("data is undefined");
+      }
 
-        if (data.result === false) {
-          router.push(URL_PATH_PARTICIPANT.SIGN_UP);
-        }
+      // 会員登録がされていない場合はサインアップページに遷移
+      if (data.result === false) {
+        router.push(URL_PATH_PARTICIPANT.SIGN_UP);
       }
     } catch (error) {
       if (error instanceof FirebaseError) {

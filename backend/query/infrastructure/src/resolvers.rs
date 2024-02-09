@@ -128,6 +128,21 @@ impl QueryRoot {
         Ok(group_accounts)
     }
 
+    /// 団体アカウントの存在チェックをする
+    ///
+    /// ## 引数
+    /// - `gid` - gid
+    ///
+    /// ## 返り値
+    /// - `bool` - 存在する場合はtrue
+    async fn exists_group_account<'ctx>(&self, ctx: &Context<'ctx>, gid: String) -> Result<bool> {
+        let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
+        let gid: UserId = UserId::new(&gid).unwrap();
+        let exists: bool = ctx.group_account_dao.exists(&gid).await?;
+
+        Ok(exists)
+    }
+
     /// 指定されたuidのアカウント情報を取得する
     ///
     /// ## 引数

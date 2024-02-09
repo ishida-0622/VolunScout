@@ -73,4 +73,7 @@ pub trait GroupUserRepository: Send + Sync {
 
     /// 団体アカウントを全て取得する
     async fn find_all(&self) -> Result<Vec<GroupAccount>>;
+
+    /// 団体アカウントが存在するか確認する
+    async fn exists(&self, gid: &UserId) -> Result<bool>;
 }

@@ -32,7 +32,7 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
             SELECT
                 uid, name, furigana, phone, gender, birthday, profile, is_deleted as "is_deleted: bool", deleted_at
             FROM participant_account
-            WHERE uid = ?
+            WHERE uid = ? AND is_deleted = false
             "#,
             pid.to_string()
         )
@@ -173,7 +173,7 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
     async fn exists(&self, pid: &UserId) -> Result<bool> {
         let response = sqlx::query!(
             r#"
-            SELECT EXISTS(SELECT * FROM participant_account WHERE uid = ?) AS exist
+            SELECT EXISTS(SELECT * FROM participant_account WHERE uid = ? AND is_deleted = false) AS exist
             "#,
             pid.to_string()
         )
