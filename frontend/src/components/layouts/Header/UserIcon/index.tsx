@@ -80,7 +80,6 @@ export const UserIcon = ({ accountType }: Props) => {
           <Image
             src={user?.photoURL ?? "/icon.svg"}
             alt="user icon"
-            // TODO: 画像のサイズを調整する
             width={80}
             height={80}
             className={styles.base}
