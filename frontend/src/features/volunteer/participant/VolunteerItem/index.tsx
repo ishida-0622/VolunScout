@@ -60,13 +60,13 @@ export const VolunteerItem = ({
               <span>場所：</span>
               <span>{volunteer.place}</span>
             </Col>
-            <Col sm="5">
+            <Col sm="4">
               <span>日時：</span>
               <span>{formatDate(volunteer.startAt)}</span>
               <span>～</span>
               <span>{formatDate(volunteer.finishAt)}</span>
             </Col>
-            <Col sm="1">
+            <Col sm="2">
               <span>人数：</span>
               <span>{volunteer.recruitedNum}</span>
             </Col>
