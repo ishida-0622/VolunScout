@@ -65,4 +65,17 @@ impl GroupUserRepository for GroupAccountImpl {
         .await?;
         Ok(groups)
     }
+
+    async fn exists(&self, gid: &UserId) -> Result<bool> {
+        let exists = sqlx::query!(
+            r#"
+            SELECT EXISTS(SELECT * FROM group_account WHERE gid = ? AND is_deleted = false) AS exist
+            "#,
+            gid.to_string()
+        )
+        .fetch_one(&self.pool)
+        .await?;
+
+        Ok(exists.exist == 1)
+    }
 }
