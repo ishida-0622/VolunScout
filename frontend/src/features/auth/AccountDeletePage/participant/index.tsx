@@ -17,16 +17,16 @@ export const AccountDeletePage = () => {
   const { user } = useAuthContext();
 
   const handleOnClick = async () => {
-    const pid = user?.uid;
-    if (pid === undefined) {
-      throw new Error("uid is undefined");
+    if (user === null) {
+      throw new Error("user is null");
     }
     const body: DeleteParticipantAccountRequestBody = {
-      pid,
+      pid: user.uid,
     };
 
     try {
       await apiClientParticipant.deleteParticipantAccount(body);
+      await user.delete();
       logout();
     } catch (e) {
       console.error(e);

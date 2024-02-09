@@ -17,14 +17,14 @@ export const AccountDeletePage = () => {
   const { user } = useAuthContext();
 
   const handleOnClick = async () => {
-    const gid = user?.uid;
-    if (gid === undefined) {
-      throw new Error("gid is undefined");
+    if (user === null) {
+      throw new Error("user is null");
     }
-    const body: DeleteGroupAccountRequestBody = { gid };
+    const body: DeleteGroupAccountRequestBody = { gid: user.uid };
 
     try {
       await apiClientGroup.deleteGroupAccount(body);
+      await user.delete();
       logout();
     } catch (e) {
       console.error(e);
