@@ -253,4 +253,39 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
         let volunteers = future::try_join_all(vids.iter().map(|vid| self.find_by_id(&vid))).await?;
         Ok(volunteers)
     }
+
+    async fn find_activity_by_gid(&self, gid: &UserId) -> Result<Vec<VolunteerReadModel>> {
+        let vids = sqlx::query!(
+            r#"
+            SELECT vid FROM volunteer WHERE gid = ? AND finish_at < now() AND is_deleted = false
+            "#,
+            gid.to_string()
+        )
+        .fetch_all(&self.pool)
+        .await?;
+
+        let vids: Vec<VolunteerId> = vids.iter().map(|v| VolunteerId::from_str(&v.vid)).collect();
+
+        let volunteers = future::try_join_all(vids.iter().map(|vid| self.find_by_id(&vid))).await?;
+        Ok(volunteers)
+    }
+
+    async fn find_scheduled_activity_by_gid(
+        &self,
+        gid: &UserId,
+    ) -> Result<Vec<VolunteerReadModel>> {
+        let vids = sqlx::query!(
+            r#"
+            SELECT vid FROM volunteer WHERE gid = ? AND finish_at > now() AND is_deleted = false
+            "#,
+            gid.to_string()
+        )
+        .fetch_all(&self.pool)
+        .await?;
+
+        let vids: Vec<VolunteerId> = vids.iter().map(|v| VolunteerId::from_str(&v.vid)).collect();
+
+        let volunteers = future::try_join_all(vids.iter().map(|vid| self.find_by_id(&vid))).await?;
+        Ok(volunteers)
+    }
 }
