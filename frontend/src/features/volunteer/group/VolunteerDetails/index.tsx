@@ -14,6 +14,7 @@ import {
 } from "react-bootstrap";
 
 import { Apply } from "./Apply";
+import { Review } from "./Review";
 import { Scout } from "./Scout";
 
 import type { DeleteVolunteerRequestBody } from "@/__generated__/command";
@@ -22,6 +23,7 @@ import { gql } from "@/__generated__/query";
 import { apiClientVolunteer } from "@/api/command";
 import { URL_PATH_GROUP } from "@/consts";
 import { formatDateTime } from "@/utils/formatDateTime";
+import { parseDateTime } from "@/utils/parseDateTime";
 
 type Props = {
   vid: string;
@@ -86,18 +88,28 @@ export const VolunteerDetails = ({ vid }: Props) => {
   }
 
   const volunteer = data.volunteer;
+  const isArchived = parseDateTime(volunteer.finishAt).getTime() < Date.now();
 
   return (
     <Container>
-      <Row>
+      <Row className="my-3">
         <Col>
           <h1>{volunteer.title}</h1>
         </Col>
       </Row>
-      <Row>
+      <Row className="mb-3">
         <Col>
-          <p>場所：{volunteer.place}</p>
-          <p>日時：{formatDateTime(volunteer.startAt)}</p>
+          <Row>
+            <Col sm="2">場所</Col>
+            <Col>{volunteer.place}</Col>
+          </Row>
+          <Row>
+            <Col sm="2">日時</Col>
+            <Col>
+              {formatDateTime(volunteer.startAt)} ～{" "}
+              {formatDateTime(volunteer.finishAt)}
+            </Col>
+          </Row>
         </Col>
         <Col>
           <Button variant="primary" className="mx-1">
@@ -108,26 +120,44 @@ export const VolunteerDetails = ({ vid }: Props) => {
           </Button>
         </Col>
       </Row>
-      <Row>
+      <Row className="mb-3">
         <Col>
           <h2>概要</h2>
-          <p>{volunteer.overview}</p>
         </Col>
       </Row>
       <Row className="mb-3">
-        <ToggleButtonGroup type="radio" name="buttons" defaultValue={"apply"}>
-          <ToggleButton id="show-apply" value={"apply"} onClick={showApply}>
-            応募者確認
-          </ToggleButton>
-          <ToggleButton id="show-scout" value={"scout"} onClick={showScout}>
-            スカウト
-          </ToggleButton>
-        </ToggleButtonGroup>
+        <Col>
+          <p>{volunteer.overview}</p>
+        </Col>
       </Row>
-      <Row>
-        {page === "apply" && <Apply vid={vid} />}
-        {page === "scout" && <Scout></Scout>}
-      </Row>
+      {isArchived ? (
+        <>
+          <Row>
+            <Review vid={vid} />
+          </Row>
+        </>
+      ) : (
+        <>
+          <Row className="mb-3">
+            <ToggleButtonGroup
+              type="radio"
+              name="buttons"
+              defaultValue={"apply"}
+            >
+              <ToggleButton id="show-apply" value={"apply"} onClick={showApply}>
+                応募者確認
+              </ToggleButton>
+              <ToggleButton id="show-scout" value={"scout"} onClick={showScout}>
+                スカウト
+              </ToggleButton>
+            </ToggleButtonGroup>
+          </Row>
+          <Row>
+            {page === "apply" && <Apply vid={vid} />}
+            {page === "scout" && <Scout></Scout>}
+          </Row>
+        </>
+      )}
     </Container>
   );
 };
