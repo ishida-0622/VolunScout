@@ -235,6 +235,30 @@ type ParticipantTheme {
 	isRequired: Boolean!
 }
 
+"""
+過去ボランティア参加者リードモデル
+"""
+type PastVolunteerParticipantReadModel {
+	"""
+	ユーザーID
+	"""
+	uid: String!
+	"""
+	ユーザー名
+	"""
+	name: String!
+	"""
+	性別
+	
+	0: 男性, 1: 女性, 2: その他
+	"""
+	gender: Int!
+	"""
+	生年月日
+	"""
+	birthday: NaiveDate!
+}
+
 type QueryRoot {
 	"""
 	指定されたgidのアカウント情報を取得する
@@ -433,6 +457,16 @@ type QueryRoot {
 	- `Vec<Apply>` - 応募情報の配列
 	"""
 	getApplyByUid(uid: String!): [Apply!]!
+	"""
+	指定されたvidのボランティアに参加した参加者情報を取得する
+	
+	## 引数
+	- `vid` - vid
+	
+	## 返り値
+	- `Vec<PastVolunteerParticipantReadModel>` - 参加者情報の配列
+	"""
+	getPastVolunteerParticipantsByVid(vid: String!): [PastVolunteerParticipantReadModel!]!
 	"""
 	指定されたvidのボランティア要素情報を取得する
 	
