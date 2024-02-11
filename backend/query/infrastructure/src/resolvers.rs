@@ -13,7 +13,7 @@ use domain::model::{
 };
 use query_repository::{
     activities::{
-        apply::{Apply, ApplyRepository},
+        apply::{Apply, ApplyRepository, PastVolunteerParticipantReadModel},
         review::{
             ParticipantReviewPointAverage, ParticipantReviewRepository, Review,
             VolunteerReviewRepository,
@@ -432,6 +432,26 @@ impl QueryRoot {
         Ok(scout)
     }
 
+    /// 指定されたvidのボランティアに参加した参加者情報を取得する
+    ///
+    /// ## 引数
+    /// - `vid` - vid
+    ///
+    /// ## 返り値
+    /// - `Vec<PastVolunteerParticipantReadModel>` - 参加者情報の配列
+    async fn get_past_volunteer_participants_by_vid<'ctx>(
+        &self,
+        ctx: &Context<'ctx>,
+        vid: String,
+    ) -> Result<Vec<PastVolunteerParticipantReadModel>> {
+        let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
+        let vid = VolunteerId::from_str(&vid);
+        let participants: Vec<PastVolunteerParticipantReadModel> =
+            ctx.apply_dao.find_past_volunteer_participants(&vid).await?;
+
+        Ok(participants)
+    }
+
     /// 指定されたvidのボランティア要素情報を取得する
     ///
     /// ## 引数
@@ -547,6 +567,48 @@ impl QueryRoot {
         let volunteers: Vec<VolunteerReadModel> = ctx
             .volunteer_dao
             .find_scheduled_activity_by_id(&uid)
+            .await?;
+
+        Ok(volunteers)
+    }
+
+    /// 指定されたgidが過去に活動したボランティア情報を取得する
+    ///
+    /// ## 引数
+    /// - `gid` - gid
+    ///
+    /// ## 返り値
+    /// - `Vec<VolunteerReadModel>` - ボランティア情報の配列
+    async fn get_activities_by_gid<'ctx>(
+        &self,
+        ctx: &Context<'ctx>,
+        gid: String,
+    ) -> Result<Vec<VolunteerReadModel>> {
+        let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
+        let gid = UserId::from_str(&gid).unwrap();
+        let volunteers: Vec<VolunteerReadModel> =
+            ctx.volunteer_dao.find_activity_by_gid(&gid).await?;
+
+        Ok(volunteers)
+    }
+
+    /// 指定されたgidがこれから活動を予定しているボランティア情報を取得する
+    ///
+    /// ## 引数
+    /// - `gid` - gid
+    ///
+    /// ## 返り値
+    /// - `Vec<VolunteerReadModel>` - ボランティア情報の配列
+    async fn get_scheduled_activities_by_gid<'ctx>(
+        &self,
+        ctx: &Context<'ctx>,
+        gid: String,
+    ) -> Result<Vec<VolunteerReadModel>> {
+        let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
+        let gid = UserId::from_str(&gid).unwrap();
+        let volunteers: Vec<VolunteerReadModel> = ctx
+            .volunteer_dao
+            .find_scheduled_activity_by_gid(&gid)
             .await?;
 
         Ok(volunteers)

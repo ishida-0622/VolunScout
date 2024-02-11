@@ -235,6 +235,30 @@ type ParticipantTheme {
 	isRequired: Boolean!
 }
 
+"""
+過去ボランティア参加者リードモデル
+"""
+type PastVolunteerParticipantReadModel {
+	"""
+	ユーザーID
+	"""
+	uid: String!
+	"""
+	ユーザー名
+	"""
+	name: String!
+	"""
+	性別
+	
+	0: 男性, 1: 女性, 2: その他
+	"""
+	gender: Int!
+	"""
+	生年月日
+	"""
+	birthday: NaiveDate!
+}
+
 type QueryRoot {
 	"""
 	指定されたgidのアカウント情報を取得する
@@ -434,6 +458,16 @@ type QueryRoot {
 	"""
 	getApplyByUid(uid: String!): [Apply!]!
 	"""
+	指定されたvidのボランティアに参加した参加者情報を取得する
+	
+	## 引数
+	- `vid` - vid
+	
+	## 返り値
+	- `Vec<PastVolunteerParticipantReadModel>` - 参加者情報の配列
+	"""
+	getPastVolunteerParticipantsByVid(vid: String!): [PastVolunteerParticipantReadModel!]!
+	"""
 	指定されたvidのボランティア要素情報を取得する
 	
 	## 引数
@@ -493,6 +527,26 @@ type QueryRoot {
 	- `Vec<VolunteerReadModel>` - ボランティア情報の配列
 	"""
 	getScheduledActivitiesByUid(uid: String!): [VolunteerReadModel!]!
+	"""
+	指定されたgidが過去に活動したボランティア情報を取得する
+	
+	## 引数
+	- `gid` - gid
+	
+	## 返り値
+	- `Vec<VolunteerReadModel>` - ボランティア情報の配列
+	"""
+	getActivitiesByGid(gid: String!): [VolunteerReadModel!]!
+	"""
+	指定されたgidがこれから活動を予定しているボランティア情報を取得する
+	
+	## 引数
+	- `gid` - gid
+	
+	## 返り値
+	- `Vec<VolunteerReadModel>` - ボランティア情報の配列
+	"""
+	getScheduledActivitiesByGid(gid: String!): [VolunteerReadModel!]!
 	"""
 	指定されたuidとvidの参加者レビュー情報を取得する
 	

@@ -12,6 +12,8 @@ import {
 
 import { VolunteerItem } from "../VolunteerItem";
 
+import { ReviewModal } from "./ReviewModal";
+
 import { gql } from "@/__generated__/query";
 import { SearchBar } from "@/components/ui-parts/SearchBar/index";
 import { useAuthContext } from "@/contexts/AuthContext";
@@ -104,6 +106,16 @@ export const ApplyList = () => {
     setPage("scheduledActivities");
   };
 
+  const [show, setShow] = useState(false);
+  const [vid, setVid] = useState("");
+
+  const handleShow = (vid: string) => {
+    setVid(vid);
+    setShow(true);
+  };
+
+  const handleClose = () => setShow(false);
+
   if (loading) {
     return <Spinner />;
   }
@@ -113,7 +125,7 @@ export const ApplyList = () => {
     return null;
   }
 
-  if (!data) {
+  if (!data || !user) {
     return null;
   }
 
@@ -123,23 +135,23 @@ export const ApplyList = () => {
       <Row className="my-3">
         <ToggleButtonGroup type="radio" name="buttons" defaultValue={"apply"}>
           <ToggleButton
-            id="show-activities"
-            value={"apply"}
-            onClick={showActivities}
+            id="show-scheduled-activities"
+            value={"scout"}
+            onClick={showScheduledActivities}
           >
             今後の活動予定
           </ToggleButton>
           <ToggleButton
-            id="show-scheduled-activities"
-            value={"scout"}
-            onClick={showScheduledActivities}
+            id="show-activities"
+            value={"apply"}
+            onClick={showActivities}
           >
             過去の活動
           </ToggleButton>
         </ToggleButtonGroup>
       </Row>
-      {page === "activities" &&
-        searchedActivities.map((volunteer) => (
+      {page === "scheduledActivities" &&
+        searchedScheduledActivities.map((volunteer) => (
           <VolunteerItem
             key={volunteer.vid}
             volunteer={volunteer}
@@ -147,14 +159,17 @@ export const ApplyList = () => {
             isCalendar
           />
         ))}
-      {page === "scheduledActivities" &&
-        searchedScheduledActivities.map((volunteer) => (
+      {page === "activities" &&
+        searchedActivities.map((volunteer) => (
           <VolunteerItem
             key={volunteer.vid}
             volunteer={volunteer}
             initIsFav={favs.has(volunteer.vid)}
+            isReview
+            onReviewClick={() => handleShow(volunteer.vid)}
           />
         ))}
+      <ReviewModal show={show} vid={vid} uid={user.uid} onHide={handleClose} />
     </Container>
   );
 };

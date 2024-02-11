@@ -1,7 +1,7 @@
 "use client";
 
 import { useLazyQuery, useQuery } from "@apollo/client";
-import { notFound, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button, Col, Container, Form, Row, Spinner } from "react-bootstrap";
 
@@ -151,7 +151,7 @@ export const Apply = ({ vid }: Props) => {
   }
 
   if (!(data && participant)) {
-    notFound();
+    return null;
   }
 
   const volunteer = data.volunteer;

@@ -27,7 +27,7 @@ type ApplyAndParticipantDataType = {
   asGroup: boolean;
   allowedStatus: number;
   name: string;
-  birthday: Date;
+  birthday: string;
   gender: number;
   point?: number;
 };

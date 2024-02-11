@@ -4,14 +4,14 @@ import { useRouter } from "next/navigation";
 
 import styles from "./index.module.css";
 
-import type { GetVolunteerByGidQuery } from "@/__generated__/query/graphql";
+import type { GetAllVolunteerByGidQuery } from "@/__generated__/query/graphql";
 
 import { joinClassnames } from "@/components/@joinClassnames";
 import { URL_PATH_GROUP } from "@/consts";
 import { formatDate } from "@/utils/formatDate";
 
 type Props = {
-  volunteer: GetVolunteerByGidQuery["volunteers"][number];
+  volunteer: GetAllVolunteerByGidQuery["volunteers"][number];
 };
 
 export const VolunteerItem = ({ volunteer }: Props) => {

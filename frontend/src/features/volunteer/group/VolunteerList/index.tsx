@@ -9,15 +9,19 @@ import { VolunteerItem } from "../VolunteerItem";
 
 import styles from "./index.module.css";
 
-import type { GetVolunteerByGidQuery } from "@/__generated__/query/graphql";
+import type { GetAllVolunteerByGidQuery } from "@/__generated__/query/graphql";
 
 import { gql } from "@/__generated__/query";
 import { SearchBar } from "@/components/ui-parts/SearchBar/index";
 import { URL_PATH_GROUP } from "@/consts";
 import { useAuthContext } from "@/contexts/AuthContext";
 
-const GetVolunteersQuery = gql(/* GraphQL */ `
-  query GetVolunteerByGid($gid: String!) {
+type Props = {
+  type: "all" | "active" | "scheduled";
+};
+
+const GetAllVolunteersQuery = gql(/* GraphQL */ `
+  query GetAllVolunteerByGid($gid: String!) {
     volunteers: getVolunteerByGid(gid: $gid) {
       vid
       title
@@ -27,13 +31,42 @@ const GetVolunteersQuery = gql(/* GraphQL */ `
       place
       startAt
       finishAt
-      isDeleted
     }
   }
 `);
 
-export const VolunteerList = () => {
-  const authContext = useAuthContext();
+const GetActiveVolunteersQuery = gql(/* GraphQL */ `
+  query GetActiveVolunteerByGid($gid: String!) {
+    volunteers: getActivitiesByGid(gid: $gid) {
+      vid
+      title
+      message
+      overview
+      recruitedNum
+      place
+      startAt
+      finishAt
+    }
+  }
+`);
+
+const GetScheduledVolunteersQuery = gql(/* GraphQL */ `
+  query GetScheduledVolunteerByGid($gid: String!) {
+    volunteers: getScheduledActivitiesByGid(gid: $gid) {
+      vid
+      title
+      message
+      overview
+      recruitedNum
+      place
+      startAt
+      finishAt
+    }
+  }
+`);
+
+export const VolunteerList = ({ type }: Props) => {
+  const { user } = useAuthContext();
   const router = useRouter();
 
   const toCreatePage = () => {
@@ -41,21 +74,25 @@ export const VolunteerList = () => {
   };
 
   const [getVolunteers, { data, loading, error }] = useLazyQuery(
-    GetVolunteersQuery,
+    type === "all"
+      ? GetAllVolunteersQuery
+      : type === "active"
+      ? GetActiveVolunteersQuery
+      : GetScheduledVolunteersQuery,
     {
       fetchPolicy: "cache-and-network",
-    },
+    }
   );
 
   const volunteers = data?.volunteers ?? [];
 
   const [showVolunteers, setShowVolunteers] = useState<
-    GetVolunteerByGidQuery["volunteers"]
+    GetAllVolunteerByGidQuery["volunteers"]
   >([]);
 
   useEffect(() => {
-    if (authContext.user?.uid) {
-      getVolunteers({ variables: { gid: authContext.user.uid } })
+    if (user?.uid) {
+      getVolunteers({ variables: { gid: user.uid } })
         .then((res) => {
           if (res.data) {
             setShowVolunteers(res.data.volunteers);
@@ -63,7 +100,7 @@ export const VolunteerList = () => {
         })
         .catch((e) => console.error(e));
     }
-  }, [getVolunteers, authContext.user?.uid]);
+  }, [getVolunteers, user?.uid]);
 
   const search = (s: string) => {
     const reg = new RegExp(s, "i");
@@ -73,8 +110,8 @@ export const VolunteerList = () => {
           reg.test(v.title) ||
           reg.test(v.message) ||
           reg.test(v.overview) ||
-          reg.test(v.place),
-      ),
+          reg.test(v.place)
+      )
     );
   };
 

@@ -1,7 +1,7 @@
 use anyhow::Result;
 use async_graphql::SimpleObject;
 use async_trait::async_trait;
-use chrono::NaiveDateTime;
+use chrono::{NaiveDate, NaiveDateTime};
 
 use domain::model::{apply::ApplyId, user_account::user_id::UserId, volunteer::VolunteerId};
 
@@ -50,6 +50,21 @@ impl Apply {
     }
 }
 
+/// 過去ボランティア参加者リードモデル
+#[derive(SimpleObject, sqlx::Type)]
+pub struct PastVolunteerParticipantReadModel {
+    /// ユーザーID
+    pub uid: String,
+    /// ユーザー名
+    pub name: String,
+    /// 性別
+    ///
+    /// 0: 男性, 1: 女性, 2: その他
+    pub gender: u8,
+    /// 生年月日
+    pub birthday: NaiveDate,
+}
+
 #[async_trait]
 pub trait ApplyRepository: Send + Sync {
     /// 応募情報を応募IDで取得する
@@ -63,4 +78,10 @@ pub trait ApplyRepository: Send + Sync {
 
     /// 応募情報をボランティアIDで一括取得する
     async fn find_by_vid(&self, vid: &VolunteerId) -> Result<Vec<Apply>>;
+
+    /// 過去に開催されたボランティアに参加した参加者を取得する
+    async fn find_past_volunteer_participants(
+        &self,
+        vid: &VolunteerId,
+    ) -> Result<Vec<PastVolunteerParticipantReadModel>>;
 }
