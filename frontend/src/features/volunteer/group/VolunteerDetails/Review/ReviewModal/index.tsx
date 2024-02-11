@@ -41,7 +41,7 @@ export const ReviewModal = ({ vid, uid, show, onHide }: Props) => {
   };
 
   return (
-    <Modal show={show}>
+    <Modal show={show} onHide={onHide}>
       <Modal.Header closeButton onHide={onHide}>
         <Modal.Title>参加者の評価</Modal.Title>
       </Modal.Header>
