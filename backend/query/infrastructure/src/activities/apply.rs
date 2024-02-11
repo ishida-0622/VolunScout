@@ -2,8 +2,10 @@ use anyhow::Result;
 use async_trait::async_trait;
 use sqlx::MySqlPool;
 
-use domain::model::{user_account::user_id::UserId, apply::ApplyId, volunteer::VolunteerId};
-use query_repository::activities::apply::{Apply, ApplyRepository};
+use domain::model::{apply::ApplyId, user_account::user_id::UserId, volunteer::VolunteerId};
+use query_repository::activities::apply::{
+    Apply, ApplyRepository, PastVolunteerParticipantReadModel,
+};
 
 pub struct ApplyImpl {
     pool: MySqlPool,
@@ -80,5 +82,28 @@ impl ApplyRepository for ApplyImpl {
         .fetch_all(&self.pool)
         .await?;
         Ok(apply)
+    }
+
+    async fn find_past_volunteer_participants(
+        &self,
+        vid: &VolunteerId,
+    ) -> Result<Vec<PastVolunteerParticipantReadModel>> {
+        let participants = sqlx::query_as!(
+            PastVolunteerParticipantReadModel,
+            r#"
+            SELECT uid, name, gender as "gender: u8", birthday
+            FROM participant_account
+            WHERE uid IN (
+                SELECT uid
+                FROM apply
+                WHERE vid = ? AND allowed_status = 1
+            )
+            "#,
+            vid.to_string()
+        )
+        .fetch_all(&self.pool)
+        .await?;
+
+        Ok(participants)
     }
 }

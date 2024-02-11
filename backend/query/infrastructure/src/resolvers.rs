@@ -13,7 +13,7 @@ use domain::model::{
 };
 use query_repository::{
     activities::{
-        apply::{Apply, ApplyRepository},
+        apply::{Apply, ApplyRepository, PastVolunteerParticipantReadModel},
         review::{
             ParticipantReviewPointAverage, ParticipantReviewRepository, Review,
             VolunteerReviewRepository,
@@ -430,6 +430,26 @@ impl QueryRoot {
         let scout: Vec<Apply> = ctx.apply_dao.find_by_uid(&uid).await?;
 
         Ok(scout)
+    }
+
+    /// 指定されたvidのボランティアに参加した参加者情報を取得する
+    ///
+    /// ## 引数
+    /// - `vid` - vid
+    ///
+    /// ## 返り値
+    /// - `Vec<PastVolunteerParticipantReadModel>` - 参加者情報の配列
+    async fn get_past_volunteer_participants_by_vid<'ctx>(
+        &self,
+        ctx: &Context<'ctx>,
+        vid: String,
+    ) -> Result<Vec<PastVolunteerParticipantReadModel>> {
+        let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
+        let vid = VolunteerId::from_str(&vid);
+        let participants: Vec<PastVolunteerParticipantReadModel> =
+            ctx.apply_dao.find_past_volunteer_participants(&vid).await?;
+
+        Ok(participants)
     }
 
     /// 指定されたvidのボランティア要素情報を取得する
