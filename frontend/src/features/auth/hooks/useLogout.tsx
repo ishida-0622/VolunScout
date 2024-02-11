@@ -14,8 +14,7 @@ export const useLogout = () => {
       .then(() => {
         router.push(URL_PATH_PARTICIPANT.HOME);
       })
-      .catch((error) => {
-        console.error(error);
+      .catch(() => {
         alert("ログアウトに失敗しました");
       });
   };

@@ -1,7 +1,7 @@
 "use client";
 
 import { useLazyQuery } from "@apollo/client";
-import { useRouter } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Button, Col, Container, Row } from "react-bootstrap";
 
@@ -52,9 +52,7 @@ export const UserInfo = () => {
 
   useEffect(() => {
     if (typeof user?.uid === "string") {
-      fetchParticipantAccount({ variables: { uid: user.uid } }).catch((e) => {
-        console.error(e);
-      });
+      fetchParticipantAccount({ variables: { uid: user.uid } }).catch(() => {});
     }
   }, [fetchParticipantAccount, user?.uid]);
 
@@ -70,8 +68,7 @@ export const UserInfo = () => {
     : undefined;
 
   if (error) {
-    console.error(error);
-    return null;
+    notFound();
   }
 
   return (

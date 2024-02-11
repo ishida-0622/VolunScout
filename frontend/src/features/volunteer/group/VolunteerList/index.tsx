@@ -1,7 +1,7 @@
 "use client";
 
 import { useLazyQuery } from "@apollo/client";
-import { useRouter } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button, Spinner } from "react-bootstrap";
 
@@ -98,7 +98,7 @@ export const VolunteerList = ({ type }: Props) => {
             setShowVolunteers(res.data.volunteers);
           }
         })
-        .catch((e) => console.error(e));
+        .catch(() => {});
     }
   }, [getVolunteers, user?.uid]);
 
@@ -116,8 +116,7 @@ export const VolunteerList = ({ type }: Props) => {
   };
 
   if (error) {
-    console.error(error);
-    return null;
+    notFound();
   }
 
   return (

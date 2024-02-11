@@ -53,7 +53,7 @@ export const Confirmation = ({ values, prevPage }: Props) => {
       theme: values.themes.filter((theme) => !themesRequiredSet.has(theme)),
       required_theme: values.themesRequired,
       condition: values.conditions.filter(
-        (condition) => !conditionsRequiredSet.has(condition),
+        (condition) => !conditionsRequiredSet.has(condition)
       ),
       required_condition: values.conditionsRequired,
       target_status: values.targetStatuses,
@@ -63,7 +63,6 @@ export const Confirmation = ({ values, prevPage }: Props) => {
       alert("会員登録が完了しました");
       router.push(URL_PATH_PARTICIPANT.HOME);
     } catch (error) {
-      console.error(error);
       alert("エラーが発生しました");
     }
   };

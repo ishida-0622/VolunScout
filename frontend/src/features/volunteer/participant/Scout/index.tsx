@@ -37,7 +37,7 @@ export const Scout = () => {
 
   useEffect(() => {
     if (user) {
-      getScout({ variables: { uid: user.uid } }).catch(console.error);
+      getScout({ variables: { uid: user.uid } }).catch(() => {});
     }
   }, [getScout, user]);
 

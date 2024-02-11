@@ -20,11 +20,7 @@ export const ScoutItem = ({ scout, onPreview }: Props) => {
     const body: UpdateScoutIsReadRequestBody = {
       sid: scout.sid,
     };
-    try {
-      await apiClientScout.updateScoutIsRead(body);
-    } catch (error) {
-      console.error(error);
-    }
+    await apiClientScout.updateScoutIsRead(body);
   };
 
   const refusal = async () => {
@@ -37,7 +33,7 @@ export const ScoutItem = ({ scout, onPreview }: Props) => {
     try {
       await apiClientScout.updateScoutDenied(body);
     } catch (error) {
-      console.error(error);
+      alert("辞退に失敗しました");
     }
   };
 

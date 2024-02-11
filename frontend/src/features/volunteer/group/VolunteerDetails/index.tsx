@@ -69,8 +69,8 @@ export const VolunteerDetails = ({ vid }: Props) => {
       await apiClientVolunteer.deleteVolunteer(body);
       alert("削除しました");
       router.push(URL_PATH_GROUP.HOME);
-    } catch (error) {
-      console.error(error);
+    } catch (e) {
+      alert("削除に失敗しました");
     }
   };
 
@@ -79,8 +79,7 @@ export const VolunteerDetails = ({ vid }: Props) => {
   }
 
   if (error) {
-    console.error(error);
-    return null;
+    notFound();
   }
 
   if (!data) {

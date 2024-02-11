@@ -61,17 +61,15 @@ export const ParticipantModal = ({
 
   if (loading) return <Spinner />;
 
-  if (error) {
-    console.error(error);
+  if (!data || error) {
     return null;
   }
 
-  if (!data) return null;
+  const { info, review } = data;
 
-  const info = data.info;
-  const review = data.review;
-
-  if (!info || !review) return null;
+  if (!info || !review) {
+    return null;
+  }
 
   return (
     <Modal
@@ -108,8 +106,7 @@ export const ParticipantModal = ({
           <Col sm={3}>レビュー</Col>
           <Col sm={9}>
             {formatReview(
-              review.map((r) => r.point).reduce((a, b) => a + b) /
-                review.length,
+              review.map((r) => r.point).reduce((a, b) => a + b) / review.length
             )}
           </Col>
         </Row>

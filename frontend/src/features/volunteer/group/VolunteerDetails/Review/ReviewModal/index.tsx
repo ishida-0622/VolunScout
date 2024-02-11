@@ -31,7 +31,6 @@ export const ReviewModal = ({ vid, uid, show, onHide }: Props) => {
       await apiClientReview.reviewToParticipant(body);
       alert("評価しました");
     } catch (error) {
-      console.error(error);
       alert("エラーが発生しました");
     } finally {
       onHide();

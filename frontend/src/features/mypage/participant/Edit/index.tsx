@@ -1,8 +1,9 @@
 "use client";
 
 import { useLazyQuery } from "@apollo/client";
-import { useRouter } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { Spinner } from "react-bootstrap";
 
 import styles from "./index.module.css";
 import { useTermsForm } from "./useTermsForm";
@@ -59,7 +60,7 @@ export const EditMyPage = () => {
   } = useTermsForm({});
 
   const [fetchParticipantAccount, { loading, error, data }] = useLazyQuery(
-    GetParticipantAccountQuery,
+    GetParticipantAccountQuery
   );
 
   const onSubmit = async () => {
@@ -76,7 +77,7 @@ export const EditMyPage = () => {
     try {
       await apiClientParticipant.updateParticipantAccount(body);
     } catch (e) {
-      console.error(e);
+      alert("更新に失敗しました");
       return;
     }
 
@@ -85,9 +86,7 @@ export const EditMyPage = () => {
 
   useEffect(() => {
     if (typeof user?.uid === "string") {
-      fetchParticipantAccount({ variables: { uid: user.uid } }).catch((e) => {
-        console.error(e);
-      });
+      fetchParticipantAccount({ variables: { uid: user.uid } }).catch(() => {});
     }
   }, [fetchParticipantAccount, user?.uid]);
 
@@ -103,25 +102,24 @@ export const EditMyPage = () => {
         region: regions.map((region) => region.name),
         theme: themes.flatMap((theme) => (theme.isRequired ? [] : theme.name)),
         required_theme: themes.flatMap((theme) =>
-          theme.isRequired ? theme.name : [],
+          theme.isRequired ? theme.name : []
         ),
         condition: conditions.flatMap((condition) =>
-          condition.isRequired ? [] : condition.name,
+          condition.isRequired ? [] : condition.name
         ),
         required_condition: conditions.flatMap((condition) =>
-          condition.isRequired ? condition.name : [],
+          condition.isRequired ? condition.name : []
         ),
       });
     }
   }, [data, setUserInfoValues]);
 
   if (loading) {
-    return null;
+    return <Spinner />;
   }
 
   if (error) {
-    console.error(error);
-    return null;
+    notFound();
   }
 
   return (

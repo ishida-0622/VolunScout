@@ -78,7 +78,6 @@ export const SignInButton = () => {
         }
       } else {
         alert("ログインに失敗しました");
-        console.error(error);
       }
     }
   };
@@ -112,7 +111,7 @@ export const SignInButton = () => {
                 onClick={() => {
                   handleGoogleSignIn()
                     .then(() => closeModal())
-                    .catch(console.error);
+                    .catch(() => {});
                 }}
               />
             </Col>

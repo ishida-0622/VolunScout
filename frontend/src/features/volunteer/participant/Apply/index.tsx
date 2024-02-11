@@ -1,7 +1,7 @@
 "use client";
 
 import { useLazyQuery, useQuery } from "@apollo/client";
-import { useRouter } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button, Col, Container, Form, Row, Spinner } from "react-bootstrap";
 
@@ -66,17 +66,13 @@ export const Apply = ({ vid }: Props) => {
 
   useEffect(() => {
     if (data) {
-      getGroupName({ variables: { gid: data.volunteer.gid } }).catch((e) =>
-        console.error(e)
-      );
+      getGroupName({ variables: { gid: data.volunteer.gid } }).catch(() => {});
     }
   }, [data, getGroupName]);
 
   useEffect(() => {
     if (user) {
-      getParticipantAccount({ variables: { uid: user.uid } }).catch((e) =>
-        console.error(e)
-      );
+      getParticipantAccount({ variables: { uid: user.uid } }).catch(() => {});
     }
   }, [user, getParticipantAccount]);
 
@@ -137,7 +133,7 @@ export const Apply = ({ vid }: Props) => {
       alert("応募が完了しました");
       router.push(URL_PATH_PARTICIPANT.APPLY_LIST);
     } catch (e) {
-      console.error(e);
+      alert("応募に失敗しました");
     }
   };
 
@@ -146,8 +142,7 @@ export const Apply = ({ vid }: Props) => {
   }
 
   if (error) {
-    console.error(error);
-    return null;
+    notFound();
   }
 
   if (!(data && participant)) {

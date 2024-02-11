@@ -27,7 +27,6 @@ export const AccountDeletePage = () => {
       await user.delete();
       logout();
     } catch (e) {
-      console.error(e);
       alert("アカウント削除に失敗しました");
     }
   };

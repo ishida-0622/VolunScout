@@ -1,6 +1,7 @@
 "use client";
 
 import { useLazyQuery } from "@apollo/client";
+import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Col, Row, Spinner } from "react-bootstrap";
 
@@ -49,7 +50,7 @@ export const FavList = () => {
           setFavSet(favSet);
           setShowVolunteers(res.data?.volunteers ?? []);
         })
-        .catch(console.error);
+        .catch(() => {});
     }
   }, [authContext.user, getFav]);
 
@@ -67,8 +68,7 @@ export const FavList = () => {
   }
 
   if (error) {
-    console.error(error);
-    return null;
+    notFound();
   }
 
   return (

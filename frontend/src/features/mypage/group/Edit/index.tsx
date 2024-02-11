@@ -52,9 +52,7 @@ export const EditMyPage = () => {
 
   useEffect(() => {
     if (typeof user?.uid === "string") {
-      getGroupAccount({ variables: { gid: user.uid } }).catch((e) =>
-        console.error(e),
-      );
+      getGroupAccount({ variables: { gid: user.uid } }).catch(() => {});
     }
   }, [getGroupAccount, user?.uid]);
 
@@ -72,7 +70,6 @@ export const EditMyPage = () => {
 
   const submit = async () => {
     if (user === null) {
-      console.error("user is null");
       return;
     }
 
@@ -84,7 +81,7 @@ export const EditMyPage = () => {
     try {
       await apiClientGroup.updateGroupAccount(body);
     } catch (e) {
-      console.error(e);
+      alert("アカウント更新に失敗しました");
       return;
     }
 
@@ -92,12 +89,10 @@ export const EditMyPage = () => {
   };
 
   if (loading || data === undefined) {
-    console.warn("loading or data is undefined");
     return null;
   }
 
   if (error) {
-    console.error(error);
     return null;
   }
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useLazyQuery } from "@apollo/client";
+import { notFound } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import {
   Container,
@@ -82,17 +83,13 @@ export const ApplyList = () => {
   useEffect(() => {
     if (user) {
       (async () => {
-        try {
-          const res = await getApply({ variables: { uid: user.uid } });
-          if (res.data) {
-            setFavs(new Set(res.data.favs.map((v) => v.vid)));
-            setSearchedActivities(res.data.activities);
-            setSearchedScheduledActivities(res.data.scheduledActivities);
-          }
-        } catch (e) {
-          console.error(e);
+        const res = await getApply({ variables: { uid: user.uid } });
+        if (res.data) {
+          setFavs(new Set(res.data.favs.map((v) => v.vid)));
+          setSearchedActivities(res.data.activities);
+          setSearchedScheduledActivities(res.data.scheduledActivities);
         }
-      })().catch(console.error);
+      })().catch(() => {});
     }
   }, [getApply, user]);
 
@@ -121,8 +118,7 @@ export const ApplyList = () => {
   }
 
   if (error) {
-    console.error(error);
-    return null;
+    notFound();
   }
 
   if (!data || !user) {

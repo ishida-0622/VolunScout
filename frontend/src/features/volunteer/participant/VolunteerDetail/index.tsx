@@ -71,7 +71,7 @@ export const VolunteerDetail = ({ vid }: Props) => {
   useEffect(() => {
     if (data) {
       getGroupAccount({ variables: { gid: data.volunteer.gid } }).catch(
-        console.error
+        () => {}
       );
     }
   }, [data, getGroupAccount]);
@@ -80,12 +80,7 @@ export const VolunteerDetail = ({ vid }: Props) => {
     return <Spinner />;
   }
 
-  if (error) {
-    console.error(error);
-    return null;
-  }
-
-  if (!data) {
+  if (!data || error) {
     notFound();
   }
 

@@ -45,7 +45,7 @@ export const FavButton = ({
       onFavClick();
       setIsFav(true);
     } catch (e) {
-      console.error(e);
+      alert("お気に入り登録に失敗しました");
     }
 
     isFavButtonDisabled.current = false;
@@ -64,7 +64,7 @@ export const FavButton = ({
       onUnFavClick();
       setIsFav(false);
     } catch (e) {
-      console.error(e);
+      alert("お気に入り解除に失敗しました");
     }
 
     isFavButtonDisabled.current = false;

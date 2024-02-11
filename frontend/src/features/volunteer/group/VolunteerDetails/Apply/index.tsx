@@ -98,7 +98,7 @@ export const Apply = ({ vid }: Props) => {
       alert("承認しました");
       await refetch();
     } catch (error) {
-      console.error(error);
+      alert("承認に失敗しました");
     }
   };
 
@@ -115,7 +115,7 @@ export const Apply = ({ vid }: Props) => {
       alert("棄却しました");
       await refetch();
     } catch (error) {
-      console.error(error);
+      alert("棄却に失敗しました");
     }
   };
 
@@ -130,9 +130,7 @@ export const Apply = ({ vid }: Props) => {
   useEffect(() => {
     if (applyData) {
       const uids = applyData.apply.map((apply) => apply.uid);
-      getParticipantAccounts({ variables: { uids } }).catch((error) => {
-        console.error(error);
-      });
+      getParticipantAccounts({ variables: { uids } }).catch(() => {});
     }
   }, [applyData, getParticipantAccounts]);
 
@@ -168,8 +166,7 @@ export const Apply = ({ vid }: Props) => {
   }
 
   if (applyError) {
-    console.error(applyError);
-    return null;
+    notFound();
   }
 
   if (applyData === undefined) {

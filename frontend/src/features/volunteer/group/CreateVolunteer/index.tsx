@@ -41,15 +41,15 @@ export const CreateVolunteer = () => {
     const termsValues = getTermsValues();
     const storageInfoKey = "create-volunteer-info";
     const storageTermsKey = "create-volunteer-terms";
-    set(storageInfoKey, infoValues).catch((e) => console.error(e));
-    set(storageTermsKey, termsValues).catch((e) => console.error(e));
+    set(storageInfoKey, infoValues).catch(() => {});
+    set(storageTermsKey, termsValues).catch(() => {});
   };
 
   const clearLocalStorage = () => {
     const storageInfoKey = "create-volunteer-info";
     const storageTermsKey = "create-volunteer-terms";
-    set(storageInfoKey, undefined).catch((e) => console.error(e));
-    set(storageTermsKey, undefined).catch((e) => console.error(e));
+    set(storageInfoKey, undefined).catch(() => {});
+    set(storageTermsKey, undefined).catch(() => {});
   };
 
   const readLocalStorage = useCallback(() => {
@@ -62,7 +62,7 @@ export const CreateVolunteer = () => {
           });
         }
       })
-      .catch((e) => console.error(e));
+      .catch(() => {});
 
     get("create-volunteer-terms")
       .then((value: TermsFormValues | undefined) => {
@@ -70,8 +70,8 @@ export const CreateVolunteer = () => {
           setTermsValue(value);
         }
       })
-      .catch((e) => console.error(e));
-  }, [getInfoValues, setInfoValue]);
+      .catch(() => {});
+  }, [setInfoValue, setTermsValue]);
 
   const handleOnSave = () => {
     writeLocalStorage();
@@ -127,10 +127,10 @@ export const CreateVolunteer = () => {
       start_at: new Date(infoValues.start_at).toISOString(),
       finish_at: new Date(infoValues.finish_at).toISOString(),
       theme: termsValues.theme.flatMap((theme) =>
-        termsValues.required_theme.includes(theme) ? [] : [theme],
+        termsValues.required_theme.includes(theme) ? [] : [theme]
       ),
       condition: termsValues.condition.flatMap((condition) =>
-        termsValues.required_condition.includes(condition) ? [] : [condition],
+        termsValues.required_condition.includes(condition) ? [] : [condition]
       ),
     };
 
@@ -140,7 +140,6 @@ export const CreateVolunteer = () => {
       alert("作成しました");
       router.push(URL_PATH_GROUP.HOME);
     } catch (error) {
-      console.error(error);
       alert("エラーが発生しました");
     }
   };
