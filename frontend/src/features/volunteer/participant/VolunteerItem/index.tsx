@@ -17,6 +17,8 @@ type Props = {
   fav?: () => void;
   unFav?: () => void;
   isCalendar?: boolean;
+  isReview?: boolean;
+  onReviewClick?: () => void;
 };
 
 export const VolunteerItem = ({
@@ -25,6 +27,8 @@ export const VolunteerItem = ({
   fav,
   unFav,
   isCalendar,
+  isReview,
+  onReviewClick,
 }: Props) => {
   const router = useRouter();
   const toVolunteer = () => {
@@ -95,6 +99,13 @@ export const VolunteerItem = ({
                     <br />
                     に追加
                   </span>
+                </Button>
+              </Col>
+            )}
+            {isReview && (
+              <Col>
+                <Button size="sm" className="w-100" onClick={onReviewClick}>
+                  評価する
                 </Button>
               </Col>
             )}
