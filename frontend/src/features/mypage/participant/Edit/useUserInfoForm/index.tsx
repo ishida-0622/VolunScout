@@ -40,7 +40,7 @@ export const useUserInfoForm = ({ initialValues, onSubmit = noop }: Props) => {
   const InputForm = (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className={joinClassnames(styles.main)}>
-        <div className={joinClassnames("row mb-3")}>
+        <div className="row my-3">
           <label htmlFor="name" className="col-sm-2 col-form-label">
             <span>氏名</span>
           </label>
