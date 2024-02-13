@@ -22,10 +22,10 @@ type Props = {
 export const Confirmation = ({ values, prevPage }: Props) => {
   const router = useRouter();
   const { user } = useAuthContext();
-  const themesSet = new Set(values.themes);
-  const themesRequiredSet = new Set(values.themesRequired);
-  const conditionsSet = new Set(values.conditions);
-  const conditionsRequiredSet = new Set(values.conditionsRequired);
+  const themesSet = new Set(values.theme);
+  const themesRequiredSet = new Set(values.required_theme);
+  const conditionsSet = new Set(values.condition);
+  const conditionsRequiredSet = new Set(values.required_condition);
 
   const isAgreed = useRef(false);
   const handleAgreed = (value: boolean) => {
@@ -49,13 +49,13 @@ export const Confirmation = ({ values, prevPage }: Props) => {
       phone: values.phone,
       pid: uid,
       profile: values.profile,
-      region: values.regions,
-      theme: values.themes.filter((theme) => !themesRequiredSet.has(theme)),
-      required_theme: values.themesRequired,
-      condition: values.conditions.filter(
+      region: values.region,
+      theme: values.theme.filter((theme) => !themesRequiredSet.has(theme)),
+      required_theme: values.required_theme,
+      condition: values.condition.filter(
         (condition) => !conditionsRequiredSet.has(condition)
       ),
-      required_condition: values.conditionsRequired,
+      required_condition: values.required_condition,
       target_status: values.targetStatuses,
     };
     try {
@@ -113,7 +113,7 @@ export const Confirmation = ({ values, prevPage }: Props) => {
         <div className={styles.select}>
           <details open>
             <summary className={styles.main}>地域</summary>
-            {values.regions.map((region) => (
+            {values.region.map((region) => (
               <p key={region}>{region}</p>
             ))}
           </details>

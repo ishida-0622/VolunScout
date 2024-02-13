@@ -14,11 +14,11 @@ export type FormValues = {
   gender: string;
   birthday: string;
   profile: string;
-  regions: string[];
-  themes: string[];
-  themesRequired: string[];
-  conditions: string[];
-  conditionsRequired: string[];
+  region: string[];
+  theme: string[];
+  required_theme: string[];
+  condition: string[];
+  required_condition: string[];
   targetStatuses: string;
 };
 
@@ -27,15 +27,15 @@ export const SignUpPage = () => {
     pid: "",
     name: "",
     furigana: "",
-    gender: "0",
+    gender: "",
     phone: "",
     birthday: "",
     profile: "",
-    regions: [],
-    themes: [],
-    themesRequired: [],
-    conditions: [],
-    conditionsRequired: [],
+    region: [],
+    theme: [],
+    required_theme: [],
+    condition: [],
+    required_condition: [],
     targetStatuses: "",
   });
 

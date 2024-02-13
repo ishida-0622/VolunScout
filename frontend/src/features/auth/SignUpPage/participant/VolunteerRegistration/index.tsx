@@ -1,24 +1,22 @@
 "use client";
 
-import { useForm, type SubmitHandler } from "react-hook-form";
+import { useRef } from "react";
 
-import styles from "./index.module.css"; // CSSモジュールのインポート
+import styles from "./index.module.css";
 
 import type { FormValues } from "..";
 
 import { joinClassnames } from "@/components/@joinClassnames";
-import { CheckBoxControl } from "@/components/ui-parts/CheckBoxControl";
-import { ToggleSwitchControl } from "@/components/ui-parts/ToggleSwitchControl";
-import { CONDITIONS, REGIONS, THEMES } from "@/consts";
+import { useTermsForm } from "@/features/volunteer/useTermsForm";
 
 type Volunteer = Pick<
   FormValues,
   | "profile"
-  | "regions"
-  | "themes"
-  | "themesRequired"
-  | "conditions"
-  | "conditionsRequired"
+  | "region"
+  | "theme"
+  | "required_theme"
+  | "condition"
+  | "required_condition"
 >;
 
 type Props = {
@@ -32,89 +30,46 @@ export const VolunteerRegistration = ({
   onPrevPage,
   values,
 }: Props) => {
-  const { register, handleSubmit } = useForm<Volunteer>({
-    defaultValues: values,
-  });
+  const { InputForm, getValues } = useTermsForm({});
+  const profileRef = useRef<HTMLTextAreaElement>(null);
 
-  const onSubmit: SubmitHandler<Volunteer> = (data) => onNextPage(data);
-  const onSubmitPrev: SubmitHandler<Volunteer> = (data) => onPrevPage(data);
+  const onSubmit = () => {
+    const data: Volunteer = {
+      ...getValues(),
+      profile: profileRef.current?.value || "",
+    };
+    onNextPage(data);
+  };
+  const onSubmitPrev = () => {
+    const data: Volunteer = {
+      ...getValues(),
+      profile: profileRef.current?.value || "",
+    };
+    onPrevPage(data);
+  };
 
   return (
     <section>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={onSubmit}>
         <button
           type="button"
           className={joinClassnames("btn btn-secondary")}
-          onClick={handleSubmit(onSubmitPrev)}
+          onClick={() => onSubmitPrev()}
         >
           戻る
         </button>
         <div className={styles.main_contents}>
           <h2 className={styles.h2}>自己紹介（後からでも設定可能です）</h2>
           <label>
-            <textarea className={styles.textarea} {...register("profile")} />
+            <textarea
+              className={styles.textarea}
+              defaultValue={values.profile}
+            />
           </label>
           <h2 className={styles.h2}>活動希望条件（後からでも設定可能です）</h2>
 
-          <div className={styles.select}>
-            <details open>
-              <summary className={styles.main}>地域</summary>
-              {REGIONS.map((region) => (
-                <div key={region}>
-                  <label>
-                    <input
-                      type="checkbox"
-                      value={region}
-                      {...register("regions")}
-                    />
-                    {region}
-                  </label>
-                </div>
-              ))}
-            </details>
+          {InputForm}
 
-            <details open>
-              <summary className={styles.main}>テーマ</summary>
-              {THEMES.map((theme) => (
-                <div key={theme} style={{ display: "flex" }}>
-                  <CheckBoxControl
-                    name="themes"
-                    value={theme}
-                    register={register}
-                    label={theme}
-                  />
-                  <ToggleSwitchControl
-                    name="themesRequired"
-                    value={theme}
-                    register={register}
-                    label=""
-                    className={styles.toggle}
-                  />
-                </div>
-              ))}
-            </details>
-
-            <details open>
-              <summary className={styles.main}>条件</summary>
-              {CONDITIONS.map((condition) => (
-                <div key={condition} style={{ display: "flex" }}>
-                  <CheckBoxControl
-                    name="conditions"
-                    value={condition}
-                    register={register}
-                    label={condition}
-                  />
-                  <ToggleSwitchControl
-                    name="conditionsRequired"
-                    value={condition}
-                    register={register}
-                    label=""
-                    className={styles.toggle}
-                  />
-                </div>
-              ))}
-            </details>
-          </div>
           <div className={styles.container}>
             <button
               type="submit"
