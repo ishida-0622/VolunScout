@@ -1,6 +1,7 @@
 "use client";
 
 import { useLazyQuery } from "@apollo/client";
+import Link from "next/link";
 import { notFound, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Spinner } from "react-bootstrap";
@@ -140,6 +141,11 @@ export const EditMyPage = () => {
         >
           更新
         </button>
+        <div className="text-center">
+          <Link href={URL_PATH_PARTICIPANT.ACCOUNT_DELETE}>
+            アカウントを削除する→
+          </Link>
+        </div>
       </div>
     </>
   );
