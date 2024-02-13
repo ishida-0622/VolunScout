@@ -5,11 +5,10 @@ import { FirebaseError } from "firebase/app";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
-import { Button, Col, Image, Modal, Row } from "react-bootstrap";
+import { Button, Col, Form, Image, Modal, Row } from "react-bootstrap";
 
 import { gql } from "@/__generated__/query";
-import { CheckBox } from "@/components/ui-parts/CheckBox";
-import { URL_PATH_PARTICIPANT } from "@/consts";
+import { URL_PATH_GROUP, URL_PATH_PARTICIPANT } from "@/consts";
 import { auth } from "@/firebaseConfig";
 
 const ExistsParticipantAccountQuery = gql(/* GraphQL */ `
@@ -33,7 +32,8 @@ export const SignInButton = () => {
   const closeModal = () => setIsModalOpen(false);
 
   const isGroup = useRef(false);
-  const handleChangeIsGroup = (checked: boolean) => {
+  const handleChangeIsGroup = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const checked = e.target.checked;
     isGroup.current = checked;
   };
 
@@ -69,7 +69,15 @@ export const SignInButton = () => {
 
       // 会員登録がされていない場合はサインアップページに遷移
       if (data.result === false) {
-        router.push(URL_PATH_PARTICIPANT.SIGN_UP);
+        router.push(
+          isGroup.current
+            ? URL_PATH_GROUP.SIGN_UP
+            : URL_PATH_PARTICIPANT.SIGN_UP
+        );
+      } else {
+        router.push(
+          isGroup.current ? URL_PATH_GROUP.HOME : URL_PATH_PARTICIPANT.HOME
+        );
       }
     } catch (error) {
       if (error instanceof FirebaseError) {
@@ -118,7 +126,7 @@ export const SignInButton = () => {
           </Row>
           <Row className="w-75 m-auto">
             <Col>
-              <CheckBox
+              <Form.Switch
                 label="ボランティアを募集する「団体」としてログイン・会員登録する"
                 onChange={handleChangeIsGroup}
                 initialState={isGroup.current}
