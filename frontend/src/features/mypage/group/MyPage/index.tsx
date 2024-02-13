@@ -2,6 +2,7 @@
 
 import { useLazyQuery } from "@apollo/client";
 import Image from "next/image";
+import Link from "next/link";
 import { notFound, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -111,6 +112,11 @@ export const MyPage = () => {
         </div>
         <div>
           <p className={styles.profile}>{userInfo.contents}</p>
+        </div>
+        <div className="text-center">
+          <Link href={URL_PATH_GROUP.ACCOUNT_DELETE}>
+            アカウントを削除する→
+          </Link>
         </div>
       </div>
     </div>

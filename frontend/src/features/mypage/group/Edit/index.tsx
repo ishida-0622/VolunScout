@@ -2,6 +2,7 @@
 
 import { useLazyQuery } from "@apollo/client";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -210,6 +211,9 @@ export const EditMyPage = () => {
           </div>
         </div>
       </form>
+      <div className="text-center">
+        <Link href={URL_PATH_GROUP.ACCOUNT_DELETE}>アカウントを削除する→</Link>
+      </div>
     </div>
   );
 };
