@@ -1696,6 +1696,8 @@ dependencies = [
  "futures",
  "query-repository",
  "redis",
+ "serde",
+ "serde_json",
  "sqlx",
  "tower-http",
 ]

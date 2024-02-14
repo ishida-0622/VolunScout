@@ -7,27 +7,27 @@ use domain::model::{user_account::user_id::UserId, volunteer::VolunteerId};
 /// ボランティアリードモデル
 #[derive(SimpleObject, sqlx::Type)]
 pub struct VolunteerReadModel {
-    vid: String,
-    gid: String,
-    title: String,
-    message: String,
-    overview: String,
-    recruited_num: u32,
-    place: String,
-    start_at: NaiveDateTime,
-    finish_at: NaiveDateTime,
-    deadline_on: NaiveDate,
-    as_group: bool,
-    is_deleted: bool,
-    deleted_at: Option<NaiveDateTime>,
-    registered_at: NaiveDateTime,
-    updated_at: NaiveDateTime,
-    regions: Vec<String>,
-    themes: Vec<String>,
-    required_themes: Vec<String>,
-    conditions: Vec<String>,
-    required_conditions: Vec<String>,
-    target_status: Vec<String>,
+    pub vid: String,
+    pub gid: String,
+    pub title: String,
+    pub message: String,
+    pub overview: String,
+    pub recruited_num: u32,
+    pub place: String,
+    pub start_at: NaiveDateTime,
+    pub finish_at: NaiveDateTime,
+    pub deadline_on: NaiveDate,
+    pub as_group: bool,
+    pub is_deleted: bool,
+    pub deleted_at: Option<NaiveDateTime>,
+    pub registered_at: NaiveDateTime,
+    pub updated_at: NaiveDateTime,
+    pub regions: Vec<String>,
+    pub themes: Vec<String>,
+    pub required_themes: Vec<String>,
+    pub conditions: Vec<String>,
+    pub required_conditions: Vec<String>,
+    pub target_status: Vec<String>,
 }
 
 impl VolunteerReadModel {
@@ -85,6 +85,7 @@ impl VolunteerReadModel {
 pub struct VolunteerElementsReadModel {
     pub vid: String,
     pub regions: Vec<String>,
+    pub required_regions: Option<Vec<String>>,  //ボランティアの検索の際に送られるリクエストのみで使用
     pub themes: Vec<String>,
     pub required_themes: Vec<String>,
     pub conditions: Vec<String>,
@@ -96,6 +97,7 @@ impl VolunteerElementsReadModel {
     pub fn new(
         vid: String,
         regions: Vec<String>,
+        required_regions: Option<Vec<String>>,
         themes: Vec<String>,
         required_themes: Vec<String>,
         conditions: Vec<String>,
@@ -105,6 +107,7 @@ impl VolunteerElementsReadModel {
         VolunteerElementsReadModel {
             vid,
             regions,
+            required_regions,
             themes,
             required_themes,
             conditions,
@@ -121,6 +124,9 @@ pub trait VolunteerQueryRepository: Send + Sync {
 
     /// ボランティアをボランティアidで取得する
     async fn find_by_id(&self, vid: &VolunteerId) -> Result<VolunteerReadModel>;
+
+    /// ボランティアを条件検索を用いて取得する
+    async fn find_by_elements(&self, elements: &VolunteerElementsReadModel, search_words: String) -> Result<Vec<VolunteerReadModel>>;
 
     /// ボランティアをグループidで取得する
     async fn find_by_gid(&self, gid: &UserId) -> Result<Vec<VolunteerReadModel>>;

@@ -425,6 +425,35 @@ impl QueryRoot {
         Ok(volunteer)
     }
 
+    /// ボランティアを検索する
+    ///
+    /// ## 引数
+    /// - `vid` - vid
+    ///
+    /// ## 返り値
+    /// - `VolunteerElementsReadModel` - ボランティア要素情報
+    async fn search_volunteer_by_elements<'ctx>(
+        &self,
+        ctx: &Context<'ctx>,
+        regions: Vec<String>,
+        required_regions: Vec<String>,
+        themes: Vec<String>,
+        required_themes: Vec<String>,
+        conditions: Vec<String>,
+        required_conditions: Vec<String>,
+        target_status: Vec<String>,
+        search_words: String
+    ) -> Result<Vec<VolunteerReadModel>> {
+        let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
+        let vid = "";
+        let volunteer: Vec<VolunteerReadModel> = ctx.volunteer_dao.find_by_elements(
+            &VolunteerElementsReadModel::new(vid.to_string(), regions, Some(required_regions), themes, required_themes, conditions, required_conditions, target_status),
+            search_words
+        ).await?;
+
+        Ok(volunteer)
+    }
+
     /// 指定されたvidのボランティア情報を取得する
     ///
     /// ## 引数
