@@ -478,6 +478,16 @@ type QueryRoot {
 	"""
 	getVolunteerElementsById(vid: String!): VolunteerElementsReadModel!
 	"""
+	ボランティアを検索する
+	
+	## 引数
+	- `vid` - vid
+	
+	## 返り値
+	- `VolunteerElementsReadModel` - ボランティア要素情報
+	"""
+	searchVolunteerByElements(regions: [String!]!, requiredRegions: [String!]!, themes: [String!]!, requiredThemes: [String!]!, conditions: [String!]!, requiredConditions: [String!]!, targetStatus: [String!]!, searchWords: String!): [VolunteerReadModel!]!
+	"""
 	指定されたvidのボランティア情報を取得する
 	
 	## 引数
@@ -670,6 +680,7 @@ type SubscriptionRoot {
 type VolunteerElementsReadModel {
 	vid: String!
 	regions: [String!]!
+	requiredRegions: [String!]
 	themes: [String!]!
 	requiredThemes: [String!]!
 	conditions: [String!]!
@@ -688,6 +699,7 @@ type VolunteerReadModel {
 	overview: String!
 	recruitedNum: Int!
 	place: String!
+	reward: String
 	startAt: NaiveDateTime!
 	finishAt: NaiveDateTime!
 	deadlineOn: NaiveDate!
