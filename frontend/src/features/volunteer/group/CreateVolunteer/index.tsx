@@ -34,7 +34,7 @@ export const CreateVolunteer = () => {
     InputForm: TermsForm,
     getValues: getTermsValues,
     setFormValues: setTermsValue,
-  } = useTermsForm({});
+  } = useTermsForm({ isOpen: true });
 
   const writeLocalStorage = () => {
     const infoValues = getInfoValues();

@@ -30,7 +30,7 @@ export const VolunteerRegistration = ({
   onPrevPage,
   values,
 }: Props) => {
-  const { InputForm, getValues } = useTermsForm({});
+  const { InputForm, getValues } = useTermsForm({ isOpen: true });
   const profileRef = useRef<HTMLTextAreaElement>(null);
 
   const onSubmit = () => {
