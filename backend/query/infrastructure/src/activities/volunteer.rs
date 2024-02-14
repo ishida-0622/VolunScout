@@ -1,16 +1,19 @@
 use std::str::FromStr;
 
-use serde_json::Value;
 use anyhow::Result;
 use async_trait::async_trait;
 use futures::future;
+use serde_json::Value;
 use sqlx::{query, MySqlPool, Row};
 use domain::{
     consts::{
-        conditions::ConditionMap, region::RegionMap, target_status::{self, TargetStatusMap},
+        conditions::ConditionMap, region::RegionMap, target_status::TargetStatusMap,
         themes::ThemeMap,
     },
-    model::{condition::Condition, region::Region, target_status::TargetStatus, theme::Theme, user_account::user_id::UserId, volunteer::VolunteerId},
+    model::{
+        condition::Condition, region::Region, target_status::TargetStatus, theme::Theme,
+        user_account::user_id::UserId, volunteer::VolunteerId,
+    },
 };
 use query_repository::activities::volunteer::{
     VolunteerElementsReadModel, VolunteerQueryRepository, VolunteerReadModel,
@@ -132,7 +135,7 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
         let volunteer = sqlx::query!(
             r#"
             SELECT
-                vid, gid, title, message, overview, recruited_num, place, start_at, finish_at, deadline_on, as_group as "as_group: bool", is_deleted as "is_deleted: bool", deleted_at, registered_at, updated_at
+                vid, gid, title, message, overview, recruited_num, place, reward, start_at, finish_at, deadline_on, as_group as "as_group: bool", is_deleted as "is_deleted: bool", deleted_at, registered_at, updated_at
             FROM volunteer WHERE vid = ?
             "#,
             vid.to_string()
@@ -160,8 +163,9 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
             volunteer.title,
             volunteer.message,
             volunteer.overview,
-            volunteer.recruited_num.unwrap() as u32,
+            volunteer.recruited_num as u32,
             volunteer.place,
+            volunteer.reward,
             volunteer.start_at,
             volunteer.finish_at,
             volunteer.deadline_on,
@@ -186,55 +190,61 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
         Ok(volunteer)
     }
 
-
     ///ボランティアの検索
-    async fn find_by_elements(&self, elements: &VolunteerElementsReadModel, search_words: String) -> Result<Vec<VolunteerReadModel>> {
+    async fn find_by_elements(
+        &self,
+        elements: &VolunteerElementsReadModel,
+        search_words: String,
+    ) -> Result<Vec<VolunteerReadModel>> {
         // OR条件の要素一覧
         let mut or_elements: Vec<String> = Vec::new();
 
         // OR条件の地域一覧
-        let mut or_regions = elements.regions.clone().iter()
-            .map(|r: &String|Region::from_str(r).unwrap().to_uint())
+        let or_regions = elements
+            .regions
+            .clone()
+            .iter()
+            .map(|r: &String| Region::from_str(r).unwrap().to_uint())
             .collect::<Vec<u8>>();
-        let req_regions: Vec<u8> = match elements.required_regions.clone(){
-            Some(regions) => regions.clone()
+        let req_regions: Vec<u8> = match elements.required_regions.clone() {
+            Some(regions) => regions
+                .clone()
                 .iter()
-                .map(|r: &String|
-                    Region::from_str(r).unwrap().to_uint()
-                )
+                .map(|r: &String| Region::from_str(r).unwrap().to_uint())
                 .collect::<Vec<u8>>(),
-            None => Vec::new()
+            None => Vec::new(),
         };
         or_elements.extend(
-            elements.themes
+            elements
+                .themes
                 .iter()
-                .map(|r: &String| Theme::from_str(r).unwrap().to_id())
-                // .collect::<Vec<String>>()
+                .map(|r: &String| Theme::from_str(r).unwrap().to_id()), // .collect::<Vec<String>>()
         );
         or_elements.extend(
-            elements.conditions
+            elements
+                .conditions
                 .iter()
-                .map(|r: &String| Condition::from_str(r).unwrap().to_id())
-                // .collect::<Vec<String>>()
+                .map(|r: &String| Condition::from_str(r).unwrap().to_id()), // .collect::<Vec<String>>()
         );
         or_elements.extend(
-            elements.target_status
+            elements
+                .target_status
                 .iter()
-                .map(|r: &String| TargetStatus::from_str(r).unwrap().to_id())
-                // .collect::<Vec<String>>()
+                .map(|r: &String| TargetStatus::from_str(r).unwrap().to_id()), // .collect::<Vec<String>>()
         );
 
         let mut req_elements: Vec<String> = Vec::new();
         req_elements.extend(
-            elements.required_themes
+            elements
+                .required_themes
                 .iter()
-                .map(|r: &String| Theme::from_str(r).unwrap().to_id())
-                // .collect::<Vec<String>>()
+                .map(|r: &String| Theme::from_str(r).unwrap().to_id()), // .collect::<Vec<String>>()
         );
-        req_elements.extend(elements.required_conditions
+        req_elements.extend(
+            elements
+                .required_conditions
                 .iter()
-                .map(|r: &String| Condition::from_str(r).unwrap().to_id())
-                // .collect::<Vec<String>>()
+                .map(|r: &String| Condition::from_str(r).unwrap().to_id()), // .collect::<Vec<String>>()
         );
         if or_elements.len() == 0 { or_elements.push("".to_string()) }
         if or_regions.len() == 0 { or_regions.push(100 as u8) }
@@ -357,28 +367,30 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
 
         let volunteers = volunteers
             .into_iter()
-            .map(|volunteer|{
+            .map(|volunteer| {
                 // println!("Debug info: {:?}", volunteer.get::<String, _>("eids"));
-                let elements: Vec<Value> = volunteer.get::<String, _>("eids")
-                .split("},{")
-                .map(|s| {
-                    // 文字列をJSONオブジェクトにパースする
-                    let new_s = {
-                        let first_char = s.chars().next().unwrap();
-                        let last_char = s.chars().last().unwrap();
-                        if last_char != '}' && first_char != '{' {
-                            format!("{}{}{}", "{", s, "}")
-                        } else if last_char != '}' {
-                            format!("{}{}", s, "}")
-                        } else if first_char != '{' {
-                            format!("{}{}", "{", s)
-                        } else {
-                            s.to_owned()
-                        }
-                    };
-                    serde_json::from_str(&new_s).unwrap_or_else(|_| panic!("Failed to parse JSON: {}", s))
-                })
-                .collect();
+                let elements: Vec<Value> = volunteer
+                    .get::<String, _>("eids")
+                    .split("},{")
+                    .map(|s| {
+                        // 文字列をJSONオブジェクトにパースする
+                        let new_s = {
+                            let first_char = s.chars().next().unwrap();
+                            let last_char = s.chars().last().unwrap();
+                            if last_char != '}' && first_char != '{' {
+                                format!("{}{}{}", "{", s, "}")
+                            } else if last_char != '}' {
+                                format!("{}{}", s, "}")
+                            } else if first_char != '{' {
+                                format!("{}{}", "{", s)
+                            } else {
+                                s.to_owned()
+                            }
+                        };
+                        serde_json::from_str(&new_s)
+                            .unwrap_or_else(|_| panic!("Failed to parse JSON: {}", s))
+                    })
+                    .collect();
 
                 let themes: Vec<String> = elements
                     .iter()
@@ -480,11 +492,15 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
                     })
                     .collect();
 
-                let regions: Vec<String> = volunteer.get::<String, _>("rids")
+                let regions: Vec<String> = volunteer
+                    .get::<String, _>("rids")
                     .split(',')
                     .map(|rid| {
                         let rid = rid.trim();
-                        regions_map.get(&rid.parse::<usize>().unwrap()).unwrap().to_string()
+                        regions_map
+                            .get(&rid.parse::<usize>().unwrap())
+                            .unwrap()
+                            .to_string()
                     })
                     .collect();
 
@@ -502,35 +518,36 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
                 };
 
                 VolunteerReadModel {
-                vid: volunteer.get("vid"),
-                gid: volunteer.get("gid"),
-                title: volunteer.get("title"),
-                message: volunteer.get("message"),
-                overview: volunteer.get("overview"),
-                recruited_num: volunteer.get::<u32, _>("recruited_num"),
-                place: volunteer.get("place"),
-                start_at: volunteer.get("start_at"),
-                finish_at: volunteer.get("finish_at"),
-                deadline_on: volunteer.get("deadline_on"),
-                as_group: volunteer.get("as_group"),
-                is_deleted: volunteer.get("is_deleted"),
-                deleted_at: volunteer.get("deleted_at"),
-                registered_at: volunteer.get("registered_at"),
-                updated_at: volunteer.get("updated_at"),
-                photo_urls: Vec::new(),
-                themes: themes,
-                regions: regions,
-                conditions: conditions,
-                required_themes: required_themes,
-                required_conditions: required_conditions,
-                target_status: target_statuses,
-            }})
+                    vid: volunteer.get("vid"),
+                    gid: volunteer.get("gid"),
+                    title: volunteer.get("title"),
+                    message: volunteer.get("message"),
+                    overview: volunteer.get("overview"),
+                    recruited_num: volunteer.get::<u32, _>("recruited_num"),
+                    place: volunteer.get("place"),
+                    reward: volunteer.get("reward"),
+                    start_at: volunteer.get("start_at"),
+                    finish_at: volunteer.get("finish_at"),
+                    deadline_on: volunteer.get("deadline_on"),
+                    as_group: volunteer.get("as_group"),
+                    is_deleted: volunteer.get("is_deleted"),
+                    deleted_at: volunteer.get("deleted_at"),
+                    registered_at: volunteer.get("registered_at"),
+                    updated_at: volunteer.get("updated_at"),
+                    photo_urls: Vec::new(),
+                    themes: themes,
+                    regions: regions,
+                    conditions: conditions,
+                    required_themes: required_themes,
+                    required_conditions: required_conditions,
+                    target_status: target_statuses,
+                }
+            })
             .collect();
         println!("Debug info: {:?}", "a");
 
         Ok(volunteers)
     }
-
 
     ///gidが一致する団体が登録したボランティア情報の取得
     async fn find_by_gid(&self, gid: &UserId) -> Result<Vec<VolunteerReadModel>> {

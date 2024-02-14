@@ -14,6 +14,7 @@ pub struct VolunteerReadModel {
     pub overview: String,
     pub recruited_num: u32,
     pub place: String,
+    pub reward: Option<String>,
     pub start_at: NaiveDateTime,
     pub finish_at: NaiveDateTime,
     pub deadline_on: NaiveDate,
@@ -40,6 +41,7 @@ impl VolunteerReadModel {
         overview: String,
         recruited_num: u32,
         place: String,
+        reward: Option<String>,
         start_at: NaiveDateTime,
         finish_at: NaiveDateTime,
         deadline_on: NaiveDate,
@@ -64,6 +66,7 @@ impl VolunteerReadModel {
             overview,
             recruited_num,
             place,
+            reward,
             start_at,
             finish_at,
             deadline_on,
@@ -88,7 +91,7 @@ impl VolunteerReadModel {
 pub struct VolunteerElementsReadModel {
     pub vid: String,
     pub regions: Vec<String>,
-    pub required_regions: Option<Vec<String>>,  //ボランティアの検索の際に送られるリクエストのみで使用
+    pub required_regions: Option<Vec<String>>, //ボランティアの検索の際に送られるリクエストのみで使用
     pub themes: Vec<String>,
     pub required_themes: Vec<String>,
     pub conditions: Vec<String>,
@@ -129,7 +132,11 @@ pub trait VolunteerQueryRepository: Send + Sync {
     async fn find_by_id(&self, vid: &VolunteerId) -> Result<VolunteerReadModel>;
 
     /// ボランティアを条件検索を用いて取得する
-    async fn find_by_elements(&self, elements: &VolunteerElementsReadModel, search_words: String) -> Result<Vec<VolunteerReadModel>>;
+    async fn find_by_elements(
+        &self,
+        elements: &VolunteerElementsReadModel,
+        search_words: String,
+    ) -> Result<Vec<VolunteerReadModel>>;
 
     /// ボランティアをグループidで取得する
     async fn find_by_gid(&self, gid: &UserId) -> Result<Vec<VolunteerReadModel>>;

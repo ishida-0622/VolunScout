@@ -22,6 +22,7 @@ const initialValues: TermsFormValues = {
 type Props = {
   defaultValues?: TermsFormValues;
   onSubmit?: (data: TermsFormValues) => void;
+  isOpen?: boolean;
 };
 
 const noop = () => {};
@@ -29,6 +30,7 @@ const noop = () => {};
 export const useTermsForm = ({
   defaultValues = initialValues,
   onSubmit = noop,
+  isOpen = false,
 }: Props) => {
   const { register, handleSubmit, getValues, setValue } =
     useForm<TermsFormValues>({
@@ -47,7 +49,7 @@ export const useTermsForm = ({
     <Form onSubmit={submitHandler}>
       <Form.Group
         as={Row}
-        className="w-100 h-100 overflow-scroll"
+        className="w-100 h-100 overflow-auto"
         style={{
           maxWidth: "1140px",
           maxHeight: "60vh",
@@ -55,76 +57,82 @@ export const useTermsForm = ({
         }}
       >
         <Col>
-          <Form.Label>地域</Form.Label>
-          <Row>
-            <Col>&emsp;</Col>
-          </Row>
-          {REGIONS.map((region) => (
-            <Form.Check
-              key={region}
-              id={`regin-${region}`}
-              type="checkbox"
-              value={region}
-              label={region}
-              {...register("region")}
-            />
-          ))}
+          <details open={isOpen}>
+            <summary>地域</summary>
+            <Row>
+              <Col>&emsp;</Col>
+            </Row>
+            {REGIONS.map((region) => (
+              <Form.Check
+                key={region}
+                id={`regin-${region}`}
+                type="checkbox"
+                value={region}
+                label={region}
+                {...register("region")}
+              />
+            ))}
+          </details>
         </Col>
         <Col>
-          <Form.Label>テーマ</Form.Label>
-          <Row>
-            <Col></Col>
-            <Col className="small">必須にする</Col>
-          </Row>
-          {THEMES.map((theme) => (
-            <Row key={theme}>
-              <Col>
-                <Form.Check
-                  id={`theme-${theme}`}
-                  type="checkbox"
-                  value={theme}
-                  label={theme}
-                  {...register("theme")}
-                />
-              </Col>
-              <Col>
-                <Form.Switch
-                  id={`required-${theme}`}
-                  type="checkbox"
-                  value={theme}
-                  {...register("required_theme")}
-                />
-              </Col>
+          <details open={isOpen}>
+            <summary>テーマ</summary>
+            <Row>
+              <Col></Col>
+              <Col className="small">必須にする</Col>
             </Row>
-          ))}
+            {THEMES.map((theme) => (
+              <Row key={theme}>
+                <Col>
+                  <Form.Check
+                    id={`theme-${theme}`}
+                    type="checkbox"
+                    value={theme}
+                    label={theme}
+                    {...register("theme")}
+                  />
+                </Col>
+                <Col>
+                  <Form.Switch
+                    id={`required-${theme}`}
+                    type="checkbox"
+                    value={theme}
+                    {...register("required_theme")}
+                  />
+                </Col>
+              </Row>
+            ))}
+          </details>
         </Col>
         <Col>
-          <Form.Label>条件</Form.Label>
-          <Row>
-            <Col></Col>
-            <Col className="small">必須にする</Col>
-          </Row>
-          {CONDITIONS.map((condition) => (
-            <Row key={condition}>
-              <Col>
-                <Form.Check
-                  id={`condition-${condition}`}
-                  type="checkbox"
-                  value={condition}
-                  label={condition}
-                  {...register("condition")}
-                />
-              </Col>
-              <Col>
-                <Form.Switch
-                  id={`required-${condition}`}
-                  type="checkbox"
-                  value={condition}
-                  {...register("required_condition")}
-                />
-              </Col>
+          <details open={isOpen}>
+            <summary>条件</summary>
+            <Row>
+              <Col></Col>
+              <Col className="small">必須にする</Col>
             </Row>
-          ))}
+            {CONDITIONS.map((condition) => (
+              <Row key={condition}>
+                <Col>
+                  <Form.Check
+                    id={`condition-${condition}`}
+                    type="checkbox"
+                    value={condition}
+                    label={condition}
+                    {...register("condition")}
+                  />
+                </Col>
+                <Col>
+                  <Form.Switch
+                    id={`required-${condition}`}
+                    type="checkbox"
+                    value={condition}
+                    {...register("required_condition")}
+                  />
+                </Col>
+              </Row>
+            ))}
+          </details>
         </Col>
       </Form.Group>
     </Form>

@@ -31,6 +31,7 @@ export const SearchBar = ({
         defaultValue={initValue}
         placeholder={placeholder}
         onChange={handleChange}
+        className="w-100"
       />
     </label>
   );

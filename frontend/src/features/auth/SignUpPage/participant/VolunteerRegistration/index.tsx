@@ -30,7 +30,7 @@ export const VolunteerRegistration = ({
   onPrevPage,
   values,
 }: Props) => {
-  const { InputForm, getValues } = useTermsForm({});
+  const { InputForm, getValues } = useTermsForm({ isOpen: true });
   const profileRef = useRef<HTMLTextAreaElement>(null);
 
   const onSubmit = () => {
@@ -64,6 +64,7 @@ export const VolunteerRegistration = ({
             <textarea
               className={styles.textarea}
               defaultValue={values.profile}
+              ref={profileRef}
             />
           </label>
           <h2 className={styles.h2}>活動希望条件（後からでも設定可能です）</h2>
