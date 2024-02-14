@@ -47,6 +47,7 @@ export const Confirmation = ({ values, onPrevPage }: Props) => {
 
     try {
       await apiClientGroup.createGroupAccount(body);
+      alert("会員登録が完了しました\nもう一度ログインしてください");
       router.push(URL_PATH_GROUP.HOME);
     } catch (e) {
       alert("アカウント作成に失敗しました");

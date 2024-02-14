@@ -60,7 +60,7 @@ export const Confirmation = ({ values, prevPage }: Props) => {
     };
     try {
       await apiClientParticipant.createParticipantAccount(body);
-      alert("会員登録が完了しました");
+      alert("会員登録が完了しました\nもう一度ログインしてください");
       router.push(URL_PATH_PARTICIPANT.HOME);
     } catch (error) {
       alert("エラーが発生しました");

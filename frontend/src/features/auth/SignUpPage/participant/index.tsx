@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Confirmation } from "./Confirmation";
 import { PersonalRegistration } from "./PersonalRegistration";
 import { VolunteerRegistration } from "./VolunteerRegistration";
+
+import { auth } from "@/firebaseConfig";
 
 export type FormValues = {
   pid: string;
@@ -52,6 +54,12 @@ export const SignUpPage = () => {
     setFormValues((prev) => ({ ...prev, ...values }));
     prevPage();
   };
+
+  useEffect(() => {
+    return () => {
+      auth.signOut().catch(() => {});
+    };
+  }, []);
 
   return (
     <main>
