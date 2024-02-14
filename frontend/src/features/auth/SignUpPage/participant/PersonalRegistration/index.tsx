@@ -24,22 +24,25 @@ type Props = {
 export const PersonalRegistration = ({ onNextPage, values }: Props) => {
   const [validated, setValidated] = useState(false);
   const ref = useRef<HTMLFormElement>(null);
+  const [invalidDateMessage, setInvalidDateMessage] =
+    useState("入力してください");
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
 
+    const b = Date.parse(
+      form.birthday.valueAsDate?.toISOString().split("T")[0]
+    );
+    if (b > Date.now() || b < Date.parse("1900-01-01")) {
+      setInvalidDateMessage("不正な日付です");
+    } else {
+      setInvalidDateMessage("入力してください");
+    }
+
     if (form.checkValidity() === false) {
       e.stopPropagation();
     } else {
-      const b = Date.parse(
-        form.birthday.valueAsDate?.toISOString().split("T")[0]
-      );
-      if (b > Date.now() || b < Date.parse("1900-01-01")) {
-        form.birthday.setCustomValidity("不正な日付です");
-        form.birthday.reportValidity();
-        return;
-      }
       // MEMO: any にアクセスしているが, フィールドが存在していることは保証されている
       const personal: Personal = {
         name: form.username.value,
@@ -105,9 +108,11 @@ export const PersonalRegistration = ({ onNextPage, values }: Props) => {
                 type="date"
                 defaultValue={values.birthday}
                 required
+                min="1900-01-01"
+                max={new Date().toISOString().split("T")[0]}
               />
               <Form.Control.Feedback type="invalid">
-                入力してください
+                {invalidDateMessage}
               </Form.Control.Feedback>
             </Col>
           </Form.Group>
