@@ -2,115 +2,111 @@
 応募リードモデル
 """
 type Apply {
-	"""
-	応募ID
-	"""
-	aid: String!
-	"""
-	ボランティアID
-	"""
-	vid: String!
-	"""
-	参加者ID
-	"""
-	uid: String!
-	"""
-	応募日時
-	"""
-	appliedAt: NaiveDateTime!
-	"""
-	集団応募有無
-	"""
-	asGroup: Boolean!
-	"""
-	認証データ 0:未認証 1:承認済み 2:棄却済み
-	"""
-	allowedStatus: Int!
-	"""
-	認証日時
-	"""
-	decidedAt: NaiveDateTime
-	"""
-	送信日時
-	"""
-	isSent: Boolean!
+  """
+  応募ID
+  """
+  aid: String!
+  """
+  ボランティアID
+  """
+  vid: String!
+  """
+  参加者ID
+  """
+  uid: String!
+  """
+  応募日時
+  """
+  appliedAt: NaiveDateTime!
+  """
+  集団応募有無
+  """
+  asGroup: Boolean!
+  """
+  認証データ 0:未認証 1:承認済み 2:棄却済み
+  """
+  allowedStatus: Int!
+  """
+  認証日時
+  """
+  decidedAt: NaiveDateTime
+  """
+  送信日時
+  """
+  isSent: Boolean!
 }
-
-
 
 """
 団体アカウントリードモデル
 """
 type GroupAccount {
-	"""
-	団体アカウントid
-	"""
-	gid: String!
-	"""
-	団体名
-	"""
-	name: String!
-	"""
-	団体名(フリガナ)
-	"""
-	furigana: String!
-	"""
-	電話番号
-	"""
-	phone: String!
-	"""
-	住所
-	"""
-	address: String!
-	"""
-	団体紹介
-	"""
-	contents: String!
-	representativeName: String!
-	representativeFurigana: String!
-	"""
-	有料会員
-	"""
-	isPaid: Boolean!
-	"""
-	削除フラグ
-	"""
-	isDeleted: Boolean!
-	"""
-	削除日時
-	"""
-	deletedAt: NaiveDateTime
+  """
+  団体アカウントid
+  """
+  gid: String!
+  """
+  団体名
+  """
+  name: String!
+  """
+  団体名(フリガナ)
+  """
+  furigana: String!
+  """
+  電話番号
+  """
+  phone: String!
+  """
+  住所
+  """
+  address: String!
+  """
+  団体紹介
+  """
+  contents: String!
+  representativeName: String!
+  representativeFurigana: String!
+  """
+  有料会員
+  """
+  isPaid: Boolean!
+  """
+  削除フラグ
+  """
+  isDeleted: Boolean!
+  """
+  削除日時
+  """
+  deletedAt: NaiveDateTime
 }
 
 """
 集団応募者リードモデル
 """
 type GroupParticipant {
-	"""
-	シリアル（連番）
-	"""
-	serial: Int!
-	"""
-	名前
-	"""
-	name: String!
-	"""
-	フリガナ
-	"""
-	furigana: String!
-	"""
-	性別
-	
-	0: 男性, 1: 女性, 2: その他
-	"""
-	gender: Int!
-	"""
-	年齢
-	"""
-	age: Int!
+  """
+  シリアル（連番）
+  """
+  serial: Int!
+  """
+  名前
+  """
+  name: String!
+  """
+  フリガナ
+  """
+  furigana: String!
+  """
+  性別
+
+  0: 男性, 1: 女性, 2: その他
+  """
+  gender: Int!
+  """
+  年齢
+  """
+  age: Int!
 }
-
-
 
 """
 ISO 8601 calendar date without timezone.
@@ -136,589 +132,668 @@ scalar NaiveDateTime
 参加者アカウントリードモデル
 """
 type ParticipantAccount {
-	"""
-	参加者アカウントid
-	"""
-	uid: String!
-	"""
-	参加者氏名
-	"""
-	name: String!
-	"""
-	参加者氏名(フリガナ)
-	"""
-	furigana: String!
-	"""
-	電話番号
-	"""
-	phone: String!
-	"""
-	性別
-	
-	0: 男性, 1: 女性, 2: その他
-	"""
-	gender: Int!
-	"""
-	生年月日
-	"""
-	birthday: NaiveDate!
-	"""
-	プロフィール
-	"""
-	profile: String!
-	"""
-	削除フラグ
-	"""
-	isDeleted: Boolean!
-	"""
-	削除日時
-	"""
-	deletedAt: NaiveDateTime
+  """
+  参加者アカウントid
+  """
+  uid: String!
+  """
+  参加者氏名
+  """
+  name: String!
+  """
+  参加者氏名(フリガナ)
+  """
+  furigana: String!
+  """
+  電話番号
+  """
+  phone: String!
+  """
+  性別
+
+  0: 男性, 1: 女性, 2: その他
+  """
+  gender: Int!
+  """
+  生年月日
+  """
+  birthday: NaiveDate!
+  """
+  プロフィール
+  """
+  profile: String!
+  """
+  削除フラグ
+  """
+  isDeleted: Boolean!
+  """
+  削除日時
+  """
+  deletedAt: NaiveDateTime
 }
 
 """
 参加者条件リードモデル
 """
 type ParticipantCondition {
-	"""
-	条件名
-	"""
-	name: String!
-	"""
-	必須フラグ
-	"""
-	isRequired: Boolean!
+  """
+  条件名
+  """
+  name: String!
+  """
+  必須フラグ
+  """
+  isRequired: Boolean!
 }
 
 """
 参加者地域リードモデル
 """
 type ParticipantRegion {
-	"""
-	地域名
-	"""
-	name: String!
+  """
+  地域名
+  """
+  name: String!
 }
 
 """
 レビューリードモデル（平均）
 """
 type ParticipantReviewPointAverage {
-	"""
-	参加者ID
-	"""
-	uid: String!
-	"""
-	レビューポイント
-	"""
-	point: Float!
+  """
+  参加者ID
+  """
+  uid: String!
+  """
+  レビューポイント
+  """
+  point: Float!
 }
 
 """
 参加者区分リードモデル
 """
 type ParticipantTargetStatus {
-	name: String!
+  name: String!
 }
 
 """
 参加者テーマリードモデル
 """
 type ParticipantTheme {
-	"""
-	テーマ名
-	"""
-	name: String!
-	"""
-	必須フラグ
-	"""
-	isRequired: Boolean!
+  """
+  テーマ名
+  """
+  name: String!
+  """
+  必須フラグ
+  """
+  isRequired: Boolean!
 }
 
 """
 過去ボランティア参加者リードモデル
 """
 type PastVolunteerParticipantReadModel {
-	"""
-	ユーザーID
-	"""
-	uid: String!
-	"""
-	ユーザー名
-	"""
-	name: String!
-	"""
-	性別
-	
-	0: 男性, 1: 女性, 2: その他
-	"""
-	gender: Int!
-	"""
-	生年月日
-	"""
-	birthday: NaiveDate!
+  """
+  ユーザーID
+  """
+  uid: String!
+  """
+  ユーザー名
+  """
+  name: String!
+  """
+  性別
+
+  0: 男性, 1: 女性, 2: その他
+  """
+  gender: Int!
+  """
+  生年月日
+  """
+  birthday: NaiveDate!
 }
 
 type QueryRoot {
-	"""
-	指定されたgidのアカウント情報を取得する
-	
-	## 引数
-	- `gid` - gid
-	
-	## 返り値
-	- `GroupAccount` - グループアカウント情報
-	"""
-	getGroupAccount(gid: String!): GroupAccount!
-	"""
-	複数指定されたgidのアカウント情報を取得する
-	
-	## 引数
-	- `gids` - gidの配列
-	
-	## 返り値
-	- `Vec<GroupAccount>` - グループアカウント情報の配列
-	"""
-	getGroupAccounts(gids: [String!]!): [GroupAccount!]!
-	"""
-	全てのグループアカウント情報を取得する
-	
-	## 返り値
-	- `Vec<GroupAccount>` - グループアカウント情報の配列
-	"""
-	getAllGroupAccounts: [GroupAccount!]!
-	"""
-	団体アカウントの存在チェックをする
-	
-	## 引数
-	- `gid` - gid
-	
-	## 返り値
-	- `bool` - 存在する場合はtrue
-	"""
-	existsGroupAccount(gid: String!): Boolean!
-	"""
-	指定されたuidのアカウント情報を取得する
-	
-	## 引数
-	- `uid` - uid
-	
-	## 返り値
-	- `ParticipantAccount` - 参加者アカウント情報
-	"""
-	getParticipantAccount(uid: String!): ParticipantAccount!
-	"""
-	複数指定されたuidのアカウント情報を取得する
-	
-	## 引数
-	- `uids` - uidの配列
-	
-	## 返り値
-	- `Vec<ParticipantAccount>` - 参加者アカウント情報の配列
-	"""
-	getParticipantAccounts(uids: [String!]!): [ParticipantAccount!]!
-	"""
-	指定されたuidの地域情報を取得する
-	
-	## 引数
-	- `uid` - uid
-	
-	## 返り値
-	- `Vec<ParticipantRegion>` - 地域情報の配列
-	"""
-	getParticipantRegions(uid: String!): [ParticipantRegion!]!
-	"""
-	指定されたuidのテーマ情報を取得する
-	
-	## 引数
-	- `uid` - uid
-	
-	## 返り値
-	- `Vec<ParticipantTheme>` - テーマ情報の配列
-	"""
-	getParticipantThemes(uid: String!): [ParticipantTheme!]!
-	"""
-	指定されたuidの条件情報を取得する
-	
-	## 引数
-	- `uid` - uid
-	
-	## 返り値
-	- `Vec<ParticipantCondition>` - 条件情報の配列
-	"""
-	getParticipantConditions(uid: String!): [ParticipantCondition!]!
-	"""
-	指定されたuidの区分情報を取得する
-	
-	## 引数
-	- `uid` - uid
-	
-	## 返り値
-	- `ParticipantTargetStatus` - 対象状況情報
-	"""
-	getParticipantTargetStatus(uid: String!): ParticipantTargetStatus!
-	"""
-	参加者アカウントの存在チェックをする
-	
-	## 引数
-	- `uid` - uid
-	
-	## 返り値
-	- `bool` - 存在する場合はtrue
-	"""
-	existsParticipantAccount(uid: String!): Boolean!
-	"""
-	指定されたaidの集団応募者の詳細情報を取得する
-	
-	## 引数
-	- `aid` - aid
-	
-	## 返り値
-	- `Vec<GroupParticipant>` - 集団応募者の詳細情報の配列
-	"""
-	getGroupParticipants(aid: String!): [GroupParticipant!]!
-	"""
-	指定されたsidのスカウト情報を取得する
-	
-	## 引数
-	- `sid` - sid
-	
-	## 返り値
-	- `Scout` - スカウト情報
-	"""
-	getScoutBySid(sid: String!): Scout!
-	"""
-	指定されたgidの団体が登録したボランティアのスカウト情報を取得する
-	
-	## 引数
-	- `gid` - gid
-	
-	## 返り値
-	- `Vec<Scout>` - スカウト情報の配列
-	"""
-	getScoutByGid(gid: String!): [Scout!]!
-	"""
-	指定されたvidのスカウト情報を取得する
-	
-	## 引数
-	- `vid` - vid
-	
-	## 返り値
-	- `Vec<Scout>` - スカウト情報の配列
-	"""
-	getScoutByVid(vid: String!): [Scout!]!
-	"""
-	指定されたuidに送られたスカウト情報を取得する
-	
-	## 引数
-	- `uid` - uid
-	
-	## 返り値
-	- `Vec<Scout>` - スカウト情報の配列
-	"""
-	getScoutByUid(uid: String!): [Scout!]!
-	"""
-	指定されたaidの応募情報を取得する
-	
-	## 引数
-	- `aid` - aid
-	
-	## 返り値
-	- `Apply` - 応募情報
-	"""
-	getApplyByAid(aid: String!): Apply!
-	"""
-	指定されたgidの団体が登録したボランティアの応募情報を取得する
-	
-	## 引数
-	- `gid` - gid
-	
-	## 返り値
-	- `Vec<Apply>` - 応募情報の配列
-	"""
-	getApplyByGid(gid: String!): [Apply!]!
-	"""
-	指定されたvidの応募情報を取得する
-	
-	## 引数
-	- `vid` - vid
-	
-	## 返り値
-	- `Vec<Apply>` - 応募情報の配列
-	"""
-	getApplyByVid(vid: String!): [Apply!]!
-	"""
-	指定されたuidに送られた応募情報を取得する
-	
-	## 引数
-	- `uid` - uid
-	
-	## 返り値
-	- `Vec<Apply>` - 応募情報の配列
-	"""
-	getApplyByUid(uid: String!): [Apply!]!
-	"""
-	指定されたvidのボランティアに参加した参加者情報を取得する
-	
-	## 引数
-	- `vid` - vid
-	
-	## 返り値
-	- `Vec<PastVolunteerParticipantReadModel>` - 参加者情報の配列
-	"""
-	getPastVolunteerParticipantsByVid(vid: String!): [PastVolunteerParticipantReadModel!]!
-	"""
-	指定されたvidのボランティア要素情報を取得する
-	
-	## 引数
-	- `vid` - vid
-	
-	## 返り値
-	- `VolunteerElementsReadModel` - ボランティア要素情報
-	"""
-	getVolunteerElementsById(vid: String!): VolunteerElementsReadModel!
-	"""
-	ボランティアを検索する
-	
-	## 引数
-	- `vid` - vid
-	
-	## 返り値
-	- `VolunteerElementsReadModel` - ボランティア要素情報
-	"""
-	searchVolunteerByElements(regions: [String!]!, requiredRegions: [String!]!, themes: [String!]!, requiredThemes: [String!]!, conditions: [String!]!, requiredConditions: [String!]!, targetStatus: [String!]!, searchWords: String!): [VolunteerReadModel!]!
-	"""
-	指定されたvidのボランティア情報を取得する
-	
-	## 引数
-	- `vid` - vid
-	
-	## 返り値
-	- `VolunteerReadModel` - ボランティア情報
-	"""
-	getVolunteerById(vid: String!): VolunteerReadModel!
-	"""
-	指定されたgidのボランティア情報を取得する
-	
-	## 引数
-	- `gid` - gid
-	
-	## 返り値
-	- `Vec<VolunteerReadModel>` - ボランティア情報の配列
-	"""
-	getVolunteerByGid(gid: String!): [VolunteerReadModel!]!
-	"""
-	指定されたuidがお気に入りに登録しているボランティア情報を取得する
-	
-	## 引数
-	- `uid` - uid
-	
-	## 返り値
-	- `Vec<VolunteerReadModel>` - ボランティア情報の配列
-	"""
-	getFavoriteByUid(uid: String!): [VolunteerReadModel!]!
-	"""
-	指定されたuidが過去に活動したボランティア情報を取得する
-	
-	## 引数
-	- `uid` - uid
-	
-	## 返り値
-	- `Vec<VolunteerReadModel>` - ボランティア情報の配列
-	"""
-	getActivitiesByUid(uid: String!): [VolunteerReadModel!]!
-	"""
-	指定されたuidがこれから活動を予定しているボランティア情報を取得する
-	
-	## 引数
-	- `uid` - uid
-	
-	## 返り値
-	- `Vec<VolunteerReadModel>` - ボランティア情報の配列
-	"""
-	getScheduledActivitiesByUid(uid: String!): [VolunteerReadModel!]!
-	"""
-	指定されたgidが過去に活動したボランティア情報を取得する
-	
-	## 引数
-	- `gid` - gid
-	
-	## 返り値
-	- `Vec<VolunteerReadModel>` - ボランティア情報の配列
-	"""
-	getActivitiesByGid(gid: String!): [VolunteerReadModel!]!
-	"""
-	指定されたgidがこれから活動を予定しているボランティア情報を取得する
-	
-	## 引数
-	- `gid` - gid
-	
-	## 返り値
-	- `Vec<VolunteerReadModel>` - ボランティア情報の配列
-	"""
-	getScheduledActivitiesByGid(gid: String!): [VolunteerReadModel!]!
-	"""
-	指定されたuidとvidの参加者レビュー情報を取得する
-	
-	## 引数
-	- `uid` - uid
-	- `vid` - vid
-	
-	## 返り値
-	- `Review` - レビュー情報
-	"""
-	getParticipantReviewByIds(uid: String!, vid: String!): Review!
-	"""
-	指定されたuidの参加者レビュー情報を取得する
-	
-	## 引数
-	- `uid` - uid
-	
-	## 返り値
-	- `Review` - レビュー情報
-	"""
-	getParticipantReviewByUid(uid: String!): [Review!]!
-	"""
-	指定されたvidの参加者レビュー情報を取得する
-	
-	## 引数
-	- `vid` - vid
-	
-	## 返り値
-	- `Review` - レビュー情報
-	"""
-	getParticipantReviewByVid(vid: String!): [Review!]!
-	"""
-	指定されたuidとvidのボランティアレビュー情報を取得する
-	
-	## 引数
-	- `uid` - uid
-	- `vid` - vid
-	
-	## 返り値
-	- `Review` - レビュー情報
-	"""
-	getVolunteerReviewByIds(uid: String!, vid: String!): Review!
-	"""
-	指定されたuidのボランティアレビュー情報を取得する
-	
-	## 引数
-	- `uid` - uid
-	
-	## 返り値
-	- `Review` - レビュー情報
-	"""
-	getVolunteerReviewByUid(uid: String!): [Review!]!
-	"""
-	指定されたvidのボランティアレビュー情報を取得する
-	
-	## 引数
-	- `vid` - vid
-	
-	## 返り値
-	- `Review` - レビュー情報
-	"""
-	getVolunteerReviewByVid(vid: String!): [Review!]!
-	"""
-	指定されたuidの参加者レビュー情報の平均を取得する
-	
-	## 引数
-	- `uids` - uidの配列
-	
-	## 返り値
-	- `Vec<ParticipantReviewPointAverage>` - レビュー情報の配列
-	"""
-	getParticipantReviewAverageByUids(uids: [String!]!): [ParticipantReviewPointAverage!]!
+  """
+  指定されたgidのアカウント情報を取得する
+
+  ## 引数
+  - `gid` - gid
+
+  ## 返り値
+  - `GroupAccount` - グループアカウント情報
+  """
+  getGroupAccount(gid: String!): GroupAccount!
+  """
+  複数指定されたgidのアカウント情報を取得する
+
+  ## 引数
+  - `gids` - gidの配列
+
+  ## 返り値
+  - `Vec<GroupAccount>` - グループアカウント情報の配列
+  """
+  getGroupAccounts(gids: [String!]!): [GroupAccount!]!
+  """
+  全てのグループアカウント情報を取得する
+
+  ## 返り値
+  - `Vec<GroupAccount>` - グループアカウント情報の配列
+  """
+  getAllGroupAccounts: [GroupAccount!]!
+  """
+  団体アカウントの存在チェックをする
+
+  ## 引数
+  - `gid` - gid
+
+  ## 返り値
+  - `bool` - 存在する場合はtrue
+  """
+  existsGroupAccount(gid: String!): Boolean!
+  """
+  指定されたuidのアカウント情報を取得する
+
+  ## 引数
+  - `uid` - uid
+
+  ## 返り値
+  - `ParticipantAccount` - 参加者アカウント情報
+  """
+  getParticipantAccount(uid: String!): ParticipantAccount!
+  """
+  複数指定されたuidのアカウント情報を取得する
+
+  ## 引数
+  - `uids` - uidの配列
+
+  ## 返り値
+  - `Vec<ParticipantAccount>` - 参加者アカウント情報の配列
+  """
+  getParticipantAccounts(uids: [String!]!): [ParticipantAccount!]!
+  """
+  指定されたuidの地域情報を取得する
+
+  ## 引数
+  - `uid` - uid
+
+  ## 返り値
+  - `Vec<ParticipantRegion>` - 地域情報の配列
+  """
+  getParticipantRegions(uid: String!): [ParticipantRegion!]!
+  """
+  指定されたuidのテーマ情報を取得する
+
+  ## 引数
+  - `uid` - uid
+
+  ## 返り値
+  - `Vec<ParticipantTheme>` - テーマ情報の配列
+  """
+  getParticipantThemes(uid: String!): [ParticipantTheme!]!
+  """
+  指定されたuidの条件情報を取得する
+
+  ## 引数
+  - `uid` - uid
+
+  ## 返り値
+  - `Vec<ParticipantCondition>` - 条件情報の配列
+  """
+  getParticipantConditions(uid: String!): [ParticipantCondition!]!
+  """
+  指定されたuidの区分情報を取得する
+
+  ## 引数
+  - `uid` - uid
+
+  ## 返り値
+  - `ParticipantTargetStatus` - 対象状況情報
+  """
+  getParticipantTargetStatus(uid: String!): ParticipantTargetStatus!
+  """
+  参加者アカウントの存在チェックをする
+
+  ## 引数
+  - `uid` - uid
+
+  ## 返り値
+  - `bool` - 存在する場合はtrue
+  """
+  existsParticipantAccount(uid: String!): Boolean!
+  """
+  指定されたaidの集団応募者の詳細情報を取得する
+
+  ## 引数
+  - `aid` - aid
+
+  ## 返り値
+  - `Vec<GroupParticipant>` - 集団応募者の詳細情報の配列
+  """
+  getGroupParticipants(aid: String!): [GroupParticipant!]!
+  """
+  指定されたsidのスカウト情報を取得する
+
+  ## 引数
+  - `sid` - sid
+
+  ## 返り値
+  - `Scout` - スカウト情報
+  """
+  getScoutBySid(sid: String!): Scout!
+  """
+  指定されたgidの団体が登録したボランティアのスカウト情報を取得する
+
+  ## 引数
+  - `gid` - gid
+
+  ## 返り値
+  - `Vec<Scout>` - スカウト情報の配列
+  """
+  getScoutByGid(gid: String!): [Scout!]!
+  """
+  指定されたvidのスカウト情報を取得する
+
+  ## 引数
+  - `vid` - vid
+
+  ## 返り値
+  - `Vec<Scout>` - スカウト情報の配列
+  """
+  getScoutByVid(vid: String!): [ScoutFromGroup!]!
+  """
+  指定されたuidに送られたスカウト情報を取得する
+
+  ## 引数
+  - `uid` - uid
+
+  ## 返り値
+  - `Vec<Scout>` - スカウト情報の配列
+  """
+  getScoutByUid(uid: String!): [Scout!]!
+  """
+  指定されたaidの応募情報を取得する
+
+  ## 引数
+  - `aid` - aid
+
+  ## 返り値
+  - `Apply` - 応募情報
+  """
+  getApplyByAid(aid: String!): Apply!
+  """
+  指定されたgidの団体が登録したボランティアの応募情報を取得する
+
+  ## 引数
+  - `gid` - gid
+
+  ## 返り値
+  - `Vec<Apply>` - 応募情報の配列
+  """
+  getApplyByGid(gid: String!): [Apply!]!
+  """
+  指定されたvidの応募情報を取得する
+
+  ## 引数
+  - `vid` - vid
+
+  ## 返り値
+  - `Vec<Apply>` - 応募情報の配列
+  """
+  getApplyByVid(vid: String!): [Apply!]!
+  """
+  指定されたuidに送られた応募情報を取得する
+
+  ## 引数
+  - `uid` - uid
+
+  ## 返り値
+  - `Vec<Apply>` - 応募情報の配列
+  """
+  getApplyByUid(uid: String!): [Apply!]!
+  """
+  指定されたvidのボランティアに参加した参加者情報を取得する
+
+  ## 引数
+  - `vid` - vid
+
+  ## 返り値
+  - `Vec<PastVolunteerParticipantReadModel>` - 参加者情報の配列
+  """
+  getPastVolunteerParticipantsByVid(
+    vid: String!
+  ): [PastVolunteerParticipantReadModel!]!
+  """
+  指定されたvidのボランティア要素情報を取得する
+
+  ## 引数
+  - `vid` - vid
+
+  ## 返り値
+  - `VolunteerElementsReadModel` - ボランティア要素情報
+  """
+  getVolunteerElementsById(vid: String!): VolunteerElementsReadModel!
+  """
+  ボランティアを検索する
+
+  ## 引数
+  - `vid` - vid
+
+  ## 返り値
+  - `VolunteerElementsReadModel` - ボランティア要素情報
+  """
+  searchVolunteerByElements(
+    regions: [String!]!
+    requiredRegions: [String!]!
+    themes: [String!]!
+    requiredThemes: [String!]!
+    conditions: [String!]!
+    requiredConditions: [String!]!
+    targetStatus: [String!]!
+    searchWords: String!
+  ): [VolunteerReadModel!]!
+  """
+  指定されたvidのボランティア情報を取得する
+
+  ## 引数
+  - `vid` - vid
+
+  ## 返り値
+  - `VolunteerReadModel` - ボランティア情報
+  """
+  getVolunteerById(vid: String!): VolunteerReadModel!
+  """
+  指定されたgidのボランティア情報を取得する
+
+  ## 引数
+  - `gid` - gid
+
+  ## 返り値
+  - `Vec<VolunteerReadModel>` - ボランティア情報の配列
+  """
+  getVolunteerByGid(gid: String!): [VolunteerReadModel!]!
+  """
+  指定されたuidがお気に入りに登録しているボランティア情報を取得する
+
+  ## 引数
+  - `uid` - uid
+
+  ## 返り値
+  - `Vec<VolunteerReadModel>` - ボランティア情報の配列
+  """
+  getFavoriteByUid(uid: String!): [VolunteerReadModel!]!
+  """
+  指定されたuidが過去に活動したボランティア情報を取得する
+
+  ## 引数
+  - `uid` - uid
+
+  ## 返り値
+  - `Vec<VolunteerReadModel>` - ボランティア情報の配列
+  """
+  getActivitiesByUid(uid: String!): [VolunteerReadModel!]!
+  """
+  指定されたuidがこれから活動を予定しているボランティア情報を取得する
+
+  ## 引数
+  - `uid` - uid
+
+  ## 返り値
+  - `Vec<VolunteerReadModel>` - ボランティア情報の配列
+  """
+  getScheduledActivitiesByUid(uid: String!): [VolunteerReadModel!]!
+  """
+  指定されたgidが過去に活動したボランティア情報を取得する
+
+  ## 引数
+  - `gid` - gid
+
+  ## 返り値
+  - `Vec<VolunteerReadModel>` - ボランティア情報の配列
+  """
+  getActivitiesByGid(gid: String!): [VolunteerReadModel!]!
+  """
+  指定されたgidがこれから活動を予定しているボランティア情報を取得する
+
+  ## 引数
+  - `gid` - gid
+
+  ## 返り値
+  - `Vec<VolunteerReadModel>` - ボランティア情報の配列
+  """
+  getScheduledActivitiesByGid(gid: String!): [VolunteerReadModel!]!
+  """
+  指定されたuidとvidの参加者レビュー情報を取得する
+
+  ## 引数
+  - `uid` - uid
+  - `vid` - vid
+
+  ## 返り値
+  - `Review` - レビュー情報
+  """
+  getParticipantReviewByIds(uid: String!, vid: String!): Review!
+  """
+  指定されたuidの参加者レビュー情報を取得する
+
+  ## 引数
+  - `uid` - uid
+
+  ## 返り値
+  - `Review` - レビュー情報
+  """
+  getParticipantReviewByUid(uid: String!): [Review!]!
+  """
+  指定されたvidの参加者レビュー情報を取得する
+
+  ## 引数
+  - `vid` - vid
+
+  ## 返り値
+  - `Review` - レビュー情報
+  """
+  getParticipantReviewByVid(vid: String!): [Review!]!
+  """
+  指定されたuidとvidのボランティアレビュー情報を取得する
+
+  ## 引数
+  - `uid` - uid
+  - `vid` - vid
+
+  ## 返り値
+  - `Review` - レビュー情報
+  """
+  getVolunteerReviewByIds(uid: String!, vid: String!): Review!
+  """
+  指定されたuidのボランティアレビュー情報を取得する
+
+  ## 引数
+  - `uid` - uid
+
+  ## 返り値
+  - `Review` - レビュー情報
+  """
+  getVolunteerReviewByUid(uid: String!): [Review!]!
+  """
+  指定されたvidのボランティアレビュー情報を取得する
+
+  ## 引数
+  - `vid` - vid
+
+  ## 返り値
+  - `Review` - レビュー情報
+  """
+  getVolunteerReviewByVid(vid: String!): [Review!]!
+  """
+  指定されたuidの参加者レビュー情報の平均を取得する
+
+  ## 引数
+  - `uids` - uidの配列
+
+  ## 返り値
+  - `Vec<ParticipantReviewPointAverage>` - レビュー情報の配列
+  """
+  getParticipantReviewAverageByUids(
+    uids: [String!]!
+  ): [ParticipantReviewPointAverage!]!
+
+  """
+  スカウトに適した参加者を検索する
+
+  ## 引数
+  - `regions` - 地域: Vec<String>
+  - `themes` - 設定したテーマ: Vec<String>,
+  - `required_themes` - 必須で設定したテーマ: Vec<String>,
+  - `conditions` - 設定した条件: Vec<String>,
+  - `required_conditions` - 必須で設定した条件: Vec<String>,
+  - `target_status` - 対象者: Vec<String>
+
+  ## 返り値
+  - `ScoutParticipant` - スカウトに必要な参加者情報
+  """
+  scoutParticipantByElements(
+    regions: [String!]!
+    themes: [String!]!
+    requiredThemes: [String!]!
+    conditions: [String!]!
+    requiredConditions: [String!]!
+    targetStatus: [String!]!
+  ): [ScoutParticipant!]!
 }
 
 """
 レビューリードモデル
 """
 type Review {
-	"""
-	参加者ID
-	"""
-	uid: String!
-	"""
-	ボランティアID
-	"""
-	vid: String!
-	"""
-	レビューポイント
-	"""
-	point: Int!
-	"""
-	コメント
-	"""
-	comment: String
+  """
+  参加者ID
+  """
+  uid: String!
+  """
+  ボランティアID
+  """
+  vid: String!
+  """
+  レビューポイント
+  """
+  point: Int!
+  """
+  コメント
+  """
+  comment: String
+}
+
+type Scout {
+  sid: String!
+  vid: String!
+  uid: String!
+  message: String!
+  scoutedAt: NaiveDateTime!
+  isRead: Boolean!
+  isSent: Boolean!
+  sentAt: NaiveDateTime
+  isDenied: Boolean!
+  deniedAt: NaiveDateTime
 }
 
 """
 スカウトリードモデル
 """
-type Scout {
-	sid: String!
-	vid: String!
-	uid: String!
-	message: String!
-	scoutedAt: NaiveDateTime!
-	isRead: Boolean!
-	isSent: Boolean!
-	sentAt: NaiveDateTime
-	isDenied: Boolean!
-	deniedAt: NaiveDateTime
+type ScoutFromGroup {
+  sid: String!
+  vid: String!
+  uid: String!
+  message: String!
+  scoutedAt: NaiveDateTime!
+  isRead: Boolean!
+  isSent: Boolean!
+  sentAt: NaiveDateTime
+  isDenied: Boolean!
+  deniedAt: NaiveDateTime
+  name: String!
+  gender: Int!
+  birthday: NaiveDate!
+  point: Float!
 }
 
-
 type SubscriptionRoot {
-	foo: String!
+  foo: String!
 }
 
 """
 ボランティア要素類リードモデル
 """
 type VolunteerElementsReadModel {
-	vid: String!
-	regions: [String!]!
-	requiredRegions: [String!]
-	themes: [String!]!
-	requiredThemes: [String!]!
-	conditions: [String!]!
-	requiredConditions: [String!]!
-	targetStatus: [String!]!
+  vid: String!
+  regions: [String!]!
+  requiredRegions: [String!]
+  themes: [String!]!
+  requiredThemes: [String!]!
+  conditions: [String!]!
+  requiredConditions: [String!]!
+  targetStatus: [String!]!
 }
 
 """
 ボランティアリードモデル
 """
 type VolunteerReadModel {
-	vid: String!
-	gid: String!
-	title: String!
-	message: String!
-	overview: String!
-	recruitedNum: Int!
-	place: String!
-	reward: String
-	startAt: NaiveDateTime!
-	finishAt: NaiveDateTime!
-	deadlineOn: NaiveDate!
-	asGroup: Boolean!
-	isDeleted: Boolean!
-	deletedAt: NaiveDateTime
-	registeredAt: NaiveDateTime!
-	updatedAt: NaiveDateTime!
-	regions: [String!]!
-	themes: [String!]!
-	requiredThemes: [String!]!
-	conditions: [String!]!
-	requiredConditions: [String!]!
-	targetStatus: [String!]!
-	photoUrls: [String!]!
+  vid: String!
+  gid: String!
+  title: String!
+  message: String!
+  overview: String!
+  recruitedNum: Int!
+  place: String!
+  reward: String
+  startAt: NaiveDateTime!
+  finishAt: NaiveDateTime!
+  deadlineOn: NaiveDate!
+  asGroup: Boolean!
+  isDeleted: Boolean!
+  deletedAt: NaiveDateTime
+  registeredAt: NaiveDateTime!
+  updatedAt: NaiveDateTime!
+  regions: [String!]!
+  themes: [String!]!
+  requiredThemes: [String!]!
+  conditions: [String!]!
+  requiredConditions: [String!]!
+  targetStatus: [String!]!
+  photoUrls: [String!]!
+}
+
+"""
+スカウト用参加者アカウントリードモデル
+"""
+type ScoutParticipant {
+  """
+  参加者アカウントid
+  """
+  uid: String!
+  """
+  参加者氏名
+  """
+  name: String!
+  """
+  性別
+
+  0: 男性, 1: 女性, 2: その他
+  """
+  gender: Int!
+  """
+  生年月日
+  """
+  birthday: NaiveDate!
+  """
+  平均評価値
+  """
+  point: Float
 }
 
 schema {
-	query: QueryRoot
-	subscription: SubscriptionRoot
+  query: QueryRoot
+  subscription: SubscriptionRoot
 }
-
