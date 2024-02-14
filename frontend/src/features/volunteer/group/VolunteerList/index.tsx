@@ -1,23 +1,27 @@
 "use client";
 
 import { useLazyQuery } from "@apollo/client";
-import { useRouter } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Button } from "react-bootstrap";
+import { Button, Spinner } from "react-bootstrap";
 
-import { Volunteer } from "../../Volunteer";
+import { VolunteerItem } from "../VolunteerItem";
 
 import styles from "./index.module.css";
 
-import type { GetVolunteerByGidQuery } from "@/__generated__/query/graphql";
+import type { GetAllVolunteerByGidQuery } from "@/__generated__/query/graphql";
 
 import { gql } from "@/__generated__/query";
 import { SearchBar } from "@/components/ui-parts/SearchBar/index";
 import { URL_PATH_GROUP } from "@/consts";
 import { useAuthContext } from "@/contexts/AuthContext";
 
-const GetVolunteersQuery = gql(/* GraphQL */ `
-  query GetVolunteerByGid($gid: String!) {
+type Props = {
+  type: "all" | "active" | "scheduled";
+};
+
+const GetAllVolunteersQuery = gql(/* GraphQL */ `
+  query GetAllVolunteerByGid($gid: String!) {
     volunteers: getVolunteerByGid(gid: $gid) {
       vid
       title
@@ -27,39 +31,76 @@ const GetVolunteersQuery = gql(/* GraphQL */ `
       place
       startAt
       finishAt
-      isDeleted
     }
   }
 `);
 
-export const VolunteerList = () => {
-  const authContext = useAuthContext();
+const GetActiveVolunteersQuery = gql(/* GraphQL */ `
+  query GetActiveVolunteerByGid($gid: String!) {
+    volunteers: getActivitiesByGid(gid: $gid) {
+      vid
+      title
+      message
+      overview
+      recruitedNum
+      place
+      startAt
+      finishAt
+    }
+  }
+`);
+
+const GetScheduledVolunteersQuery = gql(/* GraphQL */ `
+  query GetScheduledVolunteerByGid($gid: String!) {
+    volunteers: getScheduledActivitiesByGid(gid: $gid) {
+      vid
+      title
+      message
+      overview
+      recruitedNum
+      place
+      startAt
+      finishAt
+    }
+  }
+`);
+
+export const VolunteerList = ({ type }: Props) => {
+  const { user } = useAuthContext();
   const router = useRouter();
 
   const toCreatePage = () => {
     router.push(URL_PATH_GROUP.VOLUNTEER_CREATE);
   };
 
-  const [getVolunteers, { data, loading, error }] =
-    useLazyQuery(GetVolunteersQuery);
+  const [getVolunteers, { data, loading, error }] = useLazyQuery(
+    type === "all"
+      ? GetAllVolunteersQuery
+      : type === "active"
+      ? GetActiveVolunteersQuery
+      : GetScheduledVolunteersQuery,
+    {
+      fetchPolicy: "cache-and-network",
+    }
+  );
 
   const volunteers = data?.volunteers ?? [];
 
   const [showVolunteers, setShowVolunteers] = useState<
-    GetVolunteerByGidQuery["volunteers"]
+    GetAllVolunteerByGidQuery["volunteers"]
   >([]);
 
   useEffect(() => {
-    if (authContext.user?.uid) {
-      getVolunteers({ variables: { gid: authContext.user.uid } })
+    if (user?.uid) {
+      getVolunteers({ variables: { gid: user.uid } })
         .then((res) => {
           if (res.data) {
             setShowVolunteers(res.data.volunteers);
           }
         })
-        .catch((e) => console.error(e));
+        .catch(() => {});
     }
-  }, [getVolunteers, authContext.user?.uid]);
+  }, [getVolunteers, user?.uid]);
 
   const search = (s: string) => {
     const reg = new RegExp(s, "i");
@@ -74,13 +115,8 @@ export const VolunteerList = () => {
     );
   };
 
-  if (loading) {
-    return null;
-  }
-
   if (error) {
-    console.error(error);
-    return null;
+    notFound();
   }
 
   return (
@@ -96,12 +132,9 @@ export const VolunteerList = () => {
           新規掲載
         </Button>
       </div>
+      {loading && <Spinner />}
       {showVolunteers.map((volunteer) => (
-        <Volunteer
-          key={volunteer.vid}
-          volunteer={volunteer}
-          accountType="group"
-        />
+        <VolunteerItem key={volunteer.vid} volunteer={volunteer} />
       ))}
     </div>
   );

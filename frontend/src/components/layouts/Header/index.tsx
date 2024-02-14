@@ -1,8 +1,7 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { Container, Image, Navbar } from "react-bootstrap";
 
 import { GroupHeader } from "./GroupHeader";
 import { ParticipantHeader } from "./ParticipantHeader";
@@ -31,44 +30,44 @@ export const Header = ({ className }: Props) => {
 
   const accountType: AccountType = getAccountTypeFromPath(pathname);
 
-  // ログインしていない場合は, ヘッダーのリンクを表示しない
-  const isNoLink = !isLogged || isNoHeaderLink(pathname);
+  const router = useRouter();
+  const toHome = () =>
+    router.push(
+      accountType === "group" ? URL_PATH_GROUP.HOME : URL_PATH_PARTICIPANT.HOME
+    );
 
+  const isNoLink = !isLogged || isNoHeaderLink(pathname);
   const isNoIcon = isNoHeaderIcon(pathname);
 
   return (
     <header
       className={joinClassnames(
-        styles.base,
         accountType === "participant" ? styles.participant : styles.group,
         className
       )}
     >
-      <div>
-        <Link
-          href={
-            accountType === "group"
-              ? URL_PATH_GROUP.HOME
-              : URL_PATH_PARTICIPANT.HOME
-          }
-        >
-          <Image src={"/icon.svg"} alt="Icon" width={100} height={100} />
-        </Link>
-      </div>
-      <div>
-        <h1>VolunScout</h1>
-      </div>
-      {isNoLink ? null : (
-        <>
-          {accountType === "group" && <GroupHeader />}
-          {accountType === "participant" && <ParticipantHeader />}
-        </>
-      )}
-      {isNoIcon ? null : (
-        <div>
-          <UserIconOrSignInButton accountType={accountType} />
-        </div>
-      )}
+      <Navbar expand="lg" className={joinClassnames(className)}>
+        <Container>
+          <div className="d-flex align-items-center cursor-pointer me-2 w-25">
+            <Image
+              src={"/icons/banner_color.png"}
+              alt="Icon"
+              className="d-inline-block align-top h-100 w-auto"
+              onClick={toHome}
+              role="button"
+              fluid
+            />
+          </div>
+
+          {!isNoLink && accountType === "group" && (
+            <GroupHeader className="me-2" />
+          )}
+          {!isNoLink && accountType === "participant" && (
+            <ParticipantHeader className="me-2" />
+          )}
+          {!isNoIcon && <UserIconOrSignInButton accountType={accountType} />}
+        </Container>
+      </Navbar>
     </header>
   );
 };

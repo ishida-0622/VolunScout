@@ -2,6 +2,7 @@
 
 import { useLazyQuery } from "@apollo/client";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -10,9 +11,9 @@ import styles from "./index.module.css";
 
 import type { UpdateGroupAccountRequestBody } from "@/__generated__/command";
 
-import { joinClassnames } from "@/components/@joinClassnames";
 import { gql } from "@/__generated__/query";
 import { apiClientGroup } from "@/api/command";
+import { joinClassnames } from "@/components/@joinClassnames";
 import { URL_PATH_GROUP } from "@/consts";
 import { useAuthContext } from "@/contexts/AuthContext";
 
@@ -52,9 +53,7 @@ export const EditMyPage = () => {
 
   useEffect(() => {
     if (typeof user?.uid === "string") {
-      getGroupAccount({ variables: { gid: user.uid } }).catch((e) =>
-        console.error(e)
-      );
+      getGroupAccount({ variables: { gid: user.uid } }).catch(() => {});
     }
   }, [getGroupAccount, user?.uid]);
 
@@ -72,7 +71,6 @@ export const EditMyPage = () => {
 
   const submit = async () => {
     if (user === null) {
-      console.error("user is null");
       return;
     }
 
@@ -84,7 +82,7 @@ export const EditMyPage = () => {
     try {
       await apiClientGroup.updateGroupAccount(body);
     } catch (e) {
-      console.error(e);
+      alert("アカウント更新に失敗しました");
       return;
     }
 
@@ -92,12 +90,10 @@ export const EditMyPage = () => {
   };
 
   if (loading || data === undefined) {
-    console.warn("loading or data is undefined");
     return null;
   }
 
   if (error) {
-    console.error(error);
     return null;
   }
 
@@ -215,6 +211,9 @@ export const EditMyPage = () => {
           </div>
         </div>
       </form>
+      <div className="text-center">
+        <Link href={URL_PATH_GROUP.ACCOUNT_DELETE}>アカウントを削除する→</Link>
+      </div>
     </div>
   );
 };

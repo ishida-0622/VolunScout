@@ -1,10 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-
-import styles from "./index.module.css";
-
-import { joinClassnames } from "@/components/@joinClassnames";
+import { Button } from "react-bootstrap";
+import { IoCaretBack } from "react-icons/io5";
 
 type Props = {
   className?: string;
@@ -18,11 +16,9 @@ export const BackButton = ({ className }: Props) => {
   const handleOnClick = () => router.back();
 
   return (
-    <button
-      className={joinClassnames(styles.base, className)}
-      onClick={handleOnClick}
-    >
+    <Button variant="secondary" className={className} onClick={handleOnClick}>
+      <IoCaretBack />
       戻る
-    </button>
+    </Button>
   );
 };

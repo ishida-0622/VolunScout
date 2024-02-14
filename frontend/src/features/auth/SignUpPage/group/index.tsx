@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Confirmation } from "./Confirmation";
 import styles from "./index.module.css"; // CSSモジュールのインポート
 import { useInputForm } from "./useInputForm";
+
+import { auth } from "@/firebaseConfig";
 
 export const SignUpPage = () => {
   const [page, setPage] = useState<"input" | "confirm">("input");
@@ -12,6 +14,12 @@ export const SignUpPage = () => {
   const toInput = () => setPage("input");
 
   const { formValues, InputForm } = useInputForm({ onSubmit: toConfirm });
+
+  useEffect(() => {
+    return () => {
+      auth.signOut().catch(() => {});
+    };
+  }, []);
 
   return (
     <section className={styles.section}>

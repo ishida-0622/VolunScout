@@ -1,9 +1,9 @@
 "use client";
 
 import { useLazyQuery } from "@apollo/client";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { Button, Col, Container, Row } from "react-bootstrap";
 
 import styles from "./index.module.css";
 
@@ -12,6 +12,8 @@ import { joinClassnames } from "@/components/@joinClassnames";
 import { URL_PATH_PARTICIPANT } from "@/consts";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { formatDate } from "@/utils/formatDate";
+import { formatPhone } from "@/utils/formatPhone";
+import { formatReview } from "@/utils/formatReview";
 import { numberToGender } from "@/utils/numberToGender";
 
 const GetParticipantAccountInfoQuery = gql(/* GraphQL */ `
@@ -27,7 +29,9 @@ const GetParticipantAccountInfoQuery = gql(/* GraphQL */ `
     targetStatus: getParticipantTargetStatus(uid: $uid) {
       name
     }
-    # TODO: レビューの取得
+    reviews: getParticipantReviewByUid(uid: $uid) {
+      point
+    }
   }
 `);
 
@@ -43,14 +47,12 @@ export const UserInfo = () => {
     GetParticipantAccountInfoQuery,
     {
       fetchPolicy: "cache-and-network",
-    },
+    }
   );
 
   useEffect(() => {
     if (typeof user?.uid === "string") {
-      fetchParticipantAccount({ variables: { uid: user.uid } }).catch((e) => {
-        console.error(e);
-      });
+      fetchParticipantAccount({ variables: { uid: user.uid } }).catch(() => {});
     }
   }, [fetchParticipantAccount, user?.uid]);
 
@@ -60,68 +62,74 @@ export const UserInfo = () => {
 
   const userInfo = data.user;
   const targetStatus = data.targetStatus;
+  const reviews = data.reviews.map((review: { point: number }) => review.point);
+  const point = reviews.length
+    ? reviews.reduce((acc, cur) => acc + cur, 0) / reviews.length
+    : undefined;
 
   if (error) {
-    console.error(error);
-    return null;
+    notFound();
   }
 
   return (
-    <div className={styles.main_contents}>
-      <div>
-        <div>
-          <Image
-            src={user?.photoURL ?? ""}
-            alt="User icon"
-            width={100}
-           height={100}
-            className={styles.user_icon}
-          />
-        </div>
-        <div>
-          <div className={styles.name}>
-            <p>{userInfo.furigana}</p>
-            <h2>{userInfo.name}</h2>
-          </div>
-          <div className={styles.main}>
-          <p className={styles.birth}>
-            <span>生年月日</span>
-            <span>：</span>
-            <span>{formatDate(userInfo.birthday)}</span>
-          </p>
-          <p>
-            <span>区分</span>
-            <span>：</span>
-            <span>{targetStatus.name}</span>
-          </p>
-          <p>
-            <span>性別</span>
-            <span>：</span>
-            <span>{numberToGender(userInfo.gender)}</span>
-          </p>
-          <p>
-            <span>電話番号</span>
-            <span>：</span>
-            <span>{userInfo.phone}</span>
-          </p>
-          </div>
-        </div>
-        <div>
-          {/* TODO:レビュー */}
-          <p className={styles.review}>★★★★☆</p>
-        </div>
-        <div className={styles.edit}>
-          <button
-            className={joinClassnames("btn btn-info", styles.edit)}
-            onClick={toEditPage}
-          >
-            編集
-          </button>
-        </div>
-      </div>
-      <div>
-        <p className={styles.profile}>{userInfo.profile}</p>
-      </div>
-    </div>
+    <Container className={joinClassnames("my-3", styles.main_contents)}>
+      <Row>
+        <Col>
+          <Row className="mb-3">
+            <Col>
+              <p>{userInfo.furigana}</p>
+              <h2>{userInfo.name}</h2>
+            </Col>
+          </Row>
+          <Row className="mb-3">
+            <Col sm="2">
+              <span>生年月日</span>
+            </Col>
+            <Col>
+              <span>{formatDate(userInfo.birthday)}</span>
+            </Col>
+          </Row>
+          <Row className="mb-3">
+            <Col sm="2">
+              <span>区分</span>
+            </Col>
+            <Col>
+              <span>{targetStatus.name}</span>
+            </Col>
+          </Row>
+          <Row className="mb-3">
+            <Col sm="2">
+              <span>性別</span>
+            </Col>
+            <Col>
+              <span>{numberToGender(userInfo.gender)}</span>
+            </Col>
+          </Row>
+          <Row className="mb-3">
+            <Col sm="2">
+              <span>電話番号</span>
+            </Col>
+            <Col>
+              <span>{formatPhone(userInfo.phone)}</span>
+            </Col>
+          </Row>
+        </Col>
+        <Col sm="3">
+          <Row className="mb-3">
+            <Col>
+              <Button onClick={toEditPage}>編集</Button>
+            </Col>
+          </Row>
+          <Row className="mb-3">
+            <Col>
+              <span>{formatReview(point)}</span>
+            </Col>
+          </Row>
+        </Col>
+      </Row>
+      <Row>
+        <Col>{userInfo.profile}</Col>
+      </Row>
+    </Container>
   );
 };

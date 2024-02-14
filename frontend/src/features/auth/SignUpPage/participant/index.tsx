@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Confirmation } from "./Confirmation";
 import { PersonalRegistration } from "./PersonalRegistration";
 import { VolunteerRegistration } from "./VolunteerRegistration";
+
+import { auth } from "@/firebaseConfig";
 
 export type FormValues = {
   pid: string;
@@ -14,11 +16,11 @@ export type FormValues = {
   gender: string;
   birthday: string;
   profile: string;
-  regions: string[];
-  themes: string[];
-  themesRequired: string[];
-  conditions: string[];
-  conditionsRequired: string[];
+  region: string[];
+  theme: string[];
+  required_theme: string[];
+  condition: string[];
+  required_condition: string[];
   targetStatuses: string;
 };
 
@@ -27,15 +29,15 @@ export const SignUpPage = () => {
     pid: "",
     name: "",
     furigana: "",
-    gender: "0",
+    gender: "",
     phone: "",
     birthday: "",
     profile: "",
-    regions: [],
-    themes: [],
-    themesRequired: [],
-    conditions: [],
-    conditionsRequired: [],
+    region: [],
+    theme: [],
+    required_theme: [],
+    condition: [],
+    required_condition: [],
     targetStatuses: "",
   });
 
@@ -52,6 +54,12 @@ export const SignUpPage = () => {
     setFormValues((prev) => ({ ...prev, ...values }));
     prevPage();
   };
+
+  useEffect(() => {
+    return () => {
+      auth.signOut().catch(() => {});
+    };
+  }, []);
 
   return (
     <main>

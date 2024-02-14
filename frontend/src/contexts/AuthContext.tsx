@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }: Props) => {
       initializing,
       isLogged: !initializing && user !== null,
     }),
-    [user, initializing]
+    [user, initializing],
   );
 
   useEffect(() => {

@@ -1,1 +1,1 @@
-export * from "./accountType";
+export * from "./AccountType";

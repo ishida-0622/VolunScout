@@ -4,8 +4,6 @@ import styles from "./index.module.css";
 
 import type { UpdateParticipantAccountRequestBody } from "@/__generated__/command";
 
-
-
 import { CheckBoxControl } from "@/components/ui-parts/CheckBoxControl";
 import { ToggleSwitchControl } from "@/components/ui-parts/ToggleSwitchControl";
 import { CONDITIONS, REGIONS, THEMES } from "@/consts";
@@ -61,19 +59,19 @@ export const useTermsForm = ({ initialValues, onSubmit = noop }: Props) => {
               <summary>テーマ</summary>
               {THEMES.map((theme) => (
                 <div key={theme} style={{ display: "flex" }}>
-                    <CheckBoxControl
-                      name="theme"
-                      value={theme}
-                      register={register}
-                      label={theme}
-                    />
-                    <ToggleSwitchControl
-                      name="required_theme"
-                      value={theme}
-                      register={register}
-                      label=""
-                      className={styles.toggle}
-                    />
+                  <CheckBoxControl
+                    name="theme"
+                    value={theme}
+                    register={register}
+                    label={theme}
+                  />
+                  <ToggleSwitchControl
+                    name="required_theme"
+                    value={theme}
+                    register={register}
+                    label=""
+                    className={styles.toggle}
+                  />
                 </div>
               ))}
             </details>
@@ -85,19 +83,19 @@ export const useTermsForm = ({ initialValues, onSubmit = noop }: Props) => {
               <summary>条件</summary>
               {CONDITIONS.map((condition) => (
                 <div key={condition} style={{ display: "flex" }}>
-                    <CheckBoxControl
-                      name="condition"
-                      value={condition}
-                      register={register}
-                      label={condition}
-                    />
-                    <ToggleSwitchControl
-                      name="required_condition"
-                      value={condition}
-                      register={register}
-                      label=""
-                      className={styles.toggle}
-                    />
+                  <CheckBoxControl
+                    name="condition"
+                    value={condition}
+                    register={register}
+                    label={condition}
+                  />
+                  <ToggleSwitchControl
+                    name="required_condition"
+                    value={condition}
+                    register={register}
+                    label=""
+                    className={styles.toggle}
+                  />
                 </div>
               ))}
             </details>

@@ -7,9 +7,9 @@ import type { CreateParticipantAccountRequestBody } from "@/__generated__/comman
 import type { FormValues } from "..";
 
 import { apiClientParticipant } from "@/api/command";
+import { joinClassnames } from "@/components/@joinClassnames";
 import { CheckBox } from "@/components/ui-parts/CheckBox";
 import { CONDITIONS, THEMES, URL_PATH_PARTICIPANT } from "@/consts";
-import { joinClassnames } from "@/components/@joinClassnames";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { TermsOfUseAndPrivacyPolicyModal } from "@/features/auth/SignUpPage/TermsOfUseAndPrivacyPolicyModal";
 import { stringToNumber } from "@/utils/stringToNumber";
@@ -22,10 +22,10 @@ type Props = {
 export const Confirmation = ({ values, prevPage }: Props) => {
   const router = useRouter();
   const { user } = useAuthContext();
-  const themesSet = new Set(values.themes);
-  const themesRequiredSet = new Set(values.themesRequired);
-  const conditionsSet = new Set(values.conditions);
-  const conditionsRequiredSet = new Set(values.conditionsRequired);
+  const themesSet = new Set(values.theme);
+  const themesRequiredSet = new Set(values.required_theme);
+  const conditionsSet = new Set(values.condition);
+  const conditionsRequiredSet = new Set(values.required_condition);
 
   const isAgreed = useRef(false);
   const handleAgreed = (value: boolean) => {
@@ -49,21 +49,20 @@ export const Confirmation = ({ values, prevPage }: Props) => {
       phone: values.phone,
       pid: uid,
       profile: values.profile,
-      region: values.regions,
-      theme: values.themes.filter((theme) => !themesRequiredSet.has(theme)),
-      required_theme: values.themesRequired,
-      condition: values.conditions.filter(
+      region: values.region,
+      theme: values.theme.filter((theme) => !themesRequiredSet.has(theme)),
+      required_theme: values.required_theme,
+      condition: values.condition.filter(
         (condition) => !conditionsRequiredSet.has(condition)
       ),
-      required_condition: values.conditionsRequired,
+      required_condition: values.required_condition,
       target_status: values.targetStatuses,
     };
     try {
       await apiClientParticipant.createParticipantAccount(body);
-      alert("会員登録が完了しました");
+      alert("会員登録が完了しました\nもう一度ログインしてください");
       router.push(URL_PATH_PARTICIPANT.HOME);
     } catch (error) {
-      console.error(error);
       alert("エラーが発生しました");
     }
   };
@@ -72,7 +71,7 @@ export const Confirmation = ({ values, prevPage }: Props) => {
     <section>
       <button
         onClick={prevPage}
-        className={joinClassnames("btn btn-secondary", styles.return)}
+        className={joinClassnames("btn btn-secondary")}
       >
         戻る
       </button>
@@ -94,8 +93,8 @@ export const Confirmation = ({ values, prevPage }: Props) => {
               {values.gender === "0"
                 ? "男性"
                 : values.gender === "1"
-                  ? "女性"
-                  : "その他"}
+                ? "女性"
+                : "その他"}
             </span>
           </p>
           <p className={styles.profile_contents_wrapper}>
@@ -114,7 +113,7 @@ export const Confirmation = ({ values, prevPage }: Props) => {
         <div className={styles.select}>
           <details open>
             <summary className={styles.main}>地域</summary>
-            {values.regions.map((region) => (
+            {values.region.map((region) => (
               <p key={region}>{region}</p>
             ))}
           </details>

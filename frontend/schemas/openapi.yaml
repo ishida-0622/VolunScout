@@ -1,0 +1,1010 @@
+openapi: 3.0.3
+info:
+  title: write-api-server
+  description: ''
+  license:
+    name: ''
+  version: 0.1.0
+paths:
+  /apply/create:
+    post:
+      tags:
+      - controllers_apply
+      operationId: create_apply
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateApplyRequestBody'
+        required: true
+      responses:
+        '200':
+          description: Create apply successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteApiResponseSuccessBody'
+        '500':
+          description: Create apply failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteApiResponseFailureBody'
+  /apply/update/allowed-status:
+    post:
+      tags:
+      - controllers_apply
+      operationId: update_apply_allowed_status
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateApplyAllowedStatusRequestBody'
+        required: true
+      responses:
+        '200':
+          description: Update apply's allowed_status successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteApiResponseSuccessBody'
+        '500':
+          description: Update apply's allowed_status failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteApiResponseFailureBody'
+  /apply/update/is-sent:
+    post:
+      tags:
+      - controllers_apply
+      operationId: update_apply_is_sent
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateApplyIsSentRequestBody'
+        required: true
+      responses:
+        '200':
+          description: Update apply's is-sent successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteApiResponseSuccessBody'
+        '500':
+          description: Update apply's is-sent failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteApiResponseFailureBody'
+  /group-account/create:
+    post:
+      tags:
+      - controllers_group
+      operationId: create_group_account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGroupAccountRequestBody'
+        required: true
+      responses:
+        '200':
+          description: Create group account successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteApiResponseSuccessBody'
+        '500':
+          description: Create group account failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteApiResponseFailureBody'
+  /group-account/delete:
+    post:
+      tags:
+      - controllers_group
+      operationId: delete_group_account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteGroupAccountRequestBody'
+        required: true
+      responses:
+        '200':
+          description: Delete group account successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteApiResponseSuccessBody'
+        '500':
+          description: Delete group account failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteApiResponseFailureBody'
+  /group-account/update:
+    post:
+      tags:
+      - controllers_group
+      operationId: update_group_account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateGroupAccountRequestBody'
+        required: true
+      responses:
+        '200':
+          description: Update group account successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteApiResponseSuccessBody'
+        '500':
+          description: Update group account failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteApiResponseFailureBody'
+  /participant-account/create:
+    post:
+      tags:
+      - controllers_participant
+      operationId: create_participant_account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateParticipantAccountRequestBody'
+        required: true
+      responses:
+        '200':
+          description: Create participant account successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteApiResponseSuccessBody'
+        '500':
+          description: Create participant account failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteApiResponseFailureBody'
+  /participant-account/delete:
+    post:
+      tags:
+      - controllers_participant
+      operationId: delete_participant_account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteParticipantAccountRequestBody'
+        required: true
+      responses:
+        '200':
+          description: Delete participant account successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteApiResponseSuccessBody'
+        '500':
+          description: Delete participant account failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteApiResponseFailureBody'
+  /participant-account/update:
+    post:
+      tags:
+      - controllers_participant
+      operationId: update_participant_account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateParticipantAccountRequestBody'
+        required: true
+      responses:
+        '200':
+          description: Update participant account successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteApiResponseSuccessBody'
+        '500':
+          description: Update participant account failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteApiResponseFailureBody'
+  /review/to-participant:
+    post:
+      tags:
+      - controllers_review
+      operationId: review_to_participant
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewToVolunteerRequestBody'
+        required: true
+      responses:
+        '200':
+          description: Create review (to participant) successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteApiResponseSuccessBody'
+        '500':
+          description: Create review (to participant) failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteApiResponseFailureBody'
+  /review/to-volunteer:
+    post:
+      tags:
+      - controllers_review
+      operationId: review_to_volunteer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewToVolunteerRequestBody'
+        required: true
+      responses:
+        '200':
+          description: Create review (to volunteer) successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteApiResponseSuccessBody'
+        '500':
+          description: Create review (to volunteer) failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteApiResponseFailureBody'
+  /scout/create:
+    post:
+      tags:
+      - controllers_scout
+      operationId: create_scout
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateScoutRequestBody'
+        required: true
+      responses:
+        '200':
+          description: Create scout successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteApiResponseSuccessBody'
+        '500':
+          description: Create scout failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteApiResponseFailureBody'
+  /scout/update/denied:
+    post:
+      tags:
+      - controllers_scout
+      operationId: update_scout_denied
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateScoutDeniedRequestBody'
+        required: true
+      responses:
+        '200':
+          description: Update scout's denied successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteApiResponseSuccessBody'
+        '500':
+          description: Update scout's denied failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteApiResponseFailureBody'
+  /scout/update/is-read:
+    post:
+      tags:
+      - controllers_scout
+      operationId: update_scout_is_read
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateScoutIsReadRequestBody'
+        required: true
+      responses:
+        '200':
+          description: Update scout's is_read successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteApiResponseSuccessBody'
+        '500':
+          description: Update scout's is_read failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteApiResponseFailureBody'
+  /scout/update/is-sent:
+    post:
+      tags:
+      - controllers_scout
+      operationId: update_scout_is_sent
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateScoutIsSentRequestBody'
+        required: true
+      responses:
+        '200':
+          description: Update scout's is_sent successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteApiResponseSuccessBody'
+        '500':
+          description: Update scout's is_sent failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteApiResponseFailureBody'
+  /volunteer/create:
+    post:
+      tags:
+      - controllers_volunteer
+      operationId: create_volunteer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVolunteerRequestBody'
+        required: true
+      responses:
+        '200':
+          description: Create volunteer successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteApiResponseSuccessBody'
+        '500':
+          description: Create volunteer failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteApiResponseFailureBody'
+  /volunteer/delete:
+    post:
+      tags:
+      - controllers_volunteer
+      operationId: delete_volunteer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteVolunteerRequestBody'
+        required: true
+      responses:
+        '200':
+          description: Delete volunteer successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteApiResponseSuccessBody'
+        '500':
+          description: Delete volunteer failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteApiResponseFailureBody'
+  /volunteer/favorite/register:
+    post:
+      tags:
+      - controllers_volunteer
+      operationId: register_favorite
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterVolunteerFavoriteRequestBody'
+        required: true
+      responses:
+        '200':
+          description: Register favorite successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteApiResponseSuccessBody'
+        '500':
+          description: Register favorite failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteApiResponseFailureBody'
+  /volunteer/favorite/unregister:
+    post:
+      tags:
+      - controllers_volunteer
+      operationId: unregister_favorite
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterVolunteerFavoriteRequestBody'
+        required: true
+      responses:
+        '200':
+          description: Unregister favorite successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteApiResponseSuccessBody'
+        '500':
+          description: Unregister favorite failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteApiResponseFailureBody'
+  /volunteer/update:
+    post:
+      tags:
+      - controllers_volunteer
+      operationId: update_volunteer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateVolunteerRequestBody'
+        required: true
+      responses:
+        '200':
+          description: Update volunteer successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteApiResponseSuccessBody'
+        '500':
+          description: Update volunteer failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteApiResponseFailureBody'
+components:
+  schemas:
+    CreateApplyRequestBody:
+      type: object
+      description: ボランティア応募時のリクエストボディを表す構造体
+      required:
+      - vid
+      - uid
+      properties:
+        members:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+          nullable: true
+        uid:
+          type: string
+        vid:
+          type: string
+    CreateGroupAccountRequestBody:
+      type: object
+      description: グループアカウントの作成時のリクエストボディを表す構造体
+      required:
+      - gid
+      - name
+      - furigana
+      - representative_name
+      - representative_furigana
+      - phone
+      - address
+      - contents
+      properties:
+        address:
+          type: string
+        contents:
+          type: string
+        furigana:
+          type: string
+        gid:
+          type: string
+        name:
+          type: string
+        phone:
+          type: string
+        photos:
+          type: array
+          items:
+            type: string
+          nullable: true
+        representative_furigana:
+          type: string
+        representative_name:
+          type: string
+    CreateParticipantAccountRequestBody:
+      type: object
+      description: 参加者アカウントの作成時のリクエストボディを表す構造体
+      required:
+      - pid
+      - name
+      - furigana
+      - phone
+      - gender
+      - birthday
+      - profile
+      - region
+      - theme
+      - required_theme
+      - condition
+      - required_condition
+      - target_status
+      properties:
+        birthday:
+          type: string
+          example: 2002-06-22
+        condition:
+          type: array
+          items:
+            type: string
+        furigana:
+          type: string
+        gender:
+          type: integer
+          format: int32
+        name:
+          type: string
+        phone:
+          type: string
+        pid:
+          type: string
+        profile:
+          type: string
+        region:
+          type: array
+          items:
+            type: string
+        required_condition:
+          type: array
+          items:
+            type: string
+        required_theme:
+          type: array
+          items:
+            type: string
+        target_status:
+          type: string
+        theme:
+          type: array
+          items:
+            type: string
+    CreateScoutRequestBody:
+      type: object
+      description: スカウト時のリクエストボディを表す構造体
+      required:
+      - vid
+      - uid
+      - message
+      properties:
+        message:
+          type: string
+        uid:
+          type: string
+        vid:
+          type: string
+    CreateVolunteerRequestBody:
+      type: object
+      description: ボランティアの作成時のリクエストボディを表す構造体
+      required:
+      - gid
+      - title
+      - message
+      - overview
+      - recruited_num
+      - place
+      - start_at
+      - finish_at
+      - deadline_on
+      - as_group
+      - region
+      - theme
+      - required_theme
+      - condition
+      - required_condition
+      - target_status
+      properties:
+        as_group:
+          type: boolean
+        condition:
+          type: array
+          items:
+            type: string
+        deadline_on:
+          type: string
+          example: 2023-12-3
+        finish_at:
+          type: string
+          example: 2023-12-17T17:00:00Z
+        gid:
+          type: string
+        message:
+          type: string
+        overview:
+          type: string
+        photos:
+          type: array
+          items:
+            type: string
+          nullable: true
+        place:
+          type: string
+        recruited_num:
+          type: integer
+          format: int32
+          minimum: 0
+        region:
+          type: array
+          items:
+            type: string
+        required_condition:
+          type: array
+          items:
+            type: string
+        required_theme:
+          type: array
+          items:
+            type: string
+        reward:
+          type: string
+          nullable: true
+        start_at:
+          type: string
+          example: 2023-12-17T9:00:00Z
+        target_status:
+          type: array
+          items:
+            type: string
+        theme:
+          type: array
+          items:
+            type: string
+        title:
+          type: string
+    DeleteGroupAccountRequestBody:
+      type: object
+      description: グループアカウントの削除時のリクエストボディを表す構造体
+      required:
+      - gid
+      properties:
+        gid:
+          type: string
+    DeleteParticipantAccountRequestBody:
+      type: object
+      description: 参加者アカウントの削除時のリクエストボディを表す構造体
+      required:
+      - pid
+      properties:
+        pid:
+          type: string
+    DeleteVolunteerRequestBody:
+      type: object
+      description: ボランティアの削除時のリクエストボディを表す構造体
+      required:
+      - vid
+      properties:
+        vid:
+          type: string
+    RegisterVolunteerFavoriteRequestBody:
+      type: object
+      description: お気に入り登録時のリクエストボディを表す構造体
+      required:
+      - uid
+      - vid
+      properties:
+        uid:
+          type: string
+        vid:
+          type: string
+    ReviewToParticipantRequestBody:
+      type: object
+      description: ボランティアから参加者へレビュー時のリクエストボディを表す構造体
+      required:
+      - uid
+      - vid
+      - point
+      properties:
+        comment:
+          type: string
+          nullable: true
+        point:
+          type: integer
+          format: int32
+          minimum: 0
+        uid:
+          type: string
+        vid:
+          type: string
+    ReviewToVolunteerRequestBody:
+      type: object
+      description: 参加者からボランティアへレビュー時のリクエストボディを表す構造体
+      required:
+      - uid
+      - vid
+      - point
+      properties:
+        comment:
+          type: string
+          nullable: true
+        point:
+          type: integer
+          format: int32
+          minimum: 0
+        uid:
+          type: string
+        vid:
+          type: string
+    UnregisterVolunteerFavoriteRequestBody:
+      type: object
+      description: お気に入り登録時のリクエストボディを表す構造体
+      required:
+      - uid
+      - vid
+      properties:
+        uid:
+          type: string
+        vid:
+          type: string
+    UpdateApplyAllowedStatusRequestBody:
+      type: object
+      description: 応募承認更新時のリクエストボディを表す構造体
+      required:
+      - aid
+      - allowed_status
+      properties:
+        aid:
+          type: string
+        allowed_status:
+          type: integer
+          format: int32
+          minimum: 0
+    UpdateApplyIsSentRequestBody:
+      type: object
+      description: 応募メール送信更新時のリクエストボディを表す構造体
+      required:
+      - aid
+      properties:
+        aid:
+          type: string
+    UpdateGroupAccountRequestBody:
+      type: object
+      description: グループアカウントの更新時のリクエストボディを表す構造体
+      required:
+      - gid
+      - name
+      - furigana
+      - representative_name
+      - representative_furigana
+      - phone
+      - address
+      - contents
+      properties:
+        address:
+          type: string
+        contents:
+          type: string
+        furigana:
+          type: string
+        gid:
+          type: string
+        name:
+          type: string
+        phone:
+          type: string
+        photos:
+          type: array
+          items:
+            type: string
+          nullable: true
+        representative_furigana:
+          type: string
+        representative_name:
+          type: string
+    UpdateParticipantAccountRequestBody:
+      type: object
+      description: 参加者アカウントの更新時のリクエストボディを表す構造体
+      required:
+      - pid
+      - name
+      - furigana
+      - phone
+      - gender
+      - birthday
+      - profile
+      - region
+      - theme
+      - required_theme
+      - condition
+      - required_condition
+      - target_status
+      properties:
+        birthday:
+          type: string
+          example: 2002-06-22
+        condition:
+          type: array
+          items:
+            type: string
+        furigana:
+          type: string
+        gender:
+          type: integer
+          format: int32
+        name:
+          type: string
+        phone:
+          type: string
+        pid:
+          type: string
+        profile:
+          type: string
+        region:
+          type: array
+          items:
+            type: string
+        required_condition:
+          type: array
+          items:
+            type: string
+        required_theme:
+          type: array
+          items:
+            type: string
+        target_status:
+          type: string
+        theme:
+          type: array
+          items:
+            type: string
+    UpdateScoutDeniedRequestBody:
+      type: object
+      description: スカウト拒否時のリクエストボディを表す構造体
+      required:
+      - sid
+      properties:
+        sid:
+          type: string
+    UpdateScoutIsReadRequestBody:
+      type: object
+      description: スカウト既読更新時のリクエストボディを表す構造体
+      required:
+      - sid
+      properties:
+        sid:
+          type: string
+    UpdateScoutIsSentRequestBody:
+      type: object
+      description: スカウトメール送信済み更新時のリクエストボディを表す構造体
+      required:
+      - sid
+      properties:
+        sid:
+          type: string
+    UpdateVolunteerRequestBody:
+      type: object
+      description: ボランティアの更新時のリクエストボディを表す構造体
+      required:
+      - vid
+      - gid
+      - title
+      - message
+      - overview
+      - recruited_num
+      - place
+      - start_at
+      - finish_at
+      - deadline_on
+      - as_group
+      - region
+      - theme
+      - required_theme
+      - condition
+      - required_condition
+      - target_status
+      properties:
+        as_group:
+          type: boolean
+        condition:
+          type: array
+          items:
+            type: string
+        deadline_on:
+          type: string
+          example: 2023-12-3
+        finish_at:
+          type: string
+          format: date-time
+          example: 2023-12-17T17:00:00Z
+        gid:
+          type: string
+        message:
+          type: string
+        overview:
+          type: string
+        photos:
+          type: array
+          items:
+            type: string
+          nullable: true
+        place:
+          type: string
+        recruited_num:
+          type: integer
+          format: int32
+          minimum: 0
+        region:
+          type: array
+          items:
+            type: string
+        required_condition:
+          type: array
+          items:
+            type: string
+        required_theme:
+          type: array
+          items:
+            type: string
+        reward:
+          type: string
+          nullable: true
+        start_at:
+          type: string
+          format: date-time
+          example: 2023-12-17T09:00:00Z
+        target_status:
+          type: array
+          items:
+            type: string
+        theme:
+          type: array
+          items:
+            type: string
+        title:
+          type: string
+        vid:
+          type: string
+    WriteApiResponseFailureBody:
+      type: object
+      description: 失敗時のAPIレスポンスのボディを表す構造体
+      required:
+      - message
+      properties:
+        message:
+          type: string
+    WriteApiResponseSuccessBody:
+      type: object
+      description: 成功時のAPIレスポンスのボディを表す構造体
+      required:
+      - message
+      properties:
+        message:
+          type: string
+tags:
+- name: write-api-server
+  description: Write API Server

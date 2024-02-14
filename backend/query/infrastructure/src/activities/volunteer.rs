@@ -11,8 +11,10 @@ use domain::{
         themes::ThemeMap,
     },
     model::{condition::Condition, region::Region, target_status::TargetStatus, theme::Theme, user_account::user_id::UserId, volunteer::{self, VolunteerId}},
-};
-use query_repository::activities::volunteer::{VolunteerElementsReadModel, VolunteerQueryRepository, VolunteerReadModel};
+  };
+use query_repository::activities::volunteer::{
+    VolunteerElementsReadModel, VolunteerQueryRepository, VolunteerReadModel,
+  };
 
 pub struct VolunteerQueryRepositoryImpl {
     pool: MySqlPool,
@@ -44,8 +46,7 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
         )
         .fetch_all(&self.pool);
 
-        let (regions, elements) =
-            future::try_join(region_query, element_query).await?;
+        let (regions, elements) = future::try_join(region_query, element_query).await?;
 
         let regions_map = RegionMap::new().regions_index_to_name;
         let regions = regions
@@ -139,9 +140,19 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
         .fetch_one(&self.pool)
         .await?;
 
-        if volunteer.is_deleted {return Err(anyhow::anyhow!("the volunteer is deleted"));}
+        if volunteer.is_deleted {
+            return Err(anyhow::anyhow!("the volunteer is deleted"));
+        }
 
         let elements: VolunteerElementsReadModel = self.find_elements_by_id(&vid).await?;
+        let photos = sqlx::query!(
+            r#"
+            SELECT s3_key FROM volunteer_photo WHERE vid = ?
+            "#,
+            vid.to_string()
+        )
+        .fetch_all(&self.pool)
+        .await?;
 
         let volunteer = VolunteerReadModel::new(
             volunteer.vid,
@@ -169,6 +180,7 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
             elements.conditions,
             elements.required_conditions,
             elements.target_status,
+            photos.into_iter().map(|p| p.s3_key).collect(),
         );
 
         Ok(volunteer)
@@ -488,7 +500,7 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
     async fn find_by_gid(&self, gid: &UserId) -> Result<Vec<VolunteerReadModel>> {
         let vids = sqlx::query!(
             r#"
-            SELECT vid FROM volunteer WHERE gid = ?
+            SELECT vid FROM volunteer WHERE gid = ? AND is_deleted = false
             "#,
             gid.to_string()
         )
@@ -551,6 +563,41 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
                 volunteer.finish_at > now();
             "#,
             pid.to_string()
+        )
+        .fetch_all(&self.pool)
+        .await?;
+
+        let vids: Vec<VolunteerId> = vids.iter().map(|v| VolunteerId::from_str(&v.vid)).collect();
+
+        let volunteers = future::try_join_all(vids.iter().map(|vid| self.find_by_id(&vid))).await?;
+        Ok(volunteers)
+    }
+
+    async fn find_activity_by_gid(&self, gid: &UserId) -> Result<Vec<VolunteerReadModel>> {
+        let vids = sqlx::query!(
+            r#"
+            SELECT vid FROM volunteer WHERE gid = ? AND finish_at < now() AND is_deleted = false
+            "#,
+            gid.to_string()
+        )
+        .fetch_all(&self.pool)
+        .await?;
+
+        let vids: Vec<VolunteerId> = vids.iter().map(|v| VolunteerId::from_str(&v.vid)).collect();
+
+        let volunteers = future::try_join_all(vids.iter().map(|vid| self.find_by_id(&vid))).await?;
+        Ok(volunteers)
+    }
+
+    async fn find_scheduled_activity_by_gid(
+        &self,
+        gid: &UserId,
+    ) -> Result<Vec<VolunteerReadModel>> {
+        let vids = sqlx::query!(
+            r#"
+            SELECT vid FROM volunteer WHERE gid = ? AND finish_at > now() AND is_deleted = false
+            "#,
+            gid.to_string()
         )
         .fetch_all(&self.pool)
         .await?;

@@ -1,8 +1,8 @@
- .profile {
-    width: 100%;
-    max-width: 720px;
-    margin: 10% 45%;
-    font-size: var(--fontsize-x-large);
+.profile {
+  width: 100%;
+  max-width: 720px;
+  margin: 10% 45%;
+  font-size: var(--fontsize-x-large);
 }
 /*
 .phone {
@@ -24,21 +24,15 @@
 } */
 
 .main {
-    width: 100%;
-    max-width: 720px;
-    margin: 0 auto;
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
 }
-
 
 .textarea {
-    width: 720px;
-    height: 195px;
-    max-width: 720px;
-    margin: 0 -40%;
-    resize: none;
-
+  width: 720px;
+  height: 195px;
+  max-width: 720px;
+  margin: 0 -40%;
+  resize: none;
 }
-
-
-
-

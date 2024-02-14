@@ -1,10 +1,15 @@
-.base {
-}
-
 .participant {
-  background-color: var(--color-green);
+  background-color: var(--color-participant);
 }
 
 .group {
-  background-color: var(--color-blue);
+  background-color: var(--color-group);
+}
+
+.group a {
+  color: var(--color-white);
+}
+
+.group a:hover {
+  color: var(--color-white);
 }

@@ -13,8 +13,8 @@ const config: CodegenConfig = {
       config: {
         strictScalars: true,
         scalars: {
-          NaiveDateTime: "Date",
-          NaiveDate: "Date",
+          NaiveDateTime: "string",
+          NaiveDate: "string",
         },
       },
     },

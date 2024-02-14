@@ -17,25 +17,24 @@ export const AccountDeletePage = () => {
   const { user } = useAuthContext();
 
   const handleOnClick = async () => {
-    const pid = user?.uid;
-    if (pid === undefined) {
-      throw new Error("uid is undefined");
+    if (user === null) {
+      throw new Error("user is null");
     }
     const body: DeleteParticipantAccountRequestBody = {
-      pid,
+      pid: user.uid,
     };
 
     try {
       await apiClientParticipant.deleteParticipantAccount(body);
+      await user.delete();
       logout();
     } catch (e) {
-      console.error(e);
       alert("アカウント削除に失敗しました");
     }
   };
 
   return (
-    <div className={styles.base}>
+    <div>
       <BackButton className={joinClassnames("btn btn-primary")} />
       <h1 className={styles.top}>退会（アカウントの削除）に関する確認</h1>
       <div className={styles.main_contents}>

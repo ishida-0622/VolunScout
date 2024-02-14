@@ -5,12 +5,9 @@ use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
 use command_repository::activities::scout::ScoutRepository;
-use domain::model::{
-        scout::ScoutId,
-        user_account::user_id::UserId, volunteer::VolunteerId
-    };
+use domain::model::{scout::ScoutId, user_account::user_id::UserId, volunteer::VolunteerId};
 
-use super::{WriteApiResponseFailureBody, WriteApiResponseSuccessBody, AppData};
+use super::{AppData, WriteApiResponseFailureBody, WriteApiResponseSuccessBody};
 
 /// スカウト時のリクエストボディを表す構造体
 #[derive(Debug, Serialize, Deserialize, ToSchema)]
@@ -20,21 +17,21 @@ pub struct CreateScoutRequestBody {
     #[schema(required = true)]
     pub uid: String,
     #[schema(required = true)]
-    pub message: String
+    pub message: String,
 }
 
 /// スカウトメール送信済み更新時のリクエストボディを表す構造体
 #[derive(Debug, Serialize, Deserialize, ToSchema)]
 pub struct UpdateScoutIsSentRequestBody {
     #[schema(required = true)]
-    pub sid: String
+    pub sid: String,
 }
 
 /// スカウト既読更新時のリクエストボディを表す構造体
 #[derive(Debug, Serialize, Deserialize, ToSchema)]
 pub struct UpdateScoutIsReadRequestBody {
     #[schema(required = true)]
-    pub sid: String
+    pub sid: String,
 }
 
 /// スカウト拒否時のリクエストボディを表す構造体
@@ -79,10 +76,7 @@ pub async fn create_scout(
 
     let message: String = body.message;
 
-    match repository
-        .create(sid, vid, uid, message)
-        .await
-    {
+    match repository.create(sid, vid, uid, message).await {
         Ok(_) => (
             StatusCode::OK,
             Json(WriteApiResponseSuccessBody {
@@ -106,7 +100,7 @@ pub async fn create_scout(
 #[utoipa::path(
     post,
     path="/scout/update/is-sent",
-    request_body=UpdateScoutIsSent,
+    request_body=UpdateScoutIsSentRequestBody,
     responses(
         (status=200, description="Update scout's is_sent successfully.", body=WriteApiResponseSuccessBody),
         (status=500, description="Update scout's is_sent failed.", body=WriteApiResponseFailureBody)
@@ -160,10 +154,7 @@ pub async fn update_scout_is_read(
 
     let sid: ScoutId = ScoutId::from_str(&body.sid);
 
-    match repository
-        .update_is_read(sid)
-        .await
-    {
+    match repository.update_is_read(sid).await {
         Ok(_) => (
             StatusCode::OK,
             Json(WriteApiResponseSuccessBody {
@@ -202,10 +193,7 @@ pub async fn update_scout_denied(
 
     let sid: ScoutId = ScoutId::from_str(&body.sid);
 
-    match repository
-        .update_denied(sid)
-        .await
-    {
+    match repository.update_denied(sid).await {
         Ok(_) => (
             StatusCode::OK,
             Json(WriteApiResponseSuccessBody {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useLazyQuery } from "@apollo/client";
+import { notFound } from "next/navigation";
 import { useEffect } from "react";
 
 import styles from "./index.module.css";
@@ -29,15 +30,13 @@ export const Registration = () => {
   const { user } = useAuthContext();
 
   const [fetchParticipantAccountTerms, { loading, error, data }] = useLazyQuery(
-    GetParticipantAccountTermsQuery,
+    GetParticipantAccountTermsQuery
   );
 
   useEffect(() => {
     if (typeof user?.uid === "string") {
       fetchParticipantAccountTerms({ variables: { uid: user.uid } }).catch(
-        (e) => {
-          console.error(e);
-        },
+        () => {}
       );
     }
   }, [fetchParticipantAccountTerms, user?.uid]);
@@ -47,14 +46,13 @@ export const Registration = () => {
   }
 
   if (error) {
-    console.error(error);
-    return null;
+    notFound();
   }
 
   const regionsSet = new Set(data.regions.map((region) => region.name));
   const themesMap = new Map(data.themes.map((theme) => [theme.name, theme]));
   const conditionsMap = new Map(
-    data.conditions.map((condition) => [condition.name, condition]),
+    data.conditions.map((condition) => [condition.name, condition])
   );
 
   return (

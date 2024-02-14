@@ -1,5 +1,7 @@
 import { TermsOfServicePage } from "@/features/legal/TermsOfServicePage";
 
-const TermsOfService = () => <TermsOfServicePage />;
+const TermsOfService = () => {
+  return <TermsOfServicePage />;
+};
 
 export default TermsOfService;

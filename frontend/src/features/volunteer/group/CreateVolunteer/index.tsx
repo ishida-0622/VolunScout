@@ -1,5 +1,6 @@
 "use client";
 import { get, set } from "idb-keyval";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef } from "react";
 import { Button } from "react-bootstrap";
 
@@ -10,6 +11,7 @@ import type { CreateVolunteerRequestBody } from "@/__generated__/command";
 
 import { apiClientVolunteer, s3 } from "@/api/command";
 import { joinClassnames } from "@/components/@joinClassnames";
+import { URL_PATH_GROUP } from "@/consts";
 import { useAuthContext } from "@/contexts/AuthContext";
 import {
   useTermsForm,
@@ -17,6 +19,7 @@ import {
 } from "@/features/volunteer/useTermsForm";
 
 export const CreateVolunteer = () => {
+  const router = useRouter();
   const authContext = useAuthContext();
 
   const imageRef = useRef<HTMLInputElement>(null);
@@ -38,15 +41,15 @@ export const CreateVolunteer = () => {
     const termsValues = getTermsValues();
     const storageInfoKey = "create-volunteer-info";
     const storageTermsKey = "create-volunteer-terms";
-    set(storageInfoKey, infoValues).catch((e) => console.error(e));
-    set(storageTermsKey, termsValues).catch((e) => console.error(e));
+    set(storageInfoKey, infoValues).catch(() => {});
+    set(storageTermsKey, termsValues).catch(() => {});
   };
 
   const clearLocalStorage = () => {
     const storageInfoKey = "create-volunteer-info";
     const storageTermsKey = "create-volunteer-terms";
-    set(storageInfoKey, undefined).catch((e) => console.error(e));
-    set(storageTermsKey, undefined).catch((e) => console.error(e));
+    set(storageInfoKey, undefined).catch(() => {});
+    set(storageTermsKey, undefined).catch(() => {});
   };
 
   const readLocalStorage = useCallback(() => {
@@ -59,7 +62,7 @@ export const CreateVolunteer = () => {
           });
         }
       })
-      .catch((e) => console.error(e));
+      .catch(() => {});
 
     get("create-volunteer-terms")
       .then((value: TermsFormValues | undefined) => {
@@ -67,8 +70,8 @@ export const CreateVolunteer = () => {
           setTermsValue(value);
         }
       })
-      .catch((e) => console.error(e));
-  }, [getInfoValues, setInfoValue]);
+      .catch(() => {});
+  }, [setInfoValue, setTermsValue]);
 
   const handleOnSave = () => {
     writeLocalStorage();
@@ -111,6 +114,11 @@ export const CreateVolunteer = () => {
     const infoValues = getInfoValues();
     const termsValues = getTermsValues();
 
+    if (infoValues.target_status.length === 0) {
+      alert("募集対象を選択してください");
+      return;
+    }
+
     const body: CreateVolunteerRequestBody = {
       gid,
       ...infoValues,
@@ -129,8 +137,9 @@ export const CreateVolunteer = () => {
     try {
       await apiClientVolunteer.createVolunteer(body);
       clearLocalStorage();
+      alert("作成しました");
+      router.push(URL_PATH_GROUP.HOME);
     } catch (error) {
-      console.error(error);
       alert("エラーが発生しました");
     }
   };
@@ -144,7 +153,7 @@ export const CreateVolunteer = () => {
       {InfoForm}
       {TermsForm}
       <div className={joinClassnames("mb-3", styles.button_wrapper)}>
-        <Button variant="danger" size="lg" className="w-">
+        <Button variant="danger" size="lg" onClick={() => router.back()}>
           キャンセル
         </Button>
         <Button variant="secondary" size="lg" onClick={handleOnSave}>

@@ -24,7 +24,7 @@ impl GroupUserRepository for GroupAccountImpl {
             SELECT
                 gid, name, furigana, phone, address, contents, representative_name, representative_furigana, is_paid as "is_paid: bool", is_deleted as "is_deleted: bool", deleted_at
             FROM group_account
-            WHERE gid = ?
+            WHERE gid = ? AND is_deleted = false
             "#,
             gid.to_string()
         )
@@ -34,13 +34,14 @@ impl GroupUserRepository for GroupAccountImpl {
     }
 
     async fn find_by_ids(&self, gids: &[UserId]) -> Result<Vec<GroupAccount>> {
+        // TODO: FIX: Where の IN が息してない
         let groups = sqlx::query_as!(
             GroupAccount,
             r#"
             SELECT
                 gid, name, furigana, phone, address, contents, representative_name, representative_furigana, is_paid as "is_paid: bool", is_deleted as "is_deleted: bool", deleted_at
             FROM group_account
-            WHERE gid IN (?)
+            WHERE gid IN (?) AND is_deleted = false
             "#,
             gids.iter()
                 .map(|gid| gid.to_string())
@@ -59,10 +60,24 @@ impl GroupUserRepository for GroupAccountImpl {
             SELECT
                 gid, name, furigana, phone, address, contents, representative_name, representative_furigana, is_paid as "is_paid: bool", is_deleted as "is_deleted: bool", deleted_at
             FROM group_account
+            WHERE is_deleted = false
             "#
         )
         .fetch_all(&self.pool)
         .await?;
         Ok(groups)
+    }
+
+    async fn exists(&self, gid: &UserId) -> Result<bool> {
+        let exists = sqlx::query!(
+            r#"
+            SELECT EXISTS(SELECT * FROM group_account WHERE gid = ? AND is_deleted = false) AS exist
+            "#,
+            gid.to_string()
+        )
+        .fetch_one(&self.pool)
+        .await?;
+
+        Ok(exists.exist == 1)
     }
 }

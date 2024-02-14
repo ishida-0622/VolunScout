@@ -2,7 +2,8 @@
 
 import { useLazyQuery } from "@apollo/client";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { notFound, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 import styles from "./index.module.css";
@@ -38,25 +39,21 @@ export const MyPage = () => {
     GetGroupAccountQuery,
     {
       fetchPolicy: "cache-and-network",
-    },
+    }
   );
 
   useEffect(() => {
     if (typeof user?.uid === "string") {
-      getGroupAccount({ variables: { gid: user.uid } }).catch((e) =>
-        console.error(e),
-      );
+      getGroupAccount({ variables: { gid: user.uid } }).catch(() => {});
     }
   }, [getGroupAccount, user?.uid]);
 
   if (loading || data === undefined) {
-    console.warn("loading or data is undefined");
     return null;
   }
 
   if (error) {
-    console.error(error);
-    return null;
+    notFound();
   }
 
   const { __typename, ...userInfo } = data.user;
@@ -115,6 +112,11 @@ export const MyPage = () => {
         </div>
         <div>
           <p className={styles.profile}>{userInfo.contents}</p>
+        </div>
+        <div className="text-center">
+          <Link href={URL_PATH_GROUP.ACCOUNT_DELETE}>
+            アカウントを削除する→
+          </Link>
         </div>
       </div>
     </div>

@@ -1,11 +1,11 @@
 use anyhow::Result;
 use async_graphql::SimpleObject;
 use async_trait::async_trait;
-use chrono::NaiveDateTime;
+use chrono::{NaiveDate, NaiveDateTime};
 
-use domain::model::{user_account::user_id::UserId, apply::ApplyId, volunteer::VolunteerId};
+use domain::model::{apply::ApplyId, user_account::user_id::UserId, volunteer::VolunteerId};
 
-/// スカウトリードモデル
+/// 応募リードモデル
 #[derive(SimpleObject, sqlx::Type)]
 pub struct Apply {
     /// 応募ID
@@ -18,12 +18,12 @@ pub struct Apply {
     pub applied_at: NaiveDateTime,
     /// 集団応募有無
     pub as_group: bool,
-    /// 認証データ
+    /// 認証データ 0:未認証 1:承認済み 2:棄却済み
     pub allowed_status: i8,
     /// 認証日時
     pub decided_at: Option<NaiveDateTime>,
     /// 送信日時
-    pub is_sent: bool
+    pub is_sent: bool,
 }
 
 impl Apply {
@@ -35,7 +35,7 @@ impl Apply {
         as_group: bool,
         allowed_status: i8,
         decided_at: Option<NaiveDateTime>,
-        is_sent: bool
+        is_sent: bool,
     ) -> Apply {
         Apply {
             aid,
@@ -48,6 +48,21 @@ impl Apply {
             is_sent,
         }
     }
+}
+
+/// 過去ボランティア参加者リードモデル
+#[derive(SimpleObject, sqlx::Type)]
+pub struct PastVolunteerParticipantReadModel {
+    /// ユーザーID
+    pub uid: String,
+    /// ユーザー名
+    pub name: String,
+    /// 性別
+    ///
+    /// 0: 男性, 1: 女性, 2: その他
+    pub gender: u8,
+    /// 生年月日
+    pub birthday: NaiveDate,
 }
 
 #[async_trait]
@@ -63,4 +78,10 @@ pub trait ApplyRepository: Send + Sync {
 
     /// 応募情報をボランティアIDで一括取得する
     async fn find_by_vid(&self, vid: &VolunteerId) -> Result<Vec<Apply>>;
+
+    /// 過去に開催されたボランティアに参加した参加者を取得する
+    async fn find_past_volunteer_participants(
+        &self,
+        vid: &VolunteerId,
+    ) -> Result<Vec<PastVolunteerParticipantReadModel>>;
 }
