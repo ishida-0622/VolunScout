@@ -38,9 +38,14 @@ export const SignInButton = () => {
   };
 
   const [existsParticipantAccount] = useLazyQuery(
-    ExistsParticipantAccountQuery
+    ExistsParticipantAccountQuery,
+    {
+      fetchPolicy: "network-only",
+    }
   );
-  const [existsGroupAccount] = useLazyQuery(ExistsGroupAccountQuery);
+  const [existsGroupAccount] = useLazyQuery(ExistsGroupAccountQuery, {
+    fetchPolicy: "network-only",
+  });
 
   const handleGoogleSignIn = async () => {
     try {
