@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `volunteer`
   `title` VARCHAR(30) NOT NULL,
   `message` TEXT NOT NULL,
   `overview` TEXT NOT NULL,
-  `recruited_num` INT NOT NULL,
+  `recruited_num` UNSIGNED INT NOT NULL,
   `place` VARCHAR(100) NOT NULL,
   `start_at` DATETIME NOT NULL,
   `finish_at` DATETIME NOT NULL,

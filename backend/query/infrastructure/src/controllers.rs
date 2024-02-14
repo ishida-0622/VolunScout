@@ -1,10 +1,7 @@
 use async_graphql::http::GraphiQLSource;
 use async_graphql_axum::{GraphQLRequest, GraphQLResponse};
 use axum::{
-    extract::Extension,
-    response::{self, IntoResponse},
-    routing::{get, get_service},
-    Router,
+    extract::Extension, http::StatusCode, response::{self, IntoResponse, Response}, routing::{get, get_service}, Router, body::Body
 };
 use sqlx::MySqlPool;
 use tower_http::services::ServeDir;
@@ -49,6 +46,14 @@ pub fn create_router(pool: MySqlPool) -> Router {
         .route(
             Endpoints::GraphQL.as_str(),
             get(graphql).post(graphql_handler),
+        ).route(
+            "/health",
+            get(|| async {
+            Response::builder()
+                .status(StatusCode::OK)
+                .body(Body::empty())
+                .unwrap()
+        })
         )
         .nest_service(Endpoints::Assets.as_str(), service)
         .layer(Extension(schema))

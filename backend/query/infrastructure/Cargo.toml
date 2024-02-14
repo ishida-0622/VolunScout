@@ -14,8 +14,10 @@ axum = { workspace = true }
 chrono = { workspace = true }
 futures = { workspace = true }
 redis = { workspace = true, features = ["tokio-comp"] }
-sqlx = { workspace = true, features = ["bigdecimal"] }
+sqlx = { workspace = true, features = ["bigdecimal", "json"] }
 tower-http = { workspace = true, features = ["fs"] }
 
 domain = { path = "../../domain" }
 query-repository = { path = "../repository" }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
