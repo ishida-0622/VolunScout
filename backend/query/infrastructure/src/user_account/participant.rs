@@ -32,12 +32,16 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
             SELECT
                 uid, name, furigana, phone, gender, birthday, profile, is_deleted as "is_deleted: bool", deleted_at
             FROM participant_account
-            WHERE uid = ? AND is_deleted = false
+            WHERE uid = ?
             "#,
             pid.to_string()
         )
         .fetch_one(&self.pool)
         .await?;
+
+        if user.is_deleted {
+            return Err(anyhow::anyhow!("this participant_account is deleted but existed"));
+        }
         Ok(user)
     }
 

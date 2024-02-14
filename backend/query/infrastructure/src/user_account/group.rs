@@ -30,6 +30,10 @@ impl GroupUserRepository for GroupAccountImpl {
         )
         .fetch_one(&self.pool)
         .await?;
+
+        if group.is_deleted {
+            return Err(anyhow::anyhow!("this group_account is deleted but existed"));
+        }
         Ok(group)
     }
 
