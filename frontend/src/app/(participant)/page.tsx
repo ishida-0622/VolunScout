@@ -1,3 +1,5 @@
+import { SearchVolunteer } from "@/features/volunteer/participant/SearchVolunteer";
+
 export default function Home() {
-  return <main></main>;
+  return <SearchVolunteer />;
 }
