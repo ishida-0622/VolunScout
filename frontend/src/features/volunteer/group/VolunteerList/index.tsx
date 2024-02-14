@@ -122,7 +122,17 @@ export const VolunteerList = ({ type }: Props) => {
   return (
     <div>
       <div className={styles.search_bar_wrapper}>
-        <SearchBar onChange={search} className={styles.search_bar} />
+        <SearchBar
+          onChange={search}
+          placeholder={
+            type === "all"
+              ? "ボランティアを検索"
+              : type === "active"
+              ? "活動履歴を検索"
+              : "活動予定を検索"
+          }
+          className={styles.search_bar}
+        />
         <Button
           variant="primary"
           size="lg"
