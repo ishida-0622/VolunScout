@@ -5,7 +5,6 @@ use async_trait::async_trait;
 use futures::future;
 use serde_json::Value;
 use sqlx::{query, MySqlPool, Row};
-
 use domain::{
     consts::{
         conditions::ConditionMap, region::RegionMap, target_status::TargetStatusMap,
@@ -247,12 +246,14 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
                 .iter()
                 .map(|r: &String| Condition::from_str(r).unwrap().to_id()), // .collect::<Vec<String>>()
         );
+        if or_elements.len() == 0 { or_elements.push("".to_string()) }
+        if or_regions.len() == 0 { or_regions.push(100 as u8) }
         let query_str = format!(
             r#"
                 SELECT
                     volunteer.vid,
                     volunteer.gid, title, message, overview, recruited_num, place, start_at, finish_at, as_group, reward, volunteer.is_deleted,
-                    volunteer.deleted_at, deadline_on, registered_at, updated_at, is_paid,
+                    volunteer.deleted_at, deadline_on, registered_at, updated_at, is_paid, GROUP_CONCAT(DISTINCT volunteer_photo.s3_key) AS s3_keys,
                     GROUP_CONCAT(DISTINCT
                         JSON_OBJECT(
                             'eid', volunteer_element.eid,
@@ -263,7 +264,8 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
                             volunteer_region.rid
                     ) as rids,
                     COUNT(DISTINCT CASE WHEN volunteer_element.eid IN ({}) THEN volunteer_element.eid END) AS eid_match_count,
-                    COUNT(DISTINCT CASE WHEN volunteer_region.rid IN ({}) THEN volunteer_region.rid END) AS rid_match_count
+                    COUNT(DISTINCT CASE WHEN volunteer_region.rid IN ({}) THEN volunteer_region.rid END) AS rid_match_count,
+                    COUNT(DISTINCT CASE WHEN volunteer_element.is_need = true AND volunteer_element.eid IN ({}) THEN volunteer_element.eid END) AS req_eid_match_count
                 FROM
                     volunteer
                 LEFT JOIN
@@ -272,70 +274,65 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
                     volunteer_region ON volunteer.vid = volunteer_region.vid
                 LEFT JOIN
                     group_account ON volunteer.gid = group_account.gid
+                LEFT JOIN
+                    volunteer_photo ON volunteer.vid = volunteer_photo.vid
                 WHERE
                     volunteer.vid IN (
                         SELECT volunteer.vid
                         FROM volunteer
                         LEFT JOIN volunteer_element ON volunteer.vid = volunteer_element.vid
                         LEFT JOIN volunteer_region ON volunteer.vid = volunteer_region.vid
-                        WHERE volunteer_element.eid IN ({})
-                        AND volunteer_region.rid IN ({})
+                        {}
                         GROUP BY volunteer.vid
-                        HAVING COUNT(DISTINCT volunteer_element.eid) = {}
-                        AND COUNT(DISTINCT volunteer_region.rid) = {}
+                        {}
                     )
                 AND NOT volunteer.is_deleted
                 AND deadline_on > NOW()
-                AND
-                    volunteer.vid IN (
-                        SELECT volunteer.vid as v
-                        FROM volunteer
-                        LEFT JOIN volunteer_element ON volunteer.vid = volunteer_element.vid
-                        AND volunteer_element.is_need = 1
-                        GROUP BY volunteer.vid
-                        HAVING COUNT(DISTINCT volunteer_element.eid) = (
-                            SELECT COUNT(DISTINCT volunteer_element.eid)
-                            FROM volunteer
-                            LEFT JOIN volunteer_element ON volunteer.vid = volunteer_element.vid
-                            AND volunteer_element.eid IN ({})
-                            AND volunteer_element.is_need = 1
-                            WHERE volunteer.vid = v
-                            GROUP BY volunteer.vid
-                        )
-                    )
                 AND title LIKE "%{}%"
                 GROUP BY
                     volunteer.vid
                 ORDER BY
-                    eid_match_count + rid_match_count DESC, is_paid DESC, deadline_on ASC, registered_at DESC, vid;
+                    eid_match_count + rid_match_count DESC, is_paid DESC, req_eid_match_count DESC, deadline_on ASC, registered_at DESC, vid;
             "#,
-            if or_elements.len() > 0 {
-                format!("?{}", ", ?".repeat(or_elements.len() - 1))
-            } else {
-                "".to_string()
-            },
-            if or_regions.len() > 0 {
-                format!("?{}", ", ?".repeat(or_regions.len() - 1))
-            } else {
-                "".to_string()
-            },
-            if req_elements.len() > 0 {
-                format!("?{}", ", ?".repeat(req_elements.len() - 1))
-            } else {
-                "".to_string()
-            },
-            if req_regions.len() > 0 {
-                format!("?{}", ", ?".repeat(req_regions.len() - 1))
-            } else {
-                "".to_string()
-            },
-            req_elements.len(),
-            req_regions.len(),
-            if or_elements.len() > 0 {
-                format!("?{}", ", ?".repeat(or_elements.len() - 1))
-            } else {
-                "".to_string()
-            },
+            format!("?{}", ", ?".repeat(or_elements.len() - 1)),
+            format!("?{}", ", ?".repeat(or_regions.len() - 1)),
+            format!("?{}", ", ?".repeat(or_elements.len() + req_elements.len() - 1)),
+
+            if req_elements.len() > 0 && req_regions.len() > 0 {
+                format!(
+                    "WHERE volunteer_element.eid IN ({}) AND volunteer_region.rid IN ({})",
+                    format!("?{}", ", ?".repeat(req_elements.len() - 1)),
+                    format!("?{}", ", ?".repeat(req_regions.len() - 1))
+                )
+            } else if req_elements.len() > 0 {
+                format!(
+                    "WHERE volunteer_element.eid IN ({})",
+                    format!("?{}", ", ?".repeat(req_elements.len() - 1))
+                )
+            } else if req_regions.len() > 0 {
+                format!(
+                    "WHERE volunteer_region.rid IN ({})",
+                    format!("?{}", ", ?".repeat(req_regions.len() - 1))
+                )
+            } else {"".to_string()},
+
+            if req_elements.len() > 0 && req_regions.len() > 0 {
+                format!(
+                    "HAVING COUNT(DISTINCT volunteer_element.eid) = {} AND COUNT(DISTINCT volunteer_region.rid) = {}",
+                    req_elements.len(),
+                    req_regions.len()
+                )
+            } else if req_elements.len() > 0 {
+                format!(
+                    "HAVING COUNT(DISTINCT volunteer_element.eid) = {}",
+                    req_elements.len()
+                )
+            } else if req_regions.len() > 0 {
+                format!(
+                    "HAVING COUNT(DISTINCT volunteer_region.rid) = {}",
+                    req_regions.len()
+                )
+            } else {"".to_string()},
             search_words
         );
         let mut query = query(&query_str);
@@ -346,15 +343,19 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
         for or_region in or_regions {
             query = query.bind(or_region);
         }
+
+        for or_element in or_elements {
+            query = query.bind(or_element.to_string());
+        }
+        for req_element in req_elements.clone() {
+            query = query.bind(req_element.to_string());
+        }
+
         for req_element in req_elements.clone() {
             query = query.bind(req_element.to_string());
         }
         for req_region in req_regions.clone() {
             query = query.bind(req_region);
-        }
-
-        for or_element in or_elements {
-            query = query.bind(or_element.to_string());
         }
 
         let volunteers = query.fetch_all(&self.pool).await?;
@@ -502,6 +503,19 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
                             .to_string()
                     })
                     .collect();
+
+                let photo_urls: Vec<String> = match volunteer.get::<Option<String>, _>("s3_keys") {
+                    Some(keys) => {
+                        keys
+                        .split(',')
+                        .map(|key: &str| {
+                            println!("Debug info: {:?}", key);
+                            key.to_string()
+                        })
+                        .collect()
+                    }
+                    None => Vec::new()
+                };
 
                 VolunteerReadModel {
                     vid: volunteer.get("vid"),

@@ -475,7 +475,14 @@ impl QueryRoot {
     /// ボランティアを検索する
     ///
     /// ## 引数
-    /// - `vid` - vid
+    /// - `regions` - OR検索の地域: Vec<String>
+    /// - `required_regions` - AND検索の地域(東京23区外のボランティアを除外する等の場合で使用を推奨): Vec<String>,
+    /// - `themes` - OR検索のテーマ: Vec<String>,
+    /// - `required_themes` - AND検索のテーマ: Vec<String>,
+    /// - `conditions` - OR検索の条件: Vec<String>,
+    /// - `required_conditions` - AND検索の条件: Vec<String>,
+    /// - `target_status` - 対象者: Vec<String>,
+    /// - `search_words` - 検索ワード: String
     ///
     /// ## 返り値
     /// - `VolunteerElementsReadModel` - ボランティア要素情報
