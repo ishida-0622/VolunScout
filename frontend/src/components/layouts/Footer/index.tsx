@@ -29,7 +29,7 @@ export const Footer = ({ className }: Props) => {
 
   return (
     <>
-      <div style={{ minHeight: "12vh" }} />
+      <div style={{ minHeight: "8vh" }} />
       <footer
         className={joinClassnames(
           "fixed-bottom",
@@ -37,10 +37,10 @@ export const Footer = ({ className }: Props) => {
           className
         )}
       >
-        <Container className="d-flex align-items-center p-2">
+        <Container className="d-flex align-items-center p-1">
           <div>
             <Link href={homeHref} className="text-decoration-none text-dark">
-              <h1>VolunScout</h1>
+              <h2>VolunScout</h2>
             </Link>
           </div>
           <div className="w-75 d-flex justify-content-end">
