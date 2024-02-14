@@ -46,6 +46,10 @@ const GetVolunTeerDetailsQuery = gql(/* GraphQL */ `
 export const VolunteerDetails = ({ vid }: Props) => {
   const router = useRouter();
 
+  const toEdit = () => {
+    router.push(URL_PATH_GROUP.VOLUNTEER_EDIT(vid));
+  };
+
   const [page, setPage] = useState<"apply" | "scout">("apply");
 
   const showApply = () => {
@@ -111,7 +115,7 @@ export const VolunteerDetails = ({ vid }: Props) => {
           </Row>
         </Col>
         <Col>
-          <Button variant="primary" className="mx-1">
+          <Button variant="primary" className="mx-1" onClick={toEdit}>
             編集
           </Button>
           <Button variant="danger" className="mx-1" onClick={deleteVolunteer}>
