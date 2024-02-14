@@ -28,6 +28,7 @@ pub struct VolunteerReadModel {
     pub conditions: Vec<String>,
     pub required_conditions: Vec<String>,
     pub target_status: Vec<String>,
+    pub photo_urls: Vec<String>,
 }
 
 impl VolunteerReadModel {

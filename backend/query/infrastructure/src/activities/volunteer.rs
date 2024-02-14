@@ -482,6 +482,7 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
                 deleted_at: volunteer.get("deleted_at"),
                 registered_at: volunteer.get("registered_at"),
                 updated_at: volunteer.get("updated_at"),
+                photo_urls: Vec::new(),
                 themes: themes,
                 regions: regions,
                 conditions: conditions,
