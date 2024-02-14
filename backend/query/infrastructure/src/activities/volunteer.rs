@@ -544,7 +544,6 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
                 }
             })
             .collect();
-        println!("Debug info: {:?}", "a");
 
         Ok(volunteers)
     }
