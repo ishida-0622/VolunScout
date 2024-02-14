@@ -4,17 +4,17 @@ use serde_json::Value;
 use anyhow::Result;
 use async_trait::async_trait;
 use futures::future;
-use sqlx::{query, types::Json, Execute, MySqlPool, Row};
+use sqlx::{query, MySqlPool, Row};
 use domain::{
     consts::{
         conditions::ConditionMap, region::RegionMap, target_status::{self, TargetStatusMap},
         themes::ThemeMap,
     },
-    model::{condition::Condition, region::Region, target_status::TargetStatus, theme::Theme, user_account::user_id::UserId, volunteer::{self, VolunteerId}},
-  };
+    model::{condition::Condition, region::Region, target_status::TargetStatus, theme::Theme, user_account::user_id::UserId, volunteer::VolunteerId},
+};
 use query_repository::activities::volunteer::{
     VolunteerElementsReadModel, VolunteerQueryRepository, VolunteerReadModel,
-  };
+};
 
 pub struct VolunteerQueryRepositoryImpl {
     pool: MySqlPool,
