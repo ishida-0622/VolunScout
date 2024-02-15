@@ -83,8 +83,7 @@ export const SearchedVolunteer = ({ params }: Props) => {
     DEFAULT_SHOW_ONE_PAGE_ITEMS
   );
 
-  // MEMO: word は未入力の場合は空文字列になるため, string 型なのが保証されている
-  const word = params.get("word")!;
+  const word = params.get("word") ?? "";
   const region =
     params
       .get("region")
@@ -197,6 +196,9 @@ export const SearchedVolunteer = ({ params }: Props) => {
     } else if (page > MAX_PAGE) {
       setPage(MAX_PAGE);
     } else {
+      if (window) {
+        window.scrollTo(0, 0);
+      }
       setPage(page);
     }
   };
