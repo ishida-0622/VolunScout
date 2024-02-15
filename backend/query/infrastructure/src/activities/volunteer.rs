@@ -377,7 +377,6 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
         let volunteers = volunteers
             .into_iter()
             .map(|volunteer| {
-                // println!("Debug info: {:?}", volunteer.get::<String, _>("eids"));
                 let elements: Vec<Value> = volunteer
                     .get::<String, _>("eids")
                     .split("},{")
@@ -517,7 +516,6 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
                     Some(keys) => keys
                         .split(',')
                         .map(|key: &str| {
-                            println!("Debug info: {:?}", key);
                             key.to_string()
                         })
                         .collect(),
