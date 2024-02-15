@@ -163,7 +163,7 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
             volunteer.title,
             volunteer.message,
             volunteer.overview,
-            volunteer.recruited_num as u32,
+            (volunteer.recruited_num as Option<u32>).unwrap(),
             volunteer.place,
             volunteer.reward,
             volunteer.start_at,
@@ -291,7 +291,7 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
                         {}
                     )
                 AND NOT volunteer.is_deleted
-                AND deadline_on > NOW()
+                AND deadline_on >= NOW()
                 AND title LIKE "%{}%"
                 GROUP BY
                     volunteer.vid
