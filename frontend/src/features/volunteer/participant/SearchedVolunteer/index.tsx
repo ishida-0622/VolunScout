@@ -1,11 +1,7 @@
 "use client";
 
 import { useLazyQuery, useQuery } from "@apollo/client";
-import {
-  notFound,
-  useRouter,
-  type ReadonlyURLSearchParams,
-} from "next/navigation";
+import { useRouter, type ReadonlyURLSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import {
   Button,
@@ -206,7 +202,7 @@ export const SearchedVolunteer = ({ params }: Props) => {
   }
 
   if (data === undefined) {
-    return notFound();
+    return null;
   }
 
   const start = (page - 1) * SHOW_ONE_PAGE_ITEMS;
