@@ -13,9 +13,10 @@ import { apiClientScout } from "@/api/command";
 type Props = {
   scout: GetScoutByUidQuery["scouts"][number];
   onPreview: () => void;
+  refetch: () => Promise<unknown>;
 };
 
-export const ScoutItem = ({ scout, onPreview }: Props) => {
+export const ScoutItem = ({ scout, onPreview, refetch }: Props) => {
   const read = async () => {
     const body: UpdateScoutIsReadRequestBody = {
       sid: scout.sid,
@@ -32,6 +33,7 @@ export const ScoutItem = ({ scout, onPreview }: Props) => {
     };
     try {
       await apiClientScout.updateScoutDenied(body);
+      await refetch();
     } catch (error) {
       alert("辞退に失敗しました");
     }

@@ -22,7 +22,8 @@ const GetScoutQuery = gql(/* GraphQL */ `
 
 export const Scout = () => {
   const { user } = useAuthContext();
-  const [getScout, { data, loading, error }] = useLazyQuery(GetScoutQuery);
+  const [getScout, { data, loading, error, refetch }] =
+    useLazyQuery(GetScoutQuery);
 
   const [showModal, setShowModal] = useState(false);
   const [vid, setVid] = useState("");
@@ -62,6 +63,7 @@ export const Scout = () => {
           onPreview={() => {
             openModal(scout.vid);
           }}
+          refetch={refetch}
         />
       ))}
       <ScoutModal vid={vid} show={showModal} onHide={closeModal} />
