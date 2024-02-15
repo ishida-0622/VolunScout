@@ -52,7 +52,7 @@ export const UpdateVolunteer = ({ vid, gid }: Props) => {
 
   const imageRef = useRef<HTMLInputElement>(null);
 
-  const { InputForm, setValue, getValues } = useInfoForm({
+  const { InputForm, setValue, getValues, validation } = useInfoForm({
     imageRef,
   });
 
@@ -92,7 +92,16 @@ export const UpdateVolunteer = ({ vid, gid }: Props) => {
   }, [data, setFormValues, setValue]);
 
   const handleSubmit = async () => {
+    if (!validation()) {
+      return;
+    }
+
     const photos = imageRef.current?.files;
+
+    if (photos && photos.length > 4) {
+      alert("写真は4枚までです");
+      return;
+    }
 
     if (photos) {
       const requests = [];

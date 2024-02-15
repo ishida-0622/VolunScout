@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef, useState } from "react";
 import { Col, Container, Form, Row } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 
@@ -28,7 +29,7 @@ const initialValues: FormValues = {
   message: "",
   overview: "",
   place: "",
-  recruited_num: 0,
+  recruited_num: 1,
   start_at: "",
   finish_at: "",
   deadline_on: "",
@@ -37,93 +38,133 @@ const initialValues: FormValues = {
 };
 
 type Props = {
-  onSubmit?: (values: FormValues) => void;
   defaultValues?: FormValues;
   imageRef: React.RefObject<HTMLInputElement>;
 };
 
-const noop = () => {};
-
 export const useInfoForm = ({
-  onSubmit = noop,
   defaultValues = initialValues,
   imageRef,
 }: Props) => {
-  const { register, handleSubmit, getValues, setValue } = useForm<FormValues>({
+  const { register, getValues, setValue } = useForm<FormValues>({
     defaultValues,
   });
 
-  const onSubmitHandler = handleSubmit(onSubmit);
+  const [validated, setValidated] = useState(false);
+  const ref = useRef<HTMLFormElement>(null);
+
+  const [finishAtValidation, setFinishAtValidation] = useState("");
+  const [deadlineValidation, setDeadlineValidation] = useState("");
+
+  const validation = () => {
+    const form = ref.current;
+    if (form === null) {
+      return;
+    }
+    setValidated(true);
+
+    return form.checkValidity();
+  };
 
   const InputForm = (
     <Container className="mt-3">
-      <Form onSubmit={onSubmitHandler}>
-        <Form.Group as={Row} className="mb-3">
+      <Form noValidate validated={validated} ref={ref}>
+        <Form.Group as={Row} controlId="title" className="mb-3">
           <Form.Label column sm="2">
             タイトル
           </Form.Label>
           <Col>
             <Form.Control
-              {...register("title", { required: true })}
+              {...register("title")}
               placeholder="子供向けワークショップの運営ボランティア募集！"
+              required
             />
+            <Form.Control.Feedback type="invalid">
+              入力してください
+            </Form.Control.Feedback>
           </Col>
         </Form.Group>
-        <Form.Group as={Row} className="mb-3">
+        <Form.Group as={Row} controlId="address" className="mb-3">
           <Form.Label column sm="2">
             場所
           </Form.Label>
           <Col>
             <Form.Control
-              {...register("place", { required: true })}
+              {...register("place")}
               placeholder="東京都○○区×× 1-2-3"
+              required
             />
+            <Form.Control.Feedback type="invalid">
+              入力してください
+            </Form.Control.Feedback>
           </Col>
         </Form.Group>
-        <Form.Group as={Row} className="align-items-center mb-3">
+        <Form.Group
+          as={Row}
+          controlId="datetime"
+          className="align-items-center mb-3"
+        >
           <Form.Label column sm="2">
             日時
           </Form.Label>
           <Col>
             <Form.Control
               type="datetime-local"
-              {...register("start_at", { required: true })}
+              {...register("start_at")}
+              required
+              min={new Date("2000-01-01").toISOString()}
+              onChange={(e) => {
+                setFinishAtValidation(e.target.value);
+              }}
             />
           </Col>
           ～
           <Col>
             <Form.Control
               type="datetime-local"
-              {...register("finish_at", { required: true })}
+              {...register("finish_at")}
+              required
+              min={finishAtValidation}
+              onChange={(e) => {
+                const date = new Date(e.target.value || "2000-01-01");
+                setDeadlineValidation(date.toISOString().split("T")[0]);
+              }}
             />
           </Col>
         </Form.Group>
-        <Form.Group as={Row} className="mb-3">
+        <Form.Group as={Row} controlId="reward" className="mb-3">
           <Form.Label column sm="2">
             報酬
           </Form.Label>
           <Col>
             <Form.Control
-              {...register("reward", { required: true })}
+              {...register("reward")}
               placeholder="なし, 交通費支給（上限あり）, 時給1000円 など"
+              required
             />
+            <Form.Control.Feedback type="invalid">
+              入力してください
+            </Form.Control.Feedback>
           </Col>
         </Form.Group>
-        <Form.Group as={Row} className="mb-3">
+        <Form.Group as={Row} controlId="num" className="mb-3">
           <Form.Label column sm="2">
             募集人数
           </Form.Label>
           <Col>
             <Form.Control
               type="number"
-              {...register("recruited_num", {
-                required: true,
-                min: 1,
-              })}
+              {...register("recruited_num")}
+              required
+              min={1}
+              defaultValue={1}
             />
+            <Form.Control.Feedback type="invalid">
+              値が不正です
+            </Form.Control.Feedback>
           </Col>
         </Form.Group>
-        <Form.Group as={Row} className="mb-3">
+        <Form.Group as={Row} controlId="target" className="mb-3">
           <Form.Label column sm="2">
             募集対象
           </Form.Label>
@@ -135,9 +176,13 @@ export const useInfoForm = ({
                 type="checkbox"
                 value={status}
                 label={status}
-                {...register("target_status", { required: true })}
+                {...register("target_status")}
+                required
               />
             ))}
+            <Form.Control.Feedback type="invalid">
+              ひとつ以上選択してください
+            </Form.Control.Feedback>
           </Col>
         </Form.Group>
         <Form.Group as={Row} className="mb-3 align-items-center">
@@ -153,15 +198,20 @@ export const useInfoForm = ({
             />
           </Col>
         </Form.Group>
-        <Form.Group as={Row} className="mb-3">
+        <Form.Group as={Row} controlId="deadline" className="mb-3">
           <Form.Label column sm="2">
             募集期限
           </Form.Label>
           <Col>
             <Form.Control
               type="date"
-              {...register("deadline_on", { required: true })}
+              {...register("deadline_on")}
+              max={deadlineValidation}
+              required
             />
+            <Form.Control.Feedback type="invalid">
+              値が不正です
+            </Form.Control.Feedback>
           </Col>
         </Form.Group>
         <Form.Group as={Row} className="mb-3">
@@ -182,34 +232,42 @@ export const useInfoForm = ({
             />
           </Col>
         </Form.Group>
-        <Form.Group as={Row} className="mb-3">
+        <Form.Group as={Row} controlId="overview" className="mb-3">
           <Form.Label column sm="2">
             概要
           </Form.Label>
           <Col>
             <Form.Control
-              {...register("overview", { required: true })}
+              {...register("overview")}
               as="textarea"
               rows={3}
               placeholder="○○ショッピングセンターで子供向け（幼稚園～小学校低学年）ワークショップを開催します。&#13;折り紙や紙飛行機などを作って遊びます。&#13;交通費として、一律1000円を支給します。"
+              required
             />
+            <Form.Control.Feedback type="invalid">
+              入力してください
+            </Form.Control.Feedback>
           </Col>
         </Form.Group>
-        <Form.Group as={Row} className="mb-3">
+        <Form.Group as={Row} controlId="message" className="mb-3">
           <Form.Label column sm="2">
             メッセージ
           </Form.Label>
           <Col>
             <Form.Control
-              {...register("message", { required: true })}
+              {...register("message")}
               as="textarea"
               rows={3}
               placeholder="子供が好きな方、運営に興味がある方を募集しています！折り紙をするため、指先が器用な方大歓迎です！"
+              required
             />
+            <Form.Control.Feedback type="invalid">
+              入力してください
+            </Form.Control.Feedback>
           </Col>
         </Form.Group>
       </Form>
     </Container>
   );
-  return { InputForm, getValues, setValue };
+  return { InputForm, getValues, setValue, validation };
 };

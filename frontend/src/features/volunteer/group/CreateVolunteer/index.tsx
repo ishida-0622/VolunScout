@@ -30,6 +30,7 @@ export const CreateVolunteer = () => {
     InputForm: InfoForm,
     getValues: getInfoValues,
     setValue: setInfoValue,
+    validation,
   } = useInfoForm({ imageRef });
 
   const {
@@ -86,6 +87,10 @@ export const CreateVolunteer = () => {
       throw new Error("gid is undefined");
     }
 
+    if (!validation()) {
+      return;
+    }
+
     const infoValues = getInfoValues();
     const termsValues = getTermsValues();
 
@@ -104,9 +109,13 @@ export const CreateVolunteer = () => {
       return;
     }
 
-    setIsDeActive(true);
-
     const photos = imageRef.current?.files;
+    if (photos && photos.length > 4) {
+      alert("写真は4枚までです");
+      return;
+    }
+
+    setIsDeActive(true);
 
     if (photos) {
       try {
