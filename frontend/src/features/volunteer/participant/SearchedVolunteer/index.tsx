@@ -25,7 +25,7 @@ type Props = {
   params: ReadonlyURLSearchParams;
 };
 
-const SHOW_ONE_PAGE_ITEMS = 20;
+const SHOW_ONE_PAGE_ITEMS = 10;
 
 const GetTargetStatus = gql(/* GraphQL */ `
   query GetTargetStatus($uid: String!) {
@@ -243,13 +243,25 @@ export const SearchedVolunteer = ({ params }: Props) => {
             <Pagination.First onClick={() => handlePageChange(MIN_PAGE)} />
             <Pagination.Prev onClick={() => handlePageChange(page - 1)} />
             {page === MAX_PAGE && page > MIN_PAGE + 1 && (
-              <Pagination.Item>{page - 2}</Pagination.Item>
+              <Pagination.Item onClick={() => handlePageChange(page - 2)}>
+                {page - 2}
+              </Pagination.Item>
             )}
-            {page > MIN_PAGE && <Pagination.Item>{page - 1}</Pagination.Item>}
-            <Pagination.Item>{page}</Pagination.Item>
-            {page < MAX_PAGE && <Pagination.Item>{page + 1}</Pagination.Item>}
+            {page > MIN_PAGE && (
+              <Pagination.Item onClick={() => handlePageChange(page - 1)}>
+                {page - 1}
+              </Pagination.Item>
+            )}
+            <Pagination.Item active>{page}</Pagination.Item>
+            {page < MAX_PAGE && (
+              <Pagination.Item onClick={() => handlePageChange(page + 1)}>
+                {page + 1}
+              </Pagination.Item>
+            )}
             {page === MIN_PAGE && page < MAX_PAGE - 1 && (
-              <Pagination.Item>{page + 2}</Pagination.Item>
+              <Pagination.Item onClick={() => handlePageChange(page + 2)}>
+                {page + 2}
+              </Pagination.Item>
             )}
             <Pagination.Next onClick={() => handlePageChange(page + 1)} />
             <Pagination.Last onClick={() => handlePageChange(MAX_PAGE)} />
