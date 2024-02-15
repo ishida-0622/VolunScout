@@ -808,6 +808,25 @@ impl QueryRoot {
         Ok(review)
     }
 
+    /// 指定されたgidのボランティアレビュー情報を取得する
+    ///
+    /// ## 引数
+    /// - `gid` - gid
+    ///
+    /// ## 返り値
+    /// - `Review` - レビュー情報
+    async fn get_volunteer_review_by_gid<'ctx>(
+        &self,
+        ctx: &Context<'ctx>,
+        gid: String,
+    ) -> Result<Vec<Review>> {
+        let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
+        let gid = UserId::from_str(&gid).unwrap();
+        let review: Vec<Review> = ctx.volunteer_review_dao.find_by_gid(&gid).await?;
+
+        Ok(review)
+    }
+
     /// 指定されたuidの参加者レビュー情報の平均を取得する
     ///
     /// ## 引数

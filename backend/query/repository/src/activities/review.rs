@@ -68,4 +68,7 @@ pub trait VolunteerReviewRepository: Send + Sync {
 
     /// ボランティアへのレビュー情報をボランティアIDで一括取得する
     async fn find_by_vid(&self, vid: &VolunteerId) -> Result<Vec<Review>>;
+
+    /// ボランティアへのレビュー情報を団体IDで一括取得する
+    async fn find_by_gid(&self, gid: &UserId) -> Result<Vec<Review>>;
 }
