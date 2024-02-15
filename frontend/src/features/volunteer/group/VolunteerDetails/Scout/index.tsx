@@ -74,11 +74,16 @@ const SearchParticipantQuery = gql(/* GraphQL */ `
 export const Scout = ({ vid }: Props) => {
   const { data: elements, loading } = useQuery(GetVolunteerElementQuery, {
     variables: { vid },
+    fetchPolicy: "cache-and-network",
   });
 
-  const [getParticipant] = useLazyQuery(GetParticipantFromScoutQuery);
+  const [getParticipant] = useLazyQuery(GetParticipantFromScoutQuery, {
+    fetchPolicy: "cache-and-network",
+  });
 
-  const [searchParticipant, { data }] = useLazyQuery(SearchParticipantQuery);
+  const [searchParticipant, { data }] = useLazyQuery(SearchParticipantQuery, {
+    fetchPolicy: "cache-and-network",
+  });
 
   const [show, setShow] = useState(false);
   const [uid, setUid] = useState("");

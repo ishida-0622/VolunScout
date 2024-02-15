@@ -47,7 +47,7 @@ export const UpdateVolunteer = ({ vid, gid }: Props) => {
 
   const { data, loading, error } = useQuery(GetVolunteerFromUpdatePageQuery, {
     variables: { vid },
-    ssr: true,
+    fetchPolicy: "cache-and-network",
   });
 
   const imageRef = useRef<HTMLInputElement>(null);

@@ -22,8 +22,12 @@ const GetScoutQuery = gql(/* GraphQL */ `
 
 export const Scout = () => {
   const { user } = useAuthContext();
-  const [getScout, { data, loading, error, refetch }] =
-    useLazyQuery(GetScoutQuery);
+  const [getScout, { data, loading, error, refetch }] = useLazyQuery(
+    GetScoutQuery,
+    {
+      fetchPolicy: "cache-and-network",
+    }
+  );
 
   const [showModal, setShowModal] = useState(false);
   const [vid, setVid] = useState("");

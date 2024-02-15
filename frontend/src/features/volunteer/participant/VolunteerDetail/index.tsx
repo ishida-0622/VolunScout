@@ -68,7 +68,6 @@ export const VolunteerDetail = ({ vid }: Props) => {
 
   const { data, loading, error } = useQuery(GetVolunteerDetailQuery, {
     variables: { vid },
-    ssr: true,
   });
 
   const [getGroupAccount, { data: groupData }] =

@@ -65,6 +65,7 @@ export const VolunteerDetails = ({ vid }: Props) => {
 
   const { data, loading, error } = useQuery(GetVolunTeerDetailsQuery, {
     variables: { vid },
+    fetchPolicy: "cache-and-network",
   });
 
   const deleteVolunteer = async () => {

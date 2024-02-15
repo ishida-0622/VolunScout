@@ -124,7 +124,10 @@ export const Apply = ({ vid }: Props) => {
   );
 
   const [getParticipantAccounts, { data: participantData }] = useLazyQuery(
-    GetParticipantAccountsQuery
+    GetParticipantAccountsQuery,
+    {
+      fetchPolicy: "cache-and-network",
+    }
   );
 
   useEffect(() => {
