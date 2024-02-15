@@ -545,6 +545,16 @@ type QueryRoot {
 	"""
 	getScheduledActivitiesByUid(uid: String!): [VolunteerReadModel!]!
 	"""
+	指定されたuidが応募し、未承認のボランティア情報を取得する
+	
+	## 引数
+	- `uid` - uid
+	
+	## 返り値
+	- `Vec<VolunteerReadModel>` - ボランティア情報の配列
+	"""
+	getNotAllowedActivitiesByUid(uid: String!): [VolunteerReadModel!]!
+	"""
 	指定されたgidが過去に活動したボランティア情報を取得する
 	
 	## 引数
@@ -627,6 +637,16 @@ type QueryRoot {
 	"""
 	getVolunteerReviewByVid(vid: String!): [Review!]!
 	"""
+	指定されたgidのボランティアレビュー情報を取得する
+	
+	## 引数
+	- `gid` - gid
+	
+	## 返り値
+	- `Review` - レビュー情報
+	"""
+	getVolunteerReviewByGid(gid: String!): [Review!]!
+	"""
 	指定されたuidの参加者レビュー情報の平均を取得する
 	
 	## 引数
@@ -650,7 +670,7 @@ type QueryRoot {
 	## 返り値
 	- `ScoutParticipant` - スカウトに必要な参加者情報
 	"""
-	scoutParticipantByElements(regions: [String!]!, themes: [String!]!, requiredThemes: [String!]!, conditions: [String!]!, requiredConditions: [String!]!, targetStatus: [String!]!): [ScoutParticipant!]!
+	scoutParticipantByElements(vid: String!, regions: [String!]!, themes: [String!]!, requiredThemes: [String!]!, conditions: [String!]!, requiredConditions: [String!]!, targetStatus: [String!]!): [ScoutParticipant!]!
 }
 
 """
