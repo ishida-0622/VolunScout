@@ -34,6 +34,7 @@ const GetScoutByVidQuery = gql(/* GraphQL */ `
 export const SentScout = ({ vid }: Props) => {
   const { data, loading } = useQuery(GetScoutByVidQuery, {
     variables: { vid },
+    fetchPolicy: "cache-and-network",
   });
 
   const [show, setShow] = useState(false);
