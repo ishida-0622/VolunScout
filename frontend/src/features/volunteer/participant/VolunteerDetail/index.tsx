@@ -1,6 +1,7 @@
 "use client";
 
 import { useLazyQuery, useQuery } from "@apollo/client";
+import Link from "next/link";
 import { notFound, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import {
@@ -114,7 +115,13 @@ export const VolunteerDetail = ({ vid }: Props) => {
       </Row>
       <Row className="mb-2">
         <Col sm="2">掲載団体</Col>
-        <Col sm="10">{group?.name}</Col>
+        <Col sm="10">
+          <Link
+            href={URL_PATH_PARTICIPANT.GROUP_ACCOUNT_DETAIL(data.volunteer.gid)}
+          >
+            {group?.name}
+          </Link>
+        </Col>
       </Row>
       <Row className="mb-2">
         <Col sm="2">開催場所</Col>
