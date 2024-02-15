@@ -131,6 +131,10 @@ export const VolunteerDetail = ({ vid }: Props) => {
         <Col sm="2">募集人数</Col>
         <Col sm="10">{volunteer.recruitedNum}人</Col>
       </Row>
+      <Row className="mb-2">
+        <Col sm="2">報酬</Col>
+        <Col sm="10">{volunteer.reward}</Col>
+      </Row>
       <Row className="mb-3">
         <Col sm="2">募集対象</Col>
         <Col sm="10">
@@ -140,10 +144,6 @@ export const VolunteerDetail = ({ vid }: Props) => {
             </Badge>
           ))}
         </Col>
-      </Row>
-      <Row>
-        <Col sm="2">報酬</Col>
-        <Col sm="10">{volunteer.reward}</Col>
       </Row>
       <Row className="mb-2">
         <Col sm="2">概要</Col>
