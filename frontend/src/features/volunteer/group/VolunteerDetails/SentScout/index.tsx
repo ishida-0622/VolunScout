@@ -76,7 +76,7 @@ export const SentScout = ({ vid }: Props) => {
           <Col>{scout.name}</Col>
           <Col>{ageCalc(scout.birthday)}歳</Col>
           <Col>{numberToGender(scout.gender)}</Col>
-          <Col>{formatReview(scout.point)}</Col>
+          <Col>{formatReview(scout.point ?? undefined)}</Col>
           <Col sm="1">
             <Badge bg={scout.isRead ? "primary" : "secondary"}>
               {scout.isRead ? "既読" : "未読"}
@@ -113,7 +113,7 @@ export const SentScout = ({ vid }: Props) => {
           </Row>
           <Row>
             <Col sm="3">評価</Col>
-            <Col>{formatReview(selectedScout.point)}</Col>
+            <Col>{formatReview(selectedScout.point ?? undefined)}</Col>
           </Row>
           <Row>
             <Col sm="3">送信日時</Col>
