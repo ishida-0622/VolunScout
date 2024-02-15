@@ -39,6 +39,15 @@ const GetApplyFromApplyListQuery = gql(/* GraphQL */ `
       startAt
       finishAt
     }
+    notAllowed: getNotAllowedActivitiesByUid(uid: $uid) {
+      vid
+      title
+      overview
+      recruitedNum
+      place
+      startAt
+      finishAt
+    }
     favs: getFavoriteByUid(uid: $uid) {
       vid
     }
@@ -49,7 +58,10 @@ export const ApplyList = () => {
   const { user } = useAuthContext();
 
   const [getApply, { data, loading, error }] = useLazyQuery(
-    GetApplyFromApplyListQuery
+    GetApplyFromApplyListQuery,
+    {
+      fetchPolicy: "cache-and-network",
+    }
   );
 
   const [favs, setFavs] = useState<Set<string>>(new Set());
@@ -59,6 +71,9 @@ export const ApplyList = () => {
   );
   const [searchedScheduledActivities, setSearchedScheduledActivities] =
     useState(data?.scheduledActivities ?? []);
+  const [searchedNotAllowed, setSearchedNotAllowed] = useState(
+    data?.notAllowed ?? []
+  );
 
   const search = useCallback(
     (s: string) => {
@@ -76,6 +91,11 @@ export const ApplyList = () => {
           (v) => reg.test(v.title) || reg.test(v.overview) || reg.test(v.place)
         )
       );
+      setSearchedNotAllowed(
+        data.notAllowed.filter(
+          (v) => reg.test(v.title) || reg.test(v.overview) || reg.test(v.place)
+        )
+      );
     },
     [data]
   );
@@ -88,19 +108,23 @@ export const ApplyList = () => {
           setFavs(new Set(res.data.favs.map((v) => v.vid)));
           setSearchedActivities(res.data.activities);
           setSearchedScheduledActivities(res.data.scheduledActivities);
+          setSearchedNotAllowed(res.data.notAllowed);
         }
       })().catch(() => {});
     }
   }, [getApply, user]);
 
-  const [page, setPage] = useState<"activities" | "scheduledActivities">(
-    "scheduledActivities"
-  );
+  const [page, setPage] = useState<
+    "activities" | "scheduledActivities" | "notAllowed"
+  >("scheduledActivities");
   const showActivities = () => {
     setPage("activities");
   };
   const showScheduledActivities = () => {
     setPage("scheduledActivities");
+  };
+  const showNotAllowedActivities = () => {
+    setPage("notAllowed");
   };
 
   const [show, setShow] = useState(false);
@@ -142,6 +166,13 @@ export const ApplyList = () => {
             今後の活動予定
           </ToggleButton>
           <ToggleButton
+            id="show-not-allowed-activities"
+            value={"notAllowed"}
+            onClick={showNotAllowedActivities}
+          >
+            応募済み（未承認）
+          </ToggleButton>
+          <ToggleButton
             id="show-activities"
             value={"apply"}
             onClick={showActivities}
@@ -151,16 +182,24 @@ export const ApplyList = () => {
         </ToggleButtonGroup>
       </Row>
       {page === "scheduledActivities" &&
-        searchedScheduledActivities.map((volunteer) => (
+        searchedScheduledActivities.map((volunteer) => 
           <VolunteerItem
             key={volunteer.vid}
             volunteer={volunteer}
             initIsFav={favs.has(volunteer.vid)}
             isCalendar
           />
-        ))}
+        )}
+      {page === "notAllowed" &&
+        searchedNotAllowed.map((volunteer) => 
+          <VolunteerItem
+            key={volunteer.vid}
+            volunteer={volunteer}
+            initIsFav={favs.has(volunteer.vid)}
+          />
+        )}
       {page === "activities" &&
-        searchedActivities.map((volunteer) => (
+        searchedActivities.map((volunteer) => 
           <VolunteerItem
             key={volunteer.vid}
             volunteer={volunteer}
@@ -168,7 +207,7 @@ export const ApplyList = () => {
             isReview
             onReviewClick={() => handleShow(volunteer.vid)}
           />
-        ))}
+        )}
       <ReviewModal show={show} vid={vid} uid={user.uid} onHide={handleClose} />
     </Container>
   );
