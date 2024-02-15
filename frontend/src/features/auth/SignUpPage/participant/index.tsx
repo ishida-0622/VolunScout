@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Badge, Col, Container, ProgressBar, Row } from "react-bootstrap";
 
 import { Confirmation } from "./Confirmation";
 import { PersonalRegistration } from "./PersonalRegistration";
@@ -62,7 +63,32 @@ export const SignUpPage = () => {
   }, []);
 
   return (
-    <main>
+    <Container>
+      <Row>
+        <Col className="text-center my-3">
+          <h1>新規会員登録</h1>
+        </Col>
+      </Row>
+      <Row className="mb-1">
+        <Col sm={{ span: 8, offset: 2 }}>
+          <ProgressBar variant="success" now={(100 / 2) * pageCounter} />
+        </Col>
+      </Row>
+      <Row className="mb-5 text-center">
+        <Col>
+          <Badge bg="success">個人情報登録</Badge>
+        </Col>
+        <Col>
+          <Badge bg={pageCounter > 0 ? "success" : "secondary"}>
+            ボランティア情報登録
+          </Badge>
+        </Col>
+        <Col>
+          <Badge bg={pageCounter > 1 ? "success" : "secondary"}>
+            入力内容確認
+          </Badge>
+        </Col>
+      </Row>
       {pageCounter === 0 && (
         <PersonalRegistration onNextPage={handleNextPage} values={formValues} />
       )}
@@ -76,6 +102,6 @@ export const SignUpPage = () => {
       {pageCounter === 2 && (
         <Confirmation values={formValues} prevPage={prevPage} />
       )}
-    </main>
+    </Container>
   );
 };

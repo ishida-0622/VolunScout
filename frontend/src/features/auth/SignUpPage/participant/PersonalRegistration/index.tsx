@@ -60,11 +60,6 @@ export const PersonalRegistration = ({ onNextPage, values }: Props) => {
 
   return (
     <Container>
-      <Row className="text-center my-3">
-        <Col>
-          <h2>新規会員登録</h2>
-        </Col>
-      </Row>
       <Row>
         <Form noValidate validated={validated} onSubmit={onSubmit} ref={ref}>
           <Form.Group as={Row} controlId="username" className="mb-3">
