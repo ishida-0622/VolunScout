@@ -106,7 +106,10 @@ export const ParticipantModal = ({
           <Col sm={3}>レビュー</Col>
           <Col sm={9}>
             {formatReview(
-              review.map((r) => r.point).reduce((a, b) => a + b) / review.length
+              review.length > 0
+                ? review.map((r) => r.point).reduce((a, b) => a + b) /
+                    review.length
+                : undefined
             )}
           </Col>
         </Row>
