@@ -25,7 +25,7 @@ type Props = {
   params: ReadonlyURLSearchParams;
 };
 
-const SHOW_ONE_PAGE_ITEMS = 10;
+const DEFAULT_SHOW_ONE_PAGE_ITEMS = 20;
 
 const GetTargetStatus = gql(/* GraphQL */ `
   query GetTargetStatus($uid: String!) {
@@ -76,6 +76,10 @@ const GetFavFromSearchedPageQuery = gql(/* GraphQL */ `
 
 export const SearchedVolunteer = ({ params }: Props) => {
   const router = useRouter();
+
+  const [showOnePageItems, setShowOnePageItems] = useState(
+    DEFAULT_SHOW_ONE_PAGE_ITEMS
+  );
 
   // MEMO: word は未入力の場合は空文字列になるため, string 型なのが保証されている
   const word = params.get("word")!;
@@ -180,7 +184,7 @@ export const SearchedVolunteer = ({ params }: Props) => {
 
   const MIN_PAGE = 1;
   const MAX_PAGE =
-    Math.floor((data?.result.length ?? 1) / SHOW_ONE_PAGE_ITEMS) + 1;
+    Math.floor((data?.result.length ?? 1) / showOnePageItems) + 1;
 
   const [page, setPage] = useState(MIN_PAGE);
   const handlePageChange = (page: number) => {
@@ -205,8 +209,8 @@ export const SearchedVolunteer = ({ params }: Props) => {
     return null;
   }
 
-  const start = (page - 1) * SHOW_ONE_PAGE_ITEMS;
-  const end = Math.min(page * SHOW_ONE_PAGE_ITEMS, data.result.length);
+  const start = (page - 1) * showOnePageItems;
+  const end = Math.min(page * showOnePageItems, data.result.length);
   const showVolunteers = data.result.slice(start, end);
 
   return (
@@ -222,47 +226,66 @@ export const SearchedVolunteer = ({ params }: Props) => {
       <Row className="mb-3">
         <Col>{InputForm}</Col>
       </Row>
-      {data.result.length === 0 && (
+      {data.result.length === 0 &&
         <Row className="text-center">
           <Col>
             <h2>該当するボランティアはありません</h2>
           </Col>
         </Row>
-      )}
-      {showVolunteers.map((volunteer) => (
+      }
+      <Row className="mb-1">
+        <Col />
+        <Col sm="2">
+          <p>
+            {data.result.length}件中 {start + 1} - {end}件を表示
+          </p>
+        </Col>
+        <Col sm="1">
+          <select
+            value={showOnePageItems}
+            onChange={(e) => setShowOnePageItems(Number(e.target.value))}
+          >
+            <option value={10}>10件</option>
+            <option value={20}>20件</option>
+            <option value={50}>50件</option>
+            <option value={100}>100件</option>
+          </select>
+        </Col>
+      </Row>
+      {showVolunteers.map((volunteer) =>
         <VolunteerItem
           key={volunteer.vid}
           volunteer={volunteer}
           initIsFav={favSet.has(volunteer.vid)}
         />
-      ))}
+      )}
 
       <Row className="justify-content-md-center mt-5">
         <Col md="auto">
           <Pagination>
             <Pagination.First onClick={() => handlePageChange(MIN_PAGE)} />
             <Pagination.Prev onClick={() => handlePageChange(page - 1)} />
-            {page === MAX_PAGE && page > MIN_PAGE + 1 && (
+            {page === MAX_PAGE && page > MIN_PAGE + 1 &&
               <Pagination.Item onClick={() => handlePageChange(page - 2)}>
                 {page - 2}
               </Pagination.Item>
-            )}
-            {page > MIN_PAGE && (
+            }
+            {page > MIN_PAGE &&
               <Pagination.Item onClick={() => handlePageChange(page - 1)}>
                 {page - 1}
               </Pagination.Item>
-            )}
+            }
             <Pagination.Item active>{page}</Pagination.Item>
-            {page < MAX_PAGE && (
+            {page < MAX_PAGE &&
               <Pagination.Item onClick={() => handlePageChange(page + 1)}>
                 {page + 1}
               </Pagination.Item>
-            )}
-            {page === MIN_PAGE && page < MAX_PAGE - 1 && (
+            }
+            {page === MIN_PAGE && page < MAX_PAGE - 1 &&
               <Pagination.Item onClick={() => handlePageChange(page + 2)}>
                 {page + 2}
               </Pagination.Item>
-            )}
+            }
             <Pagination.Next onClick={() => handlePageChange(page + 1)} />
             <Pagination.Last onClick={() => handlePageChange(MAX_PAGE)} />
           </Pagination>
