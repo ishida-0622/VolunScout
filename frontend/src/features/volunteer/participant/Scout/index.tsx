@@ -2,7 +2,7 @@
 
 import { useLazyQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
-import { Container, Spinner } from "react-bootstrap";
+import { Col, Container, Row, Spinner } from "react-bootstrap";
 
 import { ScoutItem } from "./ScoutItem";
 import { ScoutModal } from "./ScoutModal";
@@ -56,6 +56,13 @@ export const Scout = () => {
 
   return (
     <Container className="my-5">
+      {data.scouts.length === 0 && (
+        <Row className="text-center">
+          <Col>
+            <h2>スカウトはありません</h2>
+          </Col>
+        </Row>
+      )}
       {data.scouts.map((scout) => (
         <ScoutItem
           key={scout.sid}
