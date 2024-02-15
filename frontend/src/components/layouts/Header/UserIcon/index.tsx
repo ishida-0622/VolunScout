@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { ListGroup, OverlayTrigger, Popover } from "react-bootstrap";
 import { AiOutlineQuestionCircle } from "react-icons/ai";
 import { HiOutlineCurrencyYen } from "react-icons/hi2";
@@ -11,7 +13,6 @@ import styles from "./index.module.css";
 
 import type { AccountType } from "@/features/auth/types";
 
-import { IconConfig } from "@/components/layouts/IconConfig";
 import { URL_PATH, URL_PATH_GROUP, URL_PATH_PARTICIPANT } from "@/consts";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { useLogout } from "@/features/auth/hooks/useLogout";
@@ -23,6 +24,12 @@ type Props = {
 export const UserIcon = ({ accountType }: Props) => {
   const { user, initializing } = useAuthContext();
   const { logout } = useLogout();
+  const [show, setShow] = useState(false);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    setShow(false);
+  }, [pathname]);
 
   const toMyPage = () => {
     if (accountType === "group") {
@@ -37,55 +44,49 @@ export const UserIcon = ({ accountType }: Props) => {
   if (initializing) return null;
 
   return (
-    <IconConfig>
-      <div>
-        <OverlayTrigger
-          trigger={"click"}
-          placement="bottom"
-          overlay={
-            <Popover>
-              <ListGroup>
-                <ListGroup.Item>
-                  <Link href={toMyPage()}>
-                    <IoDocumentTextOutline />
-                    マイページ
-                  </Link>
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  <Link href={URL_PATH.CONTACT}>
-                    <AiOutlineQuestionCircle />
-                    お問い合わせ
-                  </Link>
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  <Link href={URL_PATH.DONATE}>
-                    <HiOutlineCurrencyYen />
-                    運営への寄付
-                  </Link>
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  <span
-                    onClick={logout}
-                    className={styles.logout}
-                    role="button"
-                  >
-                    <IoLogOutOutline />
-                    ログアウト
-                  </span>
-                </ListGroup.Item>
-              </ListGroup>
-            </Popover>
-          }
-        >
-          <Image
-            src={user?.photoURL ?? "/icon.svg"}
-            alt="user icon"
-            width={80}
-            height={80}
-            className={styles.base}
-          />
-        </OverlayTrigger>
-      </div>
-    </IconConfig>
+    <OverlayTrigger
+      trigger={"click"}
+      placement="bottom"
+      show={show}
+      onToggle={setShow}
+      overlay={
+        <Popover>
+          <ListGroup>
+            <ListGroup.Item>
+              <Link href={toMyPage()}>
+                <IoDocumentTextOutline />
+                マイページ
+              </Link>
+            </ListGroup.Item>
+            <ListGroup.Item>
+              <Link href={URL_PATH.CONTACT}>
+                <AiOutlineQuestionCircle />
+                お問い合わせ
+              </Link>
+            </ListGroup.Item>
+            <ListGroup.Item>
+              <Link href={URL_PATH.DONATE}>
+                <HiOutlineCurrencyYen />
+                運営への寄付
+              </Link>
+            </ListGroup.Item>
+            <ListGroup.Item>
+              <span onClick={logout} className={styles.logout} role="button">
+                <IoLogOutOutline />
+                ログアウト
+              </span>
+            </ListGroup.Item>
+          </ListGroup>
+        </Popover>
+      }
+    >
+      <Image
+        src={user?.photoURL ?? "/icon.svg"}
+        alt="user icon"
+        width={80}
+        height={80}
+        className={styles.base}
+      />
+    </OverlayTrigger>
   );
 };
