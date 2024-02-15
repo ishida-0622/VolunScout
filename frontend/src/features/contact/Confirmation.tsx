@@ -1,5 +1,8 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { Button, Col, Container, Row } from "react-bootstrap";
+
 import type { FormValues } from ".";
 
 type Props = {
@@ -8,43 +11,45 @@ type Props = {
 };
 
 export const Confirmation = ({ values, onPrevPage }: Props) => {
+  const router = useRouter();
   const handleOnClick = () => {
     // TODO: 開発者への送信処理
     // 恐らくLambda関数を呼び出すことになる
-    console.log(values);
+    alert("送信しました");
+    router.back();
   };
 
   return (
-    <div>
+    <Container>
       <h1>お問い合わせ内容確認</h1>
-      <button onClick={onPrevPage}>戻る</button>
-      <section>
-        <p>
-          <span>氏名</span>
-          <span>{values.name}</span>
-        </p>
-        <p>
-          <span>フリガナ</span>
-          <span>{values.furigana}</span>
-        </p>
-        <p>
-          <span>メールアドレス</span>
-          <span>{values.email}</span>
-        </p>
-        <p>
-          <span>電話番号</span>
-          <span>{values.phone}</span>
-        </p>
-        <p>
-          <span>お問い合わせ種別</span>
-          <span>{values.title}</span>
-        </p>
-      </section>
-      <section>
-        <h2>お問い合わせ内容</h2>
-        <p>{values.text}</p>
-      </section>
-      <button onClick={handleOnClick}>送信</button>
-    </div>
+      <Button variant="secondary" onClick={onPrevPage}>
+        戻る
+      </Button>
+      <Row className="mb-3">
+        <Col sm="2">氏名</Col>
+        <Col>{values.name}</Col>
+      </Row>
+      <Row className="mb-3">
+        <Col sm="2">フリガナ</Col>
+        <Col>{values.furigana}</Col>
+      </Row>
+      <Row className="mb-3">
+        <Col sm="2">メールアドレス</Col>
+        <Col>{values.email}</Col>
+      </Row>
+      <Row className="mb-3">
+        <Col sm="2">電話番号</Col>
+        <Col>{values.phone}</Col>
+      </Row>
+      <Row className="mb-3">
+        <Col sm="2">お問い合わせ内容</Col>
+        <Col>{values.title}</Col>
+      </Row>
+      <Row>
+        <Col sm="2">本文</Col>
+        <Col>{values.text}</Col>
+      </Row>
+      <Button onClick={handleOnClick}>送信</Button>
+    </Container>
   );
 };
