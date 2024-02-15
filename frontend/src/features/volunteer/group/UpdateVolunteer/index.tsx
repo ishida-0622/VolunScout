@@ -12,6 +12,7 @@ import type { UpdateVolunteerRequestBody } from "@/__generated__/command";
 
 import { gql } from "@/__generated__/query";
 import { apiClientVolunteer, s3 } from "@/api/command";
+import { utcToJst } from "@/utils/utcToJst";
 
 type Props = { vid: string; gid: string };
 
@@ -77,7 +78,14 @@ export const UpdateVolunteer = ({ vid, gid }: Props) => {
           .join("")
           .replace(/^_/, "");
       };
-      Object.entries(data.volunteer).forEach(([key, value]) => {
+
+      const volunteer: typeof data.volunteer = {
+        ...data.volunteer,
+        startAt: utcToJst(data.volunteer.startAt),
+        finishAt: utcToJst(data.volunteer.finishAt),
+      };
+
+      Object.entries(volunteer).forEach(([key, value]) => {
         setValue(f(key) as keyof FormValues, value);
       });
     }
