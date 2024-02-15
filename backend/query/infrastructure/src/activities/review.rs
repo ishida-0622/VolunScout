@@ -141,4 +141,19 @@ impl VolunteerReviewRepository for ReviewImpl {
         .await?;
         Ok(review)
     }
+
+    async fn find_by_gid(&self, gid: &UserId) -> Result<Vec<Review>> {
+        let review = sqlx::query_as!(
+            Review,
+            r#"
+            SELECT * FROM volunteer_review WHERE vid IN (
+                SELECT vid FROM volunteer WHERE gid = ?
+            );
+            "#,
+            gid.to_string()
+        )
+        .fetch_all(&self.pool)
+        .await?;
+        Ok(review)
+    }
 }

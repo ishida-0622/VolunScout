@@ -624,6 +624,28 @@ impl QueryRoot {
         Ok(volunteers)
     }
 
+    /// 指定されたuidが応募し、未承認のボランティア情報を取得する
+    ///
+    /// ## 引数
+    /// - `uid` - uid
+    ///
+    /// ## 返り値
+    /// - `Vec<VolunteerReadModel>` - ボランティア情報の配列
+    async fn get_not_allowed_activities_by_uid<'ctx>(
+        &self,
+        ctx: &Context<'ctx>,
+        uid: String,
+    ) -> Result<Vec<VolunteerReadModel>> {
+        let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
+        let uid = UserId::from_str(&uid).unwrap();
+        let volunteers: Vec<VolunteerReadModel> = ctx
+            .volunteer_dao
+            .find_not_allowed_activity_by_id(&uid)
+            .await?;
+
+        Ok(volunteers)
+    }
+
     /// 指定されたgidが過去に活動したボランティア情報を取得する
     ///
     /// ## 引数
@@ -786,6 +808,25 @@ impl QueryRoot {
         Ok(review)
     }
 
+    /// 指定されたgidのボランティアレビュー情報を取得する
+    ///
+    /// ## 引数
+    /// - `gid` - gid
+    ///
+    /// ## 返り値
+    /// - `Review` - レビュー情報
+    async fn get_volunteer_review_by_gid<'ctx>(
+        &self,
+        ctx: &Context<'ctx>,
+        gid: String,
+    ) -> Result<Vec<Review>> {
+        let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
+        let gid = UserId::from_str(&gid).unwrap();
+        let review: Vec<Review> = ctx.volunteer_review_dao.find_by_gid(&gid).await?;
+
+        Ok(review)
+    }
+
     /// 指定されたuidの参加者レビュー情報の平均を取得する
     ///
     /// ## 引数
@@ -825,6 +866,7 @@ impl QueryRoot {
     async fn scout_participant_by_elements<'ctx>(
         &self,
         ctx: &Context<'ctx>,
+        vid: String,
         regions: Vec<String>,
         themes: Vec<String>,
         required_themes: Vec<String>,
@@ -833,9 +875,8 @@ impl QueryRoot {
         target_status: Vec<String>
     ) -> Result<Vec<ScoutParticipant>> {
         let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
-        let vid = "";
         let participants: Vec<ScoutParticipant> = ctx.participant_account_dao.find_by_elements(
-            &VolunteerElementsReadModel::new(vid.to_string(), regions, None, themes, required_themes, conditions, required_conditions, target_status)
+            &VolunteerElementsReadModel::new(vid, regions, None, themes, required_themes, conditions, required_conditions, target_status)
         ).await?;
 
         Ok(participants)
