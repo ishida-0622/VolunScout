@@ -49,14 +49,13 @@ export const useTermsForm = ({
     <Form onSubmit={submitHandler}>
       <Form.Group
         as={Row}
-        className="w-100 h-100 overflow-auto"
+        className="w-100 h-100"
         style={{
           maxWidth: "1140px",
-          maxHeight: "60vh",
           margin: "0 auto",
         }}
       >
-        <Col>
+        <Col className="overflow-auto" style={{ maxHeight: "60vh" }}>
           <details open={isOpen}>
             <summary>地域</summary>
             <Row>
@@ -74,7 +73,7 @@ export const useTermsForm = ({
             ))}
           </details>
         </Col>
-        <Col>
+        <Col className="overflow-auto" style={{ maxHeight: "60vh" }}>
           <details open={isOpen}>
             <summary>テーマ</summary>
             <Row>
@@ -104,7 +103,7 @@ export const useTermsForm = ({
             ))}
           </details>
         </Col>
-        <Col>
+        <Col className="overflow-auto" style={{ maxHeight: "60vh" }}>
           <details open={isOpen}>
             <summary>条件</summary>
             <Row>
