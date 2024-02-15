@@ -32,7 +32,7 @@ pub struct ScoutFromGroup {
     pub name: String,
     pub gender: u8,
     pub birthday: NaiveDate,
-    pub point: f32,
+    pub point: Option<f32>,
 }
 
 #[derive(SimpleObject, sqlx::Type)]

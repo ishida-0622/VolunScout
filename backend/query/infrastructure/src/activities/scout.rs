@@ -73,7 +73,7 @@ impl ScoutRepository for ScoutImpl {
                 s.sid, s.vid, s.uid, s.message, s.scouted_at, s.is_read as "is_read: bool", s.is_sent as "is_sent: bool", s.sent_at, s.is_denied as "is_denied: bool", s.denied_at, p.name, p.gender as "gender: u8", p.birthday, AVG(r.point) as point
             FROM scout as s
             INNER JOIN participant_account as p ON s.uid = p.uid
-            INNER JOIN participant_review as r ON p.uid = r.uid
+            LEFT JOIN participant_review as r ON p.uid = r.uid
             WHERE s.vid = ?
             GROUP BY s.sid
             "#,
@@ -97,8 +97,12 @@ impl ScoutRepository for ScoutImpl {
                 name: s.name,
                 gender: s.gender,
                 birthday: s.birthday,
-                point: (s.point.unwrap().to_string().parse::<f32>().unwrap() * 100.0).round()
-                    / 100.0,
+                point: match s.point {
+                    Some(p) => {
+                        Some((p.to_string().parse::<f32>().unwrap() * 100.0).round() / 100.0)
+                    }
+                    None => None,
+                },
             })
             .collect();
         Ok(scout)
