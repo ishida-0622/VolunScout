@@ -84,4 +84,7 @@ pub trait ApplyRepository: Send + Sync {
         &self,
         vid: &VolunteerId,
     ) -> Result<Vec<PastVolunteerParticipantReadModel>>;
+
+    /// 参加者が該当のボランティアに応募しているかどうかを確認する
+    async fn exists_apply(&self, vid: &VolunteerId, uid: &UserId) -> Result<bool>;
 }

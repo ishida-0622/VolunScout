@@ -106,4 +106,22 @@ impl ApplyRepository for ApplyImpl {
 
         Ok(participants)
     }
+
+    async fn exists_apply(&self, vid: &VolunteerId, uid: &UserId) -> Result<bool> {
+        let exists = sqlx::query!(
+            r#"
+            SELECT EXISTS (
+                SELECT 1
+                FROM apply
+                WHERE vid = ? AND uid = ?
+            ) as "exists: bool"
+            "#,
+            vid.to_string(),
+            uid.to_string()
+        )
+        .fetch_one(&self.pool)
+        .await?;
+
+        Ok(exists.exists)
+    }
 }

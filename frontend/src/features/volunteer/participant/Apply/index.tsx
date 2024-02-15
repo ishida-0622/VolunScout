@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Button, Col, Container, Form, Row, Spinner } from "react-bootstrap";
 
 import { GetGroupNameQuery } from "../VolunteerDetail";
+import { useExistsApply } from "../useExistsApply";
 
 import type { CreateApplyRequestBody } from "@/__generated__/command";
 
@@ -53,6 +54,8 @@ export const Apply = ({ vid }: Props) => {
   const { user } = useAuthContext();
 
   const router = useRouter();
+
+  const { existsApply, loading: existsApplyLoading } = useExistsApply(vid);
 
   const { data, loading, error } = useQuery(GetVolunteerFromApplyPageQuery, {
     variables: { vid },
@@ -116,6 +119,10 @@ export const Apply = ({ vid }: Props) => {
   };
 
   const submit = async () => {
+    if (existsApply) {
+      alert("すでに応募済みです");
+      return;
+    }
     if (!confirm("応募しますか？")) {
       return;
     }
@@ -316,9 +323,20 @@ export const Apply = ({ vid }: Props) => {
       )}
       <Row>
         <Col sm={{ span: 6, offset: 3 }}>
-          <Button variant="primary" className="w-100" onClick={submit}>
-            応募する
-          </Button>
+          {existsApply ? (
+            <Button variant="secondary" className="w-100" disabled>
+              応募済み
+            </Button>
+          ) : (
+            <Button
+              variant="primary"
+              className="w-100"
+              onClick={submit}
+              disabled={existsApplyLoading}
+            >
+              応募する
+            </Button>
+          )}
         </Col>
       </Row>
     </Container>

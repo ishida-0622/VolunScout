@@ -436,6 +436,28 @@ impl QueryRoot {
         Ok(scout)
     }
 
+    /// 指定されたvidのボランティアに指定されたuidが応募しているかどうかを確認する
+    ///
+    /// ## 引数
+    /// - `vid` - vid
+    /// - `uid` - uid
+    ///
+    /// ## 返り値
+    /// - `bool` - 応募している場合はtrue
+    async fn exists_apply<'ctx>(
+        &self,
+        ctx: &Context<'ctx>,
+        vid: String,
+        uid: String,
+    ) -> Result<bool> {
+        let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
+        let vid: VolunteerId = VolunteerId::from_str(&vid);
+        let uid: UserId = UserId::new(&uid).unwrap();
+        let exists: bool = ctx.apply_dao.exists_apply(&vid, &uid).await?;
+
+        Ok(exists)
+    }
+
     /// 指定されたvidのボランティアに参加した参加者情報を取得する
     ///
     /// ## 引数
@@ -872,12 +894,22 @@ impl QueryRoot {
         required_themes: Vec<String>,
         conditions: Vec<String>,
         required_conditions: Vec<String>,
-        target_status: Vec<String>
+        target_status: Vec<String>,
     ) -> Result<Vec<ScoutParticipant>> {
         let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
-        let participants: Vec<ScoutParticipant> = ctx.participant_account_dao.find_by_elements(
-            &VolunteerElementsReadModel::new(vid, regions, None, themes, required_themes, conditions, required_conditions, target_status)
-        ).await?;
+        let participants: Vec<ScoutParticipant> = ctx
+            .participant_account_dao
+            .find_by_elements(&VolunteerElementsReadModel::new(
+                vid,
+                regions,
+                None,
+                themes,
+                required_themes,
+                conditions,
+                required_conditions,
+                target_status,
+            ))
+            .await?;
 
         Ok(participants)
     }

@@ -15,6 +15,8 @@ import {
   Spinner,
 } from "react-bootstrap";
 
+import { useExistsApply } from "../useExistsApply";
+
 import { gql } from "@/__generated__/query";
 import { BackButton } from "@/components/ui-parts/BackButton";
 import { URL_PATH_PARTICIPANT } from "@/consts";
@@ -62,6 +64,8 @@ export const VolunteerDetail = ({ vid }: Props) => {
     router.push(URL_PATH_PARTICIPANT.APPLY(vid));
   };
 
+  const { existsApply, loading: existsApplyLoading } = useExistsApply(vid);
+
   const { data, loading, error } = useQuery(GetVolunteerDetailQuery, {
     variables: { vid },
     ssr: true,
@@ -99,9 +103,15 @@ export const VolunteerDetail = ({ vid }: Props) => {
           <h1>{volunteer.title}</h1>
         </Col>
         <Col sm="2">
-          <Button size="lg" onClick={toApply}>
-            応募する
-          </Button>
+          {existsApply ? (
+            <Button variant="secondary" size="lg" disabled>
+              応募済み
+            </Button>
+          ) : (
+            <Button size="lg" onClick={toApply} disabled={existsApplyLoading}>
+              応募する
+            </Button>
+          )}
         </Col>
       </Row>
       <Row className="mb-3">
@@ -181,9 +191,25 @@ export const VolunteerDetail = ({ vid }: Props) => {
         </Col>
       </Row>
       <div className="mb-3 d-flex">
-        <Button size="lg" className="w-50 m-auto" onClick={toApply}>
-          応募する
-        </Button>
+        {existsApply ? (
+          <Button
+            variant="secondary"
+            size="lg"
+            className="w-50 m-auto"
+            disabled
+          >
+            応募済み
+          </Button>
+        ) : (
+          <Button
+            size="lg"
+            className="w-50 m-auto"
+            onClick={toApply}
+            disabled={existsApplyLoading}
+          >
+            応募する
+          </Button>
+        )}
       </div>
     </Container>
   );

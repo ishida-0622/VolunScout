@@ -458,6 +458,17 @@ type QueryRoot {
 	"""
 	getApplyByUid(uid: String!): [Apply!]!
 	"""
+	指定されたvidのボランティアに指定されたuidが応募しているかどうかを確認する
+	
+	## 引数
+	- `vid` - vid
+	- `uid` - uid
+	
+	## 返り値
+	- `bool` - 応募している場合はtrue
+	"""
+	existsApply(vid: String!, uid: String!): Boolean!
+	"""
 	指定されたvidのボランティアに参加した参加者情報を取得する
 	
 	## 引数
