@@ -163,7 +163,7 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
             volunteer.title,
             volunteer.message,
             volunteer.overview,
-            volunteer.recruited_num as u32,
+            (volunteer.recruited_num as Option<u32>).unwrap(),
             volunteer.place,
             volunteer.reward,
             volunteer.start_at,
@@ -200,7 +200,7 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
         let mut or_elements: Vec<String> = Vec::new();
 
         // OR条件の地域一覧
-        let or_regions = elements
+        let mut or_regions = elements
             .regions
             .clone()
             .iter()
@@ -534,7 +534,7 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
                     deleted_at: volunteer.get("deleted_at"),
                     registered_at: volunteer.get("registered_at"),
                     updated_at: volunteer.get("updated_at"),
-                    photo_urls: Vec::new(),
+                    photo_urls: photo_urls,
                     themes: themes,
                     regions: regions,
                     conditions: conditions,

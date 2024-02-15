@@ -21,3 +21,4 @@ domain = { path = "../../domain" }
 query-repository = { path = "../repository" }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
+rust_decimal = "1.5.0"

@@ -25,7 +25,7 @@ use query_repository::{
         group::{GroupAccount, GroupUserRepository},
         participant::{
             GroupParticipant, ParticipantAccount, ParticipantCondition, ParticipantRegion,
-            ParticipantTargetStatus, ParticipantTheme, ParticipantUserRepository,
+            ParticipantTargetStatus, ParticipantTheme, ParticipantUserRepository, ScoutParticipant,
         },
     },
 };
@@ -792,6 +792,37 @@ impl QueryRoot {
             ctx.participant_review_dao.find_by_uids(&uids).await?;
 
         Ok(reviews)
+    }
+
+    /// スカウトに適した参加者を検索する
+    ///
+    /// ## 引数
+    /// - `regions` - 地域: Vec<String>
+    /// - `themes` - 設定したテーマ: Vec<String>,
+    /// - `required_themes` - 必須で設定したテーマ: Vec<String>,
+    /// - `conditions` - 設定した条件: Vec<String>,
+    /// - `required_conditions` - 必須で設定した条件: Vec<String>,
+    /// - `target_status` - 対象者: Vec<String>
+    ///
+    /// ## 返り値
+    /// - `ScoutParticipant` - スカウトに必要な参加者情報
+    async fn scout_participant_by_elements<'ctx>(
+        &self,
+        ctx: &Context<'ctx>,
+        regions: Vec<String>,
+        themes: Vec<String>,
+        required_themes: Vec<String>,
+        conditions: Vec<String>,
+        required_conditions: Vec<String>,
+        target_status: Vec<String>
+    ) -> Result<Vec<ScoutParticipant>> {
+        let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
+        let vid = "";
+        let participants: Vec<ScoutParticipant> = ctx.participant_account_dao.find_by_elements(
+            &VolunteerElementsReadModel::new(vid.to_string(), regions, None, themes, required_themes, conditions, required_conditions, target_status)
+        ).await?;
+
+        Ok(participants)
     }
 }
 

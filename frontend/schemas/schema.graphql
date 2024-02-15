@@ -481,7 +481,14 @@ type QueryRoot {
 	ボランティアを検索する
 	
 	## 引数
-	- `vid` - vid
+	- `regions` - OR検索の地域: Vec<String>
+	- `required_regions` - AND検索の地域(東京23区外のボランティアを除外する等の場合で使用を推奨): Vec<String>,
+	- `themes` - OR検索のテーマ: Vec<String>,
+	- `required_themes` - AND検索のテーマ: Vec<String>,
+	- `conditions` - OR検索の条件: Vec<String>,
+	- `required_conditions` - AND検索の条件: Vec<String>,
+	- `target_status` - 対象者: Vec<String>,
+	- `search_words` - 検索ワード: String
 	
 	## 返り値
 	- `VolunteerElementsReadModel` - ボランティア要素情報
@@ -629,6 +636,21 @@ type QueryRoot {
 	- `Vec<ParticipantReviewPointAverage>` - レビュー情報の配列
 	"""
 	getParticipantReviewAverageByUids(uids: [String!]!): [ParticipantReviewPointAverage!]!
+	"""
+	スカウトに適した参加者を検索する
+	
+	## 引数
+	- `regions` - 地域: Vec<String>
+	- `themes` - 設定したテーマ: Vec<String>,
+	- `required_themes` - 必須で設定したテーマ: Vec<String>,
+	- `conditions` - 設定した条件: Vec<String>,
+	- `required_conditions` - 必須で設定した条件: Vec<String>,
+	- `target_status` - 対象者: Vec<String>
+	
+	## 返り値
+	- `ScoutParticipant` - スカウトに必要な参加者情報
+	"""
+	scoutParticipantByElements(regions: [String!]!, themes: [String!]!, requiredThemes: [String!]!, conditions: [String!]!, requiredConditions: [String!]!, targetStatus: [String!]!): [ScoutParticipant!]!
 }
 
 """
@@ -667,6 +689,34 @@ type Scout {
 	sentAt: NaiveDateTime
 	isDenied: Boolean!
 	deniedAt: NaiveDateTime
+}
+
+"""
+スカウト用参加者アカウントリードモデル
+"""
+type ScoutParticipant {
+	"""
+	参加者アカウントid
+	"""
+	uid: String!
+	"""
+	参加者氏名
+	"""
+	name: String!
+	"""
+	性別
+	
+	0: 男性, 1: 女性, 2: その他
+	"""
+	gender: Int!
+	"""
+	生年月日
+	"""
+	birthday: NaiveDate!
+	"""
+	平均評価値
+	"""
+	point: Float
 }
 
 
