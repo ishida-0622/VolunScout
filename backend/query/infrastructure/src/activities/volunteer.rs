@@ -2,9 +2,6 @@ use std::str::FromStr;
 
 use anyhow::Result;
 use async_trait::async_trait;
-use futures::future;
-use serde_json::Value;
-use sqlx::{query, MySqlPool, Row};
 use domain::{
     consts::{
         conditions::ConditionMap, region::RegionMap, target_status::TargetStatusMap,
@@ -15,9 +12,12 @@ use domain::{
         user_account::user_id::UserId, volunteer::VolunteerId,
     },
 };
+use futures::future;
 use query_repository::activities::volunteer::{
     VolunteerElementsReadModel, VolunteerQueryRepository, VolunteerReadModel,
 };
+use serde_json::Value;
+use sqlx::{query, MySqlPool, Row};
 
 pub struct VolunteerQueryRepositoryImpl {
     pool: MySqlPool,
@@ -163,7 +163,7 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
             volunteer.title,
             volunteer.message,
             volunteer.overview,
-            (volunteer.recruited_num as Option<u32>).unwrap(),
+            volunteer.recruited_num as u32,
             volunteer.place,
             volunteer.reward,
             volunteer.start_at,
@@ -246,8 +246,12 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
                 .iter()
                 .map(|r: &String| Condition::from_str(r).unwrap().to_id()), // .collect::<Vec<String>>()
         );
-        if or_elements.len() == 0 { or_elements.push("".to_string()) }
-        if or_regions.len() == 0 { or_regions.push(100 as u8) }
+        if or_elements.len() == 0 {
+            or_elements.push("".to_string())
+        }
+        if or_regions.len() == 0 {
+            or_regions.push(100 as u8)
+        }
         let query_str = format!(
             r#"
                 SELECT
@@ -296,8 +300,10 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
             "#,
             format!("?{}", ", ?".repeat(or_elements.len() - 1)),
             format!("?{}", ", ?".repeat(or_regions.len() - 1)),
-            format!("?{}", ", ?".repeat(or_elements.len() + req_elements.len() - 1)),
-
+            format!(
+                "?{}",
+                ", ?".repeat(or_elements.len() + req_elements.len() - 1)
+            ),
             if req_elements.len() > 0 && req_regions.len() > 0 {
                 format!(
                     "WHERE volunteer_element.eid IN ({}) AND volunteer_region.rid IN ({})",
@@ -314,8 +320,9 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
                     "WHERE volunteer_region.rid IN ({})",
                     format!("?{}", ", ?".repeat(req_regions.len() - 1))
                 )
-            } else {"".to_string()},
-
+            } else {
+                "".to_string()
+            },
             if req_elements.len() > 0 && req_regions.len() > 0 {
                 format!(
                     "HAVING COUNT(DISTINCT volunteer_element.eid) = {} AND COUNT(DISTINCT volunteer_region.rid) = {}",
@@ -332,7 +339,9 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
                     "HAVING COUNT(DISTINCT volunteer_region.rid) = {}",
                     req_regions.len()
                 )
-            } else {"".to_string()},
+            } else {
+                "".to_string()
+            },
             search_words
         );
         let mut query = query(&query_str);
@@ -505,16 +514,14 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
                     .collect();
 
                 let photo_urls: Vec<String> = match volunteer.get::<Option<String>, _>("s3_keys") {
-                    Some(keys) => {
-                        keys
+                    Some(keys) => keys
                         .split(',')
                         .map(|key: &str| {
                             println!("Debug info: {:?}", key);
                             key.to_string()
                         })
-                        .collect()
-                    }
-                    None => Vec::new()
+                        .collect(),
+                    None => Vec::new(),
                 };
 
                 VolunteerReadModel {
