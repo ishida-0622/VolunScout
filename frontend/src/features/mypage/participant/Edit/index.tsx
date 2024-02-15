@@ -4,10 +4,9 @@ import { useLazyQuery } from "@apollo/client";
 import Link from "next/link";
 import { notFound, useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { Spinner } from "react-bootstrap";
+import { Container, Row, Spinner } from "react-bootstrap";
 
 import styles from "./index.module.css";
-import { useTermsForm } from "./useTermsForm";
 import { useUserInfoForm } from "./useUserInfoForm";
 
 import type { UpdateParticipantAccountRequestBody } from "@/__generated__/command";
@@ -17,6 +16,7 @@ import { apiClientParticipant } from "@/api/command";
 import { joinClassnames } from "@/components/@joinClassnames";
 import { URL_PATH_PARTICIPANT } from "@/consts";
 import { useAuthContext } from "@/contexts/AuthContext";
+import { useTermsForm } from "@/features/volunteer/useTermsForm";
 
 const GetParticipantAccountQuery = gql(/* GraphQL */ `
   query GetParticipantAccount($uid: String!) {
@@ -58,10 +58,13 @@ export const EditMyPage = () => {
     InputForm: TermsInputForm,
     getValues: getTermsValues,
     setFormValues: setTermsValues,
-  } = useTermsForm({});
+  } = useTermsForm({ isOpen: true });
 
   const [fetchParticipantAccount, { loading, error, data }] = useLazyQuery(
-    GetParticipantAccountQuery
+    GetParticipantAccountQuery,
+    {
+      fetchPolicy: "cache-and-network",
+    }
   );
 
   const onSubmit = async () => {
@@ -124,9 +127,9 @@ export const EditMyPage = () => {
   }
 
   return (
-    <>
-      {UserInfoInputForm}
-      {TermsInputForm}
+    <Container>
+      <Row className="mb-5">{UserInfoInputForm}</Row>
+      <Row>{TermsInputForm}</Row>
       <div className={styles.button_wrapper}>
         <button
           className={joinClassnames("btn btn-danger btn-lg", styles.button)}
@@ -147,6 +150,6 @@ export const EditMyPage = () => {
           </Link>
         </div>
       </div>
-    </>
+    </Container>
   );
 };

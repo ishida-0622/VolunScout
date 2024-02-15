@@ -48,7 +48,7 @@ export const FromParticipant = ({ gid }: Props) => {
           <span>{user.furigana}</span>
           <h2>{user.name}</h2>
         </Col>
-        <Col sm="3" className="fs-4">
+        <Col sm="3" className="fs-5">
           {formatReview(point)}
         </Col>
       </Row>

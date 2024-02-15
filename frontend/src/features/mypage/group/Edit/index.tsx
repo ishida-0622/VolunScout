@@ -1,10 +1,10 @@
 "use client";
 
 import { useLazyQuery } from "@apollo/client";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { Container } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 
 import styles from "./index.module.css";
@@ -39,8 +39,12 @@ export const EditMyPage = () => {
 
   const { user } = useAuthContext();
 
-  const [getGroupAccount, { data, loading, error }] =
-    useLazyQuery(GetGroupAccountQuery);
+  const [getGroupAccount, { data, loading, error }] = useLazyQuery(
+    GetGroupAccountQuery,
+    {
+      fetchPolicy: "cache-and-network",
+    }
+  );
 
   const { register, getValues, handleSubmit, setValue } =
     useForm<UpdateGroupAccountRequestBody>({
@@ -98,122 +102,111 @@ export const EditMyPage = () => {
   }
 
   return (
-    <div>
-      <div>
-        <Image
-          src={user?.photoURL ?? ""}
-          alt="User icon"
-          width={100}
-          height={100}
-          className={styles.user_icon}
-        />
-      </div>
+    <Container className="my-3">
       <form onSubmit={handleSubmit(submit)}>
-        <div className={styles.all}>
-          <div className={joinClassnames("row mb-3", styles.main)}>
-            <label htmlFor="name" className="col-sm-2 col-form-label">
-              <span>団体名</span>
-            </label>
-            <div className="col-sm-10">
-              <input
-                id="name"
-                className="form-control"
-                type="text"
-                {...register("name", { required: true })}
-              />
-            </div>
-            <label htmlFor="furigana" className="col-sm-2 col-form-label">
-              <span>団体名（フリガナ）</span>
-            </label>
-            <div className="col-sm-10">
-              <input
-                id="furigana"
-                className="form-control"
-                type="text"
-                {...register("furigana", { required: true })}
-              />
-            </div>
-            <label
-              htmlFor="representativeName"
-              className="col-sm-2 col-form-label"
-            >
-              <span>代表者名</span>
-            </label>
-            <div className="col-sm-10">
-              <input
-                id="representativeName"
-                className="form-control"
-                type="text"
-                {...register("representative_name", { required: true })}
-              />
-            </div>
-            <label
-              htmlFor="representativeFurigana"
-              className="col-sm-2 col-form-label"
-            >
-              <span>代表者名（フリガナ）</span>
-            </label>
-            <div className="col-sm-10">
-              <input
-                id="representativeFurigana"
-                className="form-control"
-                type="text"
-                {...register("representative_furigana", { required: true })}
-              />
-            </div>
-            <label htmlFor="address" className="col-sm-2 col-form-label">
-              <span>所在地</span>
-            </label>
-            <div className="col-sm-10">
-              <input
-                id="address"
-                className="form-control"
-                type="text"
-                {...register("address", { required: true })}
-              />
-            </div>
-            <label htmlFor="phone" className="col-sm-2 col-form-label">
-              <span>電話番号</span>
-            </label>
-            <div className={"col-sm-10"}>
-              <input
-                id="phone"
-                className="form-control"
-                type="text"
-                {...register("phone", { required: true })}
-              />
-            </div>
+        <div className="row mb-3">
+          <label htmlFor="name" className="col-sm-2 col-form-label mb-3">
+            <span>団体名</span>
+          </label>
+          <div className="col-sm-10">
+            <input
+              id="name"
+              className="form-control"
+              type="text"
+              {...register("name", { required: true })}
+            />
           </div>
-          <div className={styles.contents}>
-            <label className="form-label">
-              紹介メッセージ
-              <textarea
-                id="contents"
-                {...register("contents", { required: true })}
-                className={joinClassnames("form-control", styles.textarea)}
-              />
-            </label>
+          <label htmlFor="furigana" className="col-sm-2 col-form-label mb-3">
+            <span>団体名（フリガナ）</span>
+          </label>
+          <div className="col-sm-10">
+            <input
+              id="furigana"
+              className="form-control"
+              type="text"
+              {...register("furigana", { required: true })}
+            />
           </div>
-          <div className={styles.button_wrapper}>
-            <button
-              type="button"
-              className={joinClassnames("btn btn-danger", styles.button)}
-              onClick={back}
-            >
-              キャンセル
-            </button>
-            <button
-              type="submit"
-              className={joinClassnames("btn btn-primary", styles.button)}
-            >
-              更新
-            </button>
+          <label
+            htmlFor="representativeName"
+            className="col-sm-2 col-form-label mb-3"
+          >
+            <span>代表者名</span>
+          </label>
+          <div className="col-sm-10">
+            <input
+              id="representativeName"
+              className="form-control"
+              type="text"
+              {...register("representative_name", { required: true })}
+            />
           </div>
+          <label
+            htmlFor="representativeFurigana"
+            className="col-sm-2 col-form-label mb-3"
+          >
+            <span>代表者名（フリガナ）</span>
+          </label>
+          <div className="col-sm-10">
+            <input
+              id="representativeFurigana"
+              className="form-control"
+              type="text"
+              {...register("representative_furigana", { required: true })}
+            />
+          </div>
+          <label htmlFor="address" className="col-sm-2 col-form-label mb-3">
+            <span>所在地</span>
+          </label>
+          <div className="col-sm-10">
+            <input
+              id="address"
+              className="form-control"
+              type="text"
+              {...register("address", { required: true })}
+            />
+          </div>
+          <label htmlFor="phone" className="col-sm-2 col-form-label mb-3">
+            <span>電話番号</span>
+          </label>
+          <div className={"col-sm-10"}>
+            <input
+              id="phone"
+              className="form-control"
+              type="text"
+              {...register("phone", { required: true })}
+            />
+          </div>
+        </div>
+        <div className="text-center">
+          <label className="form-label w-100">
+            紹介メッセージ
+            <textarea
+              id="contents"
+              {...register("contents", { required: true })}
+              className="form-control mt-2"
+            />
+          </label>
+        </div>
+        <div className={styles.button_wrapper}>
+          <button
+            type="button"
+            className={joinClassnames("btn btn-danger", styles.button)}
+            onClick={back}
+          >
+            キャンセル
+          </button>
+          <button
+            type="submit"
+            className={joinClassnames("btn btn-primary", styles.button)}
+          >
+            更新
+          </button>
         </div>
       </form>
       <div className="text-center">
         <Link href={URL_PATH_GROUP.ACCOUNT_DELETE}>アカウントを削除する→</Link>
       </div>
-    </div>
+    </Container>
   );
 };

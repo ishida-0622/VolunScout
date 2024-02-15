@@ -5,10 +5,8 @@ import { notFound, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Button, Col, Container, Row } from "react-bootstrap";
 
-import styles from "./index.module.css";
-
 import { gql } from "@/__generated__/query";
-import { joinClassnames } from "@/components/@joinClassnames";
+import { BackButton } from "@/components/ui-parts/BackButton";
 import { URL_PATH_PARTICIPANT } from "@/consts";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { formatDate } from "@/utils/formatDate";
@@ -72,59 +70,54 @@ export const UserInfo = () => {
   }
 
   return (
-    <Container className={joinClassnames("my-3", styles.main_contents)}>
-      <Row>
+    <Container className="my-3">
+      <Row className="mb-3">
         <Col>
-          <Row className="mb-3">
-            <Col>
-              <p>{userInfo.furigana}</p>
-              <h2>{userInfo.name}</h2>
-            </Col>
-          </Row>
-          <Row className="mb-3">
-            <Col sm="2">
-              <span>生年月日</span>
-            </Col>
-            <Col>
-              <span>{formatDate(userInfo.birthday)}</span>
-            </Col>
-          </Row>
-          <Row className="mb-3">
-            <Col sm="2">
-              <span>区分</span>
-            </Col>
-            <Col>
-              <span>{targetStatus.name}</span>
-            </Col>
-          </Row>
-          <Row className="mb-3">
-            <Col sm="2">
-              <span>性別</span>
-            </Col>
-            <Col>
-              <span>{numberToGender(userInfo.gender)}</span>
-            </Col>
-          </Row>
-          <Row className="mb-3">
-            <Col sm="2">
-              <span>電話番号</span>
-            </Col>
-            <Col>
-              <span>{formatPhone(userInfo.phone)}</span>
-            </Col>
-          </Row>
+          <BackButton />
         </Col>
-        <Col sm="3">
-          <Row className="mb-3">
-            <Col>
-              <Button onClick={toEditPage}>編集</Button>
-            </Col>
-          </Row>
-          <Row className="mb-3">
-            <Col>
-              <span>{formatReview(point)}</span>
-            </Col>
-          </Row>
+        <Col sm="2">
+          <Button onClick={toEditPage}>編集</Button>
+        </Col>
+      </Row>
+      <Row className="mb-3">
+        <Col>
+          <span>{userInfo.furigana}</span>
+          <h2>{userInfo.name}</h2>
+        </Col>
+        <Col sm="3" className="fs-5">
+          {formatReview(point)}
+        </Col>
+      </Row>
+      <Row className="mb-3">
+        <Col sm="2">
+          <span>生年月日</span>
+        </Col>
+        <Col>
+          <span>{formatDate(userInfo.birthday)}</span>
+        </Col>
+      </Row>
+      <Row className="mb-3">
+        <Col sm="2">
+          <span>区分</span>
+        </Col>
+        <Col>
+          <span>{targetStatus.name}</span>
+        </Col>
+      </Row>
+      <Row className="mb-3">
+        <Col sm="2">
+          <span>性別</span>
+        </Col>
+        <Col>
+          <span>{numberToGender(userInfo.gender)}</span>
+        </Col>
+      </Row>
+      <Row className="mb-3">
+        <Col sm="2">
+          <span>電話番号</span>
+        </Col>
+        <Col>
+          <span>{formatPhone(userInfo.phone)}</span>
         </Col>
       </Row>
       <Row>

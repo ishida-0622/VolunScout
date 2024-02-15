@@ -3,8 +3,7 @@
 import { useLazyQuery } from "@apollo/client";
 import { notFound } from "next/navigation";
 import { useEffect } from "react";
-
-import styles from "./index.module.css";
+import { Badge, Col, Container, Row } from "react-bootstrap";
 
 import { gql } from "@/__generated__/query";
 import { CONDITIONS, REGIONS, THEMES } from "@/consts";
@@ -30,7 +29,10 @@ export const Registration = () => {
   const { user } = useAuthContext();
 
   const [fetchParticipantAccountTerms, { loading, error, data }] = useLazyQuery(
-    GetParticipantAccountTermsQuery
+    GetParticipantAccountTermsQuery,
+    {
+      fetchPolicy: "cache-and-network",
+    }
   );
 
   useEffect(() => {
@@ -56,57 +58,63 @@ export const Registration = () => {
   );
 
   return (
-    <div className={styles.wrapper}>
-      <div className={styles.regions}>
-        <details open>
-          <summary>地域</summary>
-          {REGIONS.map((region) => {
-            if (regionsSet.has(region)) {
-              return <p key={region}>{region}</p>;
-            }
-          })}
-        </details>
-      </div>
-      <div className={styles.theme}>
-        <details open>
-          <summary>テーマ</summary>
-          {THEMES.map((theme) => {
-            const themeData = themesMap.get(theme);
-            if (themeData === undefined) {
-              return null;
-            }
-            if (themeData.isRequired) {
-              return (
-                <p key={theme}>
-                  <span>※</span>
-                  <span>{theme}</span>
-                </p>
-              );
-            }
-            return <p key={theme}>{theme}</p>;
-          })}
-        </details>
-      </div>
-      <div className={styles.condition}>
-        <details open>
-          <summary>活動希望条件</summary>
-          {CONDITIONS.map((condition) => {
-            const conditionData = conditionsMap.get(condition);
-            if (conditionData === undefined) {
-              return null;
-            }
-            if (conditionData.isRequired) {
-              return (
-                <p key={condition}>
-                  <span>※</span>
-                  <span>{condition}</span>
-                </p>
-              );
-            }
-            return <p key={condition}>{condition}</p>;
-          })}
-        </details>
-      </div>
-    </div>
+    <Container>
+      <Row>
+        <Col>
+          <details open>
+            <summary>地域</summary>
+            {REGIONS.map((region) => {
+              if (regionsSet.has(region)) {
+                return <p key={region}>{region}</p>;
+              }
+            })}
+          </details>
+        </Col>
+        <Col>
+          <details open>
+            <summary>テーマ</summary>
+            {THEMES.map((theme) => {
+              const themeData = themesMap.get(theme);
+              if (themeData === undefined) {
+                return null;
+              }
+              if (themeData.isRequired) {
+                return (
+                  <p key={theme} className="d-flex align-items-center">
+                    <span>{theme}</span>
+                    <Badge bg="danger" className="mx-1">
+                      必須
+                    </Badge>
+                  </p>
+                );
+              }
+              return <p key={theme}>{theme}</p>;
+            })}
+          </details>
+        </Col>
+        <Col>
+          <details open>
+            <summary>活動希望条件</summary>
+            {CONDITIONS.map((condition) => {
+              const conditionData = conditionsMap.get(condition);
+              if (conditionData === undefined) {
+                return null;
+              }
+              if (conditionData.isRequired) {
+                return (
+                  <p key={condition} className="d-flex align-items-center">
+                    <span>{condition}</span>
+                    <Badge bg="danger" className="mx-1">
+                      必須
+                    </Badge>
+                  </p>
+                );
+              }
+              return <p key={condition}>{condition}</p>;
+            })}
+          </details>
+        </Col>
+      </Row>
+    </Container>
   );
 };
