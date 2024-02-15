@@ -12,6 +12,7 @@ import { gql } from "@/__generated__/query";
 import { joinClassnames } from "@/components/@joinClassnames";
 import { URL_PATH_GROUP } from "@/consts";
 import { useAuthContext } from "@/contexts/AuthContext";
+import { formatReview } from "@/utils/formatReview";
 
 export const GetGroupAccountQuery = gql(/* GraphQL */ `
   query GetGroupAccountAndReview($gid: String!) {
@@ -24,7 +25,9 @@ export const GetGroupAccountQuery = gql(/* GraphQL */ `
       address
       contents
     }
-    # TODO: レビューの取得
+    reviews: getVolunteerReviewByGid(gid: $gid) {
+      point
+    }
   }
 `);
 
@@ -56,7 +59,14 @@ export const MyPage = () => {
     notFound();
   }
 
-  const { __typename, ...userInfo } = data.user;
+  const { user: userInfo, reviews } = data;
+  const point =
+    reviews.length > 0
+      ? Math.round(
+          (reviews.reduce((acc, cur) => acc + cur.point, 0) / reviews.length) *
+            10
+        ) / 10
+      : undefined;
 
   return (
     <div>
@@ -98,8 +108,7 @@ export const MyPage = () => {
             </div>
           </div>
           <div>
-            {/* TODO:レビュー */}
-            <p className={styles.review}>★★★★☆</p>
+            <p className={styles.review}>{formatReview(point)}</p>
           </div>
           <div className={styles.edit}>
             <button
