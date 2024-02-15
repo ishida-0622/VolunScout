@@ -18,7 +18,7 @@ use query_repository::{
             ParticipantReviewPointAverage, ParticipantReviewRepository, Review,
             VolunteerReviewRepository,
         },
-        scout::{Scout, ScoutRepository},
+        scout::{Scout, ScoutFromGroup, ScoutRepository},
         volunteer::{VolunteerElementsReadModel, VolunteerQueryRepository, VolunteerReadModel},
     },
     user_account::{
@@ -349,10 +349,14 @@ impl QueryRoot {
     ///
     /// ## 返り値
     /// - `Vec<Scout>` - スカウト情報の配列
-    async fn get_scout_by_vid<'ctx>(&self, ctx: &Context<'ctx>, vid: String) -> Result<Vec<Scout>> {
+    async fn get_scout_by_vid<'ctx>(
+        &self,
+        ctx: &Context<'ctx>,
+        vid: String,
+    ) -> Result<Vec<ScoutFromGroup>> {
         let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
         let vid: VolunteerId = VolunteerId::from_str(&vid);
-        let scout: Vec<Scout> = ctx.scout_dao.find_by_vid(&vid).await?;
+        let scout: Vec<ScoutFromGroup> = ctx.scout_dao.find_by_vid(&vid).await?;
 
         Ok(scout)
     }
@@ -496,14 +500,26 @@ impl QueryRoot {
         conditions: Vec<String>,
         required_conditions: Vec<String>,
         target_status: Vec<String>,
-        search_words: String
+        search_words: String,
     ) -> Result<Vec<VolunteerReadModel>> {
         let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
         let vid = "";
-        let volunteer: Vec<VolunteerReadModel> = ctx.volunteer_dao.find_by_elements(
-            &VolunteerElementsReadModel::new(vid.to_string(), regions, Some(required_regions), themes, required_themes, conditions, required_conditions, target_status),
-            search_words
-        ).await?;
+        let volunteer: Vec<VolunteerReadModel> = ctx
+            .volunteer_dao
+            .find_by_elements(
+                &VolunteerElementsReadModel::new(
+                    vid.to_string(),
+                    regions,
+                    Some(required_regions),
+                    themes,
+                    required_themes,
+                    conditions,
+                    required_conditions,
+                    target_status,
+                ),
+                search_words,
+            )
+            .await?;
 
         Ok(volunteer)
     }

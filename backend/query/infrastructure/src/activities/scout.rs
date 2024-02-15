@@ -2,8 +2,8 @@ use anyhow::Result;
 use async_trait::async_trait;
 use sqlx::MySqlPool;
 
-use domain::model::{user_account::user_id::UserId, scout::ScoutId, volunteer::VolunteerId};
-use query_repository::activities::scout::{Scout, ScoutRepository};
+use domain::model::{scout::ScoutId, user_account::user_id::UserId, volunteer::VolunteerId};
+use query_repository::activities::scout::{Scout, ScoutFromGroup, ScoutRepository};
 
 pub struct ScoutImpl {
     pool: MySqlPool,
@@ -66,19 +66,41 @@ impl ScoutRepository for ScoutImpl {
         Ok(scout)
     }
 
-    async fn find_by_vid(&self, vid: &VolunteerId) -> Result<Vec<Scout>> {
-        let scout = sqlx::query_as!(
-            Scout,
+    async fn find_by_vid(&self, vid: &VolunteerId) -> Result<Vec<ScoutFromGroup>> {
+        let scout = sqlx::query!(
             r#"
             SELECT
-                sid, vid, uid, message, scouted_at, is_read as "is_read: bool", is_sent as "is_sent: bool", sent_at, is_denied as "is_denied: bool", denied_at
-            FROM scout
-            WHERE vid = ?
+                s.sid, s.vid, s.uid, s.message, s.scouted_at, s.is_read as "is_read: bool", s.is_sent as "is_sent: bool", s.sent_at, s.is_denied as "is_denied: bool", s.denied_at, p.name, p.gender as "gender: u8", p.birthday, AVG(r.point) as point
+            FROM scout as s
+            INNER JOIN participant_account as p ON s.uid = p.uid
+            INNER JOIN participant_review as r ON p.uid = r.uid
+            WHERE s.vid = ?
+            GROUP BY s.sid
             "#,
             vid.to_string()
         )
         .fetch_all(&self.pool)
         .await?;
+        let scout = scout
+            .into_iter()
+            .map(|s| ScoutFromGroup {
+                sid: s.sid,
+                vid: s.vid,
+                uid: s.uid,
+                message: s.message,
+                scouted_at: s.scouted_at,
+                is_read: s.is_read,
+                is_sent: s.is_sent,
+                sent_at: s.sent_at,
+                is_denied: s.is_denied,
+                denied_at: s.denied_at,
+                name: s.name,
+                gender: s.gender,
+                birthday: s.birthday,
+                point: (s.point.unwrap().to_string().parse::<f32>().unwrap() * 100.0).round()
+                    / 100.0,
+            })
+            .collect();
         Ok(scout)
     }
 }
