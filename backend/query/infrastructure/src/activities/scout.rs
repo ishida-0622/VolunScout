@@ -58,6 +58,7 @@ impl ScoutRepository for ScoutImpl {
                 sid, vid, uid, message, scouted_at, is_read as "is_read: bool", is_sent as "is_sent: bool", sent_at, is_denied as "is_denied: bool", denied_at
             FROM scout
             WHERE uid = ?
+            AND is_denied = false
             "#,
             uid.to_string()
         )
