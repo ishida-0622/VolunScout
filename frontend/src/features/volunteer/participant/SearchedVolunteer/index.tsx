@@ -48,7 +48,7 @@ const SearchVolunteerQuery = gql(/* GraphQL */ `
     result: searchVolunteerByElements(
       searchWords: $word
       regions: $region
-      requiredRegions: $region
+      requiredRegions: []
       themes: $theme
       requiredThemes: $requiredTheme
       conditions: $condition
