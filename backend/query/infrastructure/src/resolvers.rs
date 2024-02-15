@@ -624,6 +624,28 @@ impl QueryRoot {
         Ok(volunteers)
     }
 
+    /// 指定されたuidが応募し、未承認のボランティア情報を取得する
+    ///
+    /// ## 引数
+    /// - `uid` - uid
+    ///
+    /// ## 返り値
+    /// - `Vec<VolunteerReadModel>` - ボランティア情報の配列
+    async fn get_not_allowed_activities_by_uid<'ctx>(
+        &self,
+        ctx: &Context<'ctx>,
+        uid: String,
+    ) -> Result<Vec<VolunteerReadModel>> {
+        let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
+        let uid = UserId::from_str(&uid).unwrap();
+        let volunteers: Vec<VolunteerReadModel> = ctx
+            .volunteer_dao
+            .find_not_allowed_activity_by_id(&uid)
+            .await?;
+
+        Ok(volunteers)
+    }
+
     /// 指定されたgidが過去に活動したボランティア情報を取得する
     ///
     /// ## 引数

@@ -594,9 +594,10 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
             r#"
             SELECT
             volunteer.vid FROM volunteer, apply WHERE
-                volunteer.vid = apply.vid AND
-                apply.uid = ? AND
-                volunteer.finish_at < now();
+                volunteer.vid = apply.vid
+                AND apply.uid = ?
+                AND apply.allowed_status = 1
+                AND volunteer.finish_at < now();
             "#,
             pid.to_string()
         )
@@ -615,9 +616,32 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
             r#"
             SELECT
             volunteer.vid FROM volunteer, apply WHERE
-                volunteer.vid = apply.vid AND
-                apply.uid = ? AND
-                volunteer.finish_at > now();
+                volunteer.vid = apply.vid
+                AND apply.uid = ?
+                AND apply.allowed_status = 1
+                AND volunteer.finish_at >= now();
+            "#,
+            pid.to_string()
+        )
+        .fetch_all(&self.pool)
+        .await?;
+
+        let vids: Vec<VolunteerId> = vids.iter().map(|v| VolunteerId::from_str(&v.vid)).collect();
+
+        let volunteers = future::try_join_all(vids.iter().map(|vid| self.find_by_id(&vid))).await?;
+        Ok(volunteers)
+    }
+
+    ///uidが一致する参加者の未承認予定ボランティア情報の取得
+    async fn find_not_allowed_activity_by_id(&self, pid: &UserId) -> Result<Vec<VolunteerReadModel>> {
+        let vids = sqlx::query!(
+            r#"
+            SELECT
+            volunteer.vid FROM volunteer, apply WHERE
+                volunteer.vid = apply.vid
+                AND apply.uid = ?
+                AND apply.allowed_status = 0
+                AND volunteer.deadline_on >= NOW();
             "#,
             pid.to_string()
         )

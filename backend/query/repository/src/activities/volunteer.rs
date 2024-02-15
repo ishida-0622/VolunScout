@@ -150,6 +150,9 @@ pub trait VolunteerQueryRepository: Send + Sync {
     /// 参加者の予定を取得する
     async fn find_scheduled_activity_by_id(&self, pid: &UserId) -> Result<Vec<VolunteerReadModel>>;
 
+    /// 参加者の応募済ボランティア(未承認)を取得する
+    async fn find_not_allowed_activity_by_id(&self, pid: &UserId) -> Result<Vec<VolunteerReadModel>>;
+
     /// 団体の活動履歴を取得する
     async fn find_activity_by_gid(&self, gid: &UserId) -> Result<Vec<VolunteerReadModel>>;
 
