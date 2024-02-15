@@ -16,6 +16,7 @@ import {
 import { Apply } from "./Apply";
 import { Review } from "./Review";
 import { Scout } from "./Scout";
+import { SentScout } from "./SentScout";
 
 import type { DeleteVolunteerRequestBody } from "@/__generated__/command";
 
@@ -50,13 +51,16 @@ export const VolunteerDetails = ({ vid }: Props) => {
     router.push(URL_PATH_GROUP.VOLUNTEER_EDIT(vid));
   };
 
-  const [page, setPage] = useState<"apply" | "scout">("apply");
+  const [page, setPage] = useState<"apply" | "scout" | "sentScout">("apply");
 
   const showApply = () => {
     setPage("apply");
   };
   const showScout = () => {
     setPage("scout");
+  };
+  const showSentScout = () => {
+    setPage("sentScout");
   };
 
   const { data, loading, error } = useQuery(GetVolunTeerDetailsQuery, {
@@ -114,7 +118,7 @@ export const VolunteerDetails = ({ vid }: Props) => {
             </Col>
           </Row>
         </Col>
-        <Col>
+        <Col sm="2">
           <Button variant="primary" className="mx-1" onClick={toEdit}>
             編集
           </Button>
@@ -153,11 +157,19 @@ export const VolunteerDetails = ({ vid }: Props) => {
               <ToggleButton id="show-scout" value={"scout"} onClick={showScout}>
                 スカウト
               </ToggleButton>
+              <ToggleButton
+                id="show-sent-scout"
+                value={"sentScout"}
+                onClick={showSentScout}
+              >
+                送信済みスカウト
+              </ToggleButton>
             </ToggleButtonGroup>
           </Row>
           <Row>
             {page === "apply" && <Apply vid={vid} />}
-            {page === "scout" && <Scout></Scout>}
+            {page === "scout" && <Scout vid={vid} />}
+            {page === "sentScout" && <SentScout vid={vid} />}
           </Row>
         </>
       )}
