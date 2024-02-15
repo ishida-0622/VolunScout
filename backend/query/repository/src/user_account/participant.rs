@@ -5,6 +5,8 @@ use chrono::{NaiveDate, NaiveDateTime};
 
 use domain::model::{apply::ApplyId, user_account::user_id::UserId};
 
+use crate::activities::volunteer::VolunteerElementsReadModel;
+
 /// 参加者アカウントリードモデル
 #[derive(SimpleObject, sqlx::Type)]
 pub struct ParticipantAccount {
@@ -78,6 +80,23 @@ pub struct GroupParticipant {
     pub age: u8,
 }
 
+/// スカウト用参加者アカウントリードモデル
+#[derive(SimpleObject, sqlx::Type)]
+pub struct ScoutParticipant {
+    /// 参加者アカウントid
+    pub uid: String,
+    /// 参加者氏名
+    pub name: String,
+    /// 性別
+    ///
+    /// 0: 男性, 1: 女性, 2: その他
+    pub gender: i8,
+    /// 生年月日
+    pub birthday: NaiveDate,
+    /// 平均評価値
+    pub point: Option<f32>
+}
+
 #[async_trait]
 pub trait ParticipantUserRepository: Send + Sync {
     /// 参加者アカウントをIDで取得する
@@ -103,4 +122,10 @@ pub trait ParticipantUserRepository: Send + Sync {
 
     /// 集団応募者の詳細情報を取得する
     async fn find_group_participants(&self, aid: &ApplyId) -> Result<Vec<GroupParticipant>>;
+
+    /// 参加者を条件検索を用いて取得する
+    async fn find_by_elements(
+        &self,
+        elements: &VolunteerElementsReadModel
+    ) -> Result<Vec<ScoutParticipant>>;
 }

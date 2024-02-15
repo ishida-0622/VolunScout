@@ -1,16 +1,23 @@
+use std::str::FromStr;
+
 use anyhow::Result;
 use async_trait::async_trait;
 use domain::consts::conditions::ConditionMap;
 use domain::consts::target_status::{TargetStatusMap, TARGET_STATUSES_PREFIX};
 use domain::consts::themes::ThemeMap;
 use domain::model::apply::ApplyId;
-use sqlx::{MySqlPool, Row};
+use domain::model::condition::Condition;
+use domain::model::region::Region;
+use domain::model::target_status::TargetStatus;
+use domain::model::theme::Theme;
+use query_repository::activities::volunteer::VolunteerElementsReadModel;
+use sqlx::{query, MySqlPool, Row};
 
 use domain::consts::region::RegionMap;
 use domain::model::user_account::user_id::UserId;
 use query_repository::user_account::participant::{
     GroupParticipant, ParticipantAccount, ParticipantCondition, ParticipantRegion,
-    ParticipantTargetStatus, ParticipantTheme, ParticipantUserRepository,
+    ParticipantTargetStatus, ParticipantTheme, ParticipantUserRepository, ScoutParticipant,
 };
 
 pub struct ParticipantAccountImpl {
@@ -202,4 +209,155 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
 
         Ok(response)
     }
+
+
+    /// 参加者の検索
+    async fn find_by_elements(
+        &self,
+        elements: &VolunteerElementsReadModel
+    ) -> Result<Vec<ScoutParticipant>> {
+        // OR条件の要素一覧
+        let mut or_elements: Vec<String> = Vec::new();
+
+        // OR条件の地域一覧
+        let mut or_regions = elements
+            .regions
+            .clone()
+            .iter()
+            .map(|r: &String| Region::from_str(r).unwrap().to_uint())
+            .collect::<Vec<u8>>();
+
+        or_elements.extend(
+            elements
+                .themes
+                .iter()
+                .map(|r: &String| Theme::from_str(r).unwrap().to_id()), // .collect::<Vec<String>>()
+        );
+        or_elements.extend(
+            elements
+                .conditions
+                .iter()
+                .map(|r: &String| Condition::from_str(r).unwrap().to_id()), // .collect::<Vec<String>>()
+        );
+        or_elements.extend(
+            elements
+                .target_status
+                .iter()
+                .map(|r: &String| TargetStatus::from_str(r).unwrap().to_id()), // .collect::<Vec<String>>()
+        );
+
+        let mut req_elements: Vec<String> = Vec::new();
+        req_elements.extend(
+            elements
+                .required_themes
+                .iter()
+                .map(|r: &String| Theme::from_str(r).unwrap().to_id()), // .collect::<Vec<String>>()
+        );
+        req_elements.extend(
+            elements
+                .required_conditions
+                .iter()
+                .map(|r: &String| Condition::from_str(r).unwrap().to_id()), // .collect::<Vec<String>>()
+        );
+        if or_elements.len() == 0 { or_elements.push("".to_string()) }
+        if or_regions.len() == 0 { or_regions.push(100 as u8) }
+        let query_str = format!(
+            r#"
+                SELECT
+                    participant_account.uid, name, gender, birthday, CAST(AVG(point) AS FLOAT) as point,
+                    GROUP_CONCAT(DISTINCT
+                        JSON_OBJECT(
+                            'eid', participant_element.eid,
+                            'is_need', participant_element.is_need
+                        )
+                    ) as eids,
+                    GROUP_CONCAT(DISTINCT
+                        JSON_OBJECT(
+                            'rid', participant_region.rid
+                        )
+                    ) as rids,
+                    COUNT(DISTINCT CASE WHEN participant_element.eid IN ({}) THEN participant_element.eid END) AS eid_match_count,
+                    COUNT(DISTINCT CASE WHEN participant_region.rid IN ({}) THEN participant_region.rid END) AS rid_match_count,
+                    COUNT(DISTINCT CASE WHEN participant_element.is_need = true AND participant_element.eid IN ({}) THEN participant_element.eid END) AS req_eid_match_count
+                FROM
+                    participant_account
+                LEFT JOIN
+                    participant_element ON participant_account.uid = participant_element.uid
+                LEFT JOIN
+                    participant_region ON participant_account.uid = participant_region.uid
+                LEFT JOIN
+                    participant_review ON participant_account.uid = participant_review.uid
+                WHERE
+                    participant_account.uid IN (
+                        SELECT participant_account.uid
+                        FROM participant_account
+                        LEFT JOIN participant_element ON participant_account.uid = participant_element.uid
+                        LEFT JOIN participant_region ON participant_account.uid = participant_region.uid
+                        {}
+                        GROUP BY participant_account.uid
+                        {}
+                    )
+                AND NOT participant_account.is_deleted
+                GROUP BY
+                    participant_account.uid
+                ORDER BY
+                    eid_match_count + rid_match_count DESC, req_eid_match_count DESC, point DESC, uid DESC;
+            "#,
+            format!("?{}", ", ?".repeat(or_elements.len() - 1)),
+            format!("?{}", ", ?".repeat(or_regions.len() - 1)),
+            format!("?{}", ", ?".repeat(or_elements.len() + req_elements.len() - 1)),
+
+            if req_elements.len() > 0 {
+                format!(
+                    "WHERE participant_element.eid IN ({})",
+                    format!("?{}", ", ?".repeat(req_elements.len() - 1))
+                )
+            } else {"".to_string()},
+
+            if req_elements.len() > 0 {
+                format!(
+                    "HAVING COUNT(DISTINCT participant_element.eid) = {}",
+                    req_elements.len()
+                )
+            } else {"".to_string()}
+        );
+
+        let mut query = query(&query_str);
+
+        for or_element in or_elements.clone() {
+            query = query.bind(or_element);
+        }
+        for or_region in or_regions {
+            query = query.bind(or_region);
+        }
+
+        for or_element in or_elements {
+            query = query.bind(or_element.to_string());
+        }
+        for req_element in req_elements.clone() {
+            query = query.bind(req_element.to_string());
+        }
+
+        for req_element in req_elements.clone() {
+            query = query.bind(req_element.to_string());
+        }
+
+        let participants = query.fetch_all(&self.pool).await?;
+
+        let participants = participants
+            .into_iter()
+            .map(|participant| {
+                ScoutParticipant {
+                    uid: participant.get("uid"),
+                    name: participant.get("name"),
+                    gender: participant.get::<i8, _>("gender") as i8,
+                    birthday: participant.get("birthday"),
+                    point: participant.get::<Option<f32>, _>("point")
+                }
+            })
+            .collect();
+
+        Ok(participants)
+    }
+
 }
