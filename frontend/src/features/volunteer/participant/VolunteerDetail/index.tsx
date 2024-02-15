@@ -33,6 +33,7 @@ const GetVolunteerDetailQuery = gql(/* GraphQL */ `
       overview
       recruitedNum
       place
+      reward
       startAt
       finishAt
       regions
@@ -139,6 +140,10 @@ export const VolunteerDetail = ({ vid }: Props) => {
             </Badge>
           ))}
         </Col>
+      </Row>
+      <Row>
+        <Col sm="2">報酬</Col>
+        <Col sm="10">{volunteer.reward}</Col>
       </Row>
       <Row className="mb-2">
         <Col sm="2">概要</Col>
