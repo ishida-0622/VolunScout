@@ -825,6 +825,7 @@ impl QueryRoot {
     async fn scout_participant_by_elements<'ctx>(
         &self,
         ctx: &Context<'ctx>,
+        vid: String,
         regions: Vec<String>,
         themes: Vec<String>,
         required_themes: Vec<String>,
@@ -833,9 +834,8 @@ impl QueryRoot {
         target_status: Vec<String>
     ) -> Result<Vec<ScoutParticipant>> {
         let ctx: &ServiceContext = ctx.data::<ServiceContext>().unwrap();
-        let vid = "";
         let participants: Vec<ScoutParticipant> = ctx.participant_account_dao.find_by_elements(
-            &VolunteerElementsReadModel::new(vid.to_string(), regions, None, themes, required_themes, conditions, required_conditions, target_status)
+            &VolunteerElementsReadModel::new(vid, regions, None, themes, required_themes, conditions, required_conditions, target_status)
         ).await?;
 
         Ok(participants)

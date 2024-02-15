@@ -163,7 +163,7 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
             volunteer.title,
             volunteer.message,
             volunteer.overview,
-            (volunteer.recruited_num as Option<u32>).unwrap(),
+            volunteer.recruited_num,
             volunteer.place,
             volunteer.reward,
             volunteer.start_at,

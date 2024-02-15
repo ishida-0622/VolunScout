@@ -300,6 +300,14 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
                 AND NOT participant_account.is_deleted
                 GROUP BY
                     participant_account.uid
+                HAVING
+                    COUNT(
+                        (SELECT sid FROM scout WHERE uid = participant_account.uid AND vid = ?)
+                    ) = 0
+                AND
+                    COUNT(
+                        (SELECT aid FROM apply WHERE uid = participant_account.uid AND vid = ?)
+                    ) = 0
                 ORDER BY
                     eid_match_count + rid_match_count DESC, req_eid_match_count DESC, point DESC, uid DESC;
             "#,
@@ -319,7 +327,7 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
                     "HAVING COUNT(DISTINCT participant_element.eid) = {}",
                     req_elements.len()
                 )
-            } else {"".to_string()}
+            } else {"".to_string()},
         );
 
         let mut query = query(&query_str);
@@ -341,6 +349,9 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
         for req_element in req_elements.clone() {
             query = query.bind(req_element.to_string());
         }
+
+        query = query.bind(elements.vid.to_string());
+        query = query.bind(elements.vid.to_string());
 
         let participants = query.fetch_all(&self.pool).await?;
 
