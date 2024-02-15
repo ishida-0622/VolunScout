@@ -163,7 +163,7 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
             volunteer.title,
             volunteer.message,
             volunteer.overview,
-            volunteer.recruited_num,
+            volunteer.recruited_num.try_into().unwrap(),
             volunteer.place,
             volunteer.reward,
             volunteer.start_at,
@@ -513,12 +513,7 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
                     .collect();
 
                 let photo_urls: Vec<String> = match volunteer.get::<Option<String>, _>("s3_keys") {
-                    Some(keys) => keys
-                        .split(',')
-                        .map(|key: &str| {
-                            key.to_string()
-                        })
-                        .collect(),
+                    Some(keys) => keys.split(',').map(|key: &str| key.to_string()).collect(),
                     None => Vec::new(),
                 };
 
@@ -633,7 +628,10 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
     }
 
     ///uidが一致する参加者の未承認予定ボランティア情報の取得
-    async fn find_not_allowed_activity_by_id(&self, pid: &UserId) -> Result<Vec<VolunteerReadModel>> {
+    async fn find_not_allowed_activity_by_id(
+        &self,
+        pid: &UserId,
+    ) -> Result<Vec<VolunteerReadModel>> {
         let vids = sqlx::query!(
             r#"
             SELECT
