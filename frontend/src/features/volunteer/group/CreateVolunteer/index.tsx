@@ -1,8 +1,8 @@
 "use client";
 import { get, set } from "idb-keyval";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useRef } from "react";
-import { Button } from "react-bootstrap";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Button, Spinner } from "react-bootstrap";
 
 import styles from "./index.module.css";
 import { useInfoForm, type FormValues } from "./useInfoForm";
@@ -23,6 +23,8 @@ export const CreateVolunteer = () => {
   const authContext = useAuthContext();
 
   const imageRef = useRef<HTMLInputElement>(null);
+
+  const [isDeActive, setIsDeActive] = useState(false);
 
   const {
     InputForm: InfoForm,
@@ -84,33 +86,6 @@ export const CreateVolunteer = () => {
       throw new Error("gid is undefined");
     }
 
-    const photos = imageRef.current?.files;
-
-    if (photos) {
-      const requests = [];
-      const urls = [];
-
-      const bucket = process.env.NEXT_PUBLIC_S3_BUCKET_NAME;
-      if (bucket === undefined) {
-        throw new Error("S3_BUCKET_NAME is undefined");
-      }
-
-      for (let i = 0; i < photos.length; i++) {
-        const photo = photos[i];
-        const uuid = crypto.randomUUID();
-        const key = `volunteer/${gid}/${uuid}.${photo.name.split(".").pop()}`;
-        const promise = s3.putObject({
-          Key: key,
-          Body: photo,
-          Bucket: bucket,
-        });
-        requests.push(promise.promise());
-        urls.push(`https://${bucket}.s3.amazonaws.com/${key}`);
-      }
-      await Promise.all(requests);
-      setInfoValue("photos", urls);
-    }
-
     const infoValues = getInfoValues();
     const termsValues = getTermsValues();
 
@@ -127,6 +102,41 @@ export const CreateVolunteer = () => {
     if (termsValues.theme.length + termsValues.required_theme.length === 0) {
       alert("テーマを選択してください");
       return;
+    }
+
+    setIsDeActive(true);
+
+    const photos = imageRef.current?.files;
+
+    if (photos) {
+      try {
+        const requests = [];
+        const urls = [];
+
+        const bucket = process.env.NEXT_PUBLIC_S3_BUCKET_NAME;
+        if (bucket === undefined) {
+          throw new Error("S3_BUCKET_NAME is undefined");
+        }
+
+        for (let i = 0; i < photos.length; i++) {
+          const photo = photos[i];
+          const uuid = crypto.randomUUID();
+          const key = `volunteer/${gid}/${uuid}.${photo.name.split(".").pop()}`;
+          const promise = s3.putObject({
+            Key: key,
+            Body: photo,
+            Bucket: bucket,
+          });
+          requests.push(promise.promise());
+          urls.push(`https://${bucket}.s3.amazonaws.com/${key}`);
+        }
+        await Promise.all(requests);
+        setInfoValue("photos", urls);
+      } catch {
+        setIsDeActive(false);
+        alert("エラーが発生しました");
+        return;
+      }
     }
 
     const body: CreateVolunteerRequestBody = {
@@ -150,7 +160,9 @@ export const CreateVolunteer = () => {
       clearLocalStorage();
       alert("作成しました");
       router.push(URL_PATH_GROUP.HOME);
+      setIsDeActive(false);
     } catch (error) {
+      setIsDeActive(false);
       alert("エラーが発生しました");
     }
   };
@@ -170,9 +182,22 @@ export const CreateVolunteer = () => {
         <Button variant="secondary" size="lg" onClick={handleOnSave}>
           一時保存（写真は保存されません）
         </Button>
-        <Button variant="primary" size="lg" onClick={handleOnSubmit}>
-          作成する
-        </Button>
+        {isDeActive ? (
+          <Button disabled size="lg">
+            <Spinner
+              as="span"
+              animation="grow"
+              size="sm"
+              role="status"
+              aria-hidden="true"
+            />
+            作成中...
+          </Button>
+        ) : (
+          <Button variant="primary" size="lg" onClick={handleOnSubmit}>
+            作成する
+          </Button>
+        )}
       </div>
     </div>
   );
