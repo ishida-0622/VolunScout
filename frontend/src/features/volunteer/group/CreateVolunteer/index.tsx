@@ -129,14 +129,6 @@ export const CreateVolunteer = () => {
       return;
     }
 
-    if (
-      termsValues.condition.length + termsValues.required_condition.length ===
-      0
-    ) {
-      alert("条件を選択してください");
-      return;
-    }
-
     const body: CreateVolunteerRequestBody = {
       gid,
       ...infoValues,
