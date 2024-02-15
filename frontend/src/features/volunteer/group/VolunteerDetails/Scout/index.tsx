@@ -45,6 +45,7 @@ const GetParticipantFromScoutQuery = gql(/* GraphQL */ `
 
 const SearchParticipantQuery = gql(/* GraphQL */ `
   query searchParticipant(
+    $vid: String!
     $regions: [String!]!
     $themes: [String!]!
     $requiredThemes: [String!]!
@@ -53,6 +54,7 @@ const SearchParticipantQuery = gql(/* GraphQL */ `
     $targetStatus: [String!]!
   ) {
     participants: scoutParticipantByElements(
+      vid: $vid
       regions: $regions
       themes: $themes
       requiredThemes: $requiredThemes
@@ -141,6 +143,7 @@ export const Scout = ({ vid }: Props) => {
       } = elements.elements;
       searchParticipant({
         variables: {
+          vid,
           regions,
           themes,
           requiredThemes,
