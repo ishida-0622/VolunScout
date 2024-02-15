@@ -82,9 +82,12 @@ impl ScoutRepository for ScoutImpl {
         )
         .fetch_all(&self.pool)
         .await?;
+
         let scout = scout
             .into_iter()
-            .map(|s| ScoutFromGroup {
+            .map(|s|{
+                println!("aaa");
+                ScoutFromGroup {
                 sid: s.sid,
                 vid: s.vid,
                 uid: s.uid,
@@ -104,7 +107,7 @@ impl ScoutRepository for ScoutImpl {
                     }
                     None => None,
                 },
-            })
+            }})
             .collect();
         Ok(scout)
     }

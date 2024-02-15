@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `volunteer`
 (
   `vid` CHAR(26),
   `gid` CHAR(28) NOT NULL,
-  `title` VARCHAR(30) NOT NULL,
+  `title` VARCHAR(50) NOT NULL,
   `message` TEXT NOT NULL,
   `overview` TEXT NOT NULL,
   `recruited_num` UNSIGNED INT NOT NULL,
