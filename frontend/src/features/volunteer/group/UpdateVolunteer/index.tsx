@@ -118,6 +118,24 @@ export const UpdateVolunteer = ({ vid, gid }: Props) => {
       return;
     }
 
+    if (termsValues.region.length === 0) {
+      alert("活動地域を選択してください");
+      return;
+    }
+
+    if (termsValues.theme.length + termsValues.required_theme.length === 0) {
+      alert("テーマを選択してください");
+      return;
+    }
+
+    if (
+      termsValues.condition.length + termsValues.required_condition.length ===
+      0
+    ) {
+      alert("条件を選択してください");
+      return;
+    }
+
     const values: UpdateVolunteerRequestBody = {
       vid,
       gid,
