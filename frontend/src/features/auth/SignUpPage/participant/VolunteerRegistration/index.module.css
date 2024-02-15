@@ -11,18 +11,6 @@
   justify-content: right;
 }
 
-.main_contents {
-  margin: 0 auto;
-  width: 100%;
-  max-width: 720px;
-}
-
-.textarea {
-  width: 43rem;
-  height: 0.5rem;
-  resize: none;
-}
-
 .button {
   width: 100%;
 }

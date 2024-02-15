@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import { Container, Form } from "react-bootstrap";
 
 import styles from "./index.module.css";
 
@@ -58,15 +59,14 @@ export const VolunteerRegistration = ({
         >
           戻る
         </button>
-        <div className={styles.main_contents}>
+        <Container>
           <h2 className={styles.h2}>自己紹介（後からでも設定可能です）</h2>
-          <label>
-            <textarea
-              className={styles.textarea}
-              defaultValue={values.profile}
-              ref={profileRef}
-            />
-          </label>
+          <Form.Control
+            as="textarea"
+            rows={8}
+            defaultValue={values.profile}
+            ref={profileRef}
+          />
           <h2 className={styles.h2}>活動希望条件（後からでも設定可能です）</h2>
 
           {InputForm}
@@ -79,7 +79,7 @@ export const VolunteerRegistration = ({
               入力情報の確認へ
             </button>
           </div>
-        </div>
+        </Container>
       </form>
     </section>
   );

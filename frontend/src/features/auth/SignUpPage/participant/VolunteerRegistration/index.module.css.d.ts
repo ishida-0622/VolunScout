@@ -3,9 +3,7 @@ declare const styles: {
   readonly "container": string;
   readonly "h2": string;
   readonly "main": string;
-  readonly "main_contents": string;
   readonly "select": string;
-  readonly "textarea": string;
   readonly "toggle": string;
 };
 export = styles;
