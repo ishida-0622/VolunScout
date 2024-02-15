@@ -94,7 +94,7 @@ export const ApplyList = () => {
   }, [getApply, user]);
 
   const [page, setPage] = useState<"activities" | "scheduledActivities">(
-    "activities"
+    "scheduledActivities"
   );
   const showActivities = () => {
     setPage("activities");
@@ -129,10 +129,14 @@ export const ApplyList = () => {
     <Container>
       <SearchBar onChange={search} className="my-2" />
       <Row className="my-3">
-        <ToggleButtonGroup type="radio" name="buttons" defaultValue={"apply"}>
+        <ToggleButtonGroup
+          type="radio"
+          name="buttons"
+          defaultValue={"scheduled"}
+        >
           <ToggleButton
             id="show-scheduled-activities"
-            value={"scout"}
+            value={"scheduled"}
             onClick={showScheduledActivities}
           >
             今後の活動予定
