@@ -13,7 +13,7 @@ import { joinClassnames } from "@/components/@joinClassnames";
 import { URL_PATH_GROUP } from "@/consts";
 import { useAuthContext } from "@/contexts/AuthContext";
 
-const GetGroupAccountQuery = gql(/* GraphQL */ `
+export const GetGroupAccountQuery = gql(/* GraphQL */ `
   query GetGroupAccountAndReview($gid: String!) {
     user: getGroupAccount(gid: $gid) {
       name
