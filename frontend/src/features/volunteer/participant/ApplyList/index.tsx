@@ -151,7 +151,11 @@ export const ApplyList = () => {
 
   return (
     <Container>
-      <SearchBar onChange={search} className="my-2" />
+      <SearchBar
+        onChange={search}
+        className="my-2"
+        placeholder="応募済みボランティアを検索"
+      />
       <Row className="my-3">
         <ToggleButtonGroup
           type="radio"
@@ -182,24 +186,24 @@ export const ApplyList = () => {
         </ToggleButtonGroup>
       </Row>
       {page === "scheduledActivities" &&
-        searchedScheduledActivities.map((volunteer) => 
+        searchedScheduledActivities.map((volunteer) => (
           <VolunteerItem
             key={volunteer.vid}
             volunteer={volunteer}
             initIsFav={favs.has(volunteer.vid)}
             isCalendar
           />
-        )}
+        ))}
       {page === "notAllowed" &&
-        searchedNotAllowed.map((volunteer) => 
+        searchedNotAllowed.map((volunteer) => (
           <VolunteerItem
             key={volunteer.vid}
             volunteer={volunteer}
             initIsFav={favs.has(volunteer.vid)}
           />
-        )}
+        ))}
       {page === "activities" &&
-        searchedActivities.map((volunteer) => 
+        searchedActivities.map((volunteer) => (
           <VolunteerItem
             key={volunteer.vid}
             volunteer={volunteer}
@@ -207,7 +211,7 @@ export const ApplyList = () => {
             isReview
             onReviewClick={() => handleShow(volunteer.vid)}
           />
-        )}
+        ))}
       <ReviewModal show={show} vid={vid} uid={user.uid} onHide={handleClose} />
     </Container>
   );

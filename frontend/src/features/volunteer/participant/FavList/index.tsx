@@ -78,14 +78,14 @@ export const FavList = () => {
         style={{ maxWidth: "1080px" }}
       >
         <Col>
-          <SearchBar onChange={search} />
+          <SearchBar onChange={search} placeholder="お気に入り内を検索" />
         </Col>
       </Row>
       {volunteers.length === 0 && (
-        <h2 className="m-auto w-75 mb-2">お気に入りがありません</h2>
+        <h2 className="m-auto w-75 mb-2 text-center">お気に入りがありません</h2>
       )}
       {showVolunteers.length === 0 && volunteers.length !== 0 && (
-        <h2 className="m-auto w-75 mb-2">検索結果は0件です</h2>
+        <h2 className="m-auto w-75 mb-2 text-center">検索結果は0件です</h2>
       )}
       {showVolunteers.map((volunteer) => (
         <VolunteerItem

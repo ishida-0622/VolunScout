@@ -69,8 +69,12 @@ export const VolunteerList = ({ type }: Props) => {
   const { user } = useAuthContext();
   const router = useRouter();
 
+  const [isDeActive, setIsDeActive] = useState(false);
+
   const toCreatePage = () => {
+    setIsDeActive(true);
     router.push(URL_PATH_GROUP.VOLUNTEER_CREATE);
+    setIsDeActive(false);
   };
 
   const [getVolunteers, { data, loading, error }] = useLazyQuery(
@@ -133,14 +137,26 @@ export const VolunteerList = ({ type }: Props) => {
           }
           className={styles.search_bar}
         />
-        <Button
-          variant="primary"
-          size="lg"
-          className={styles.create_button}
-          onClick={toCreatePage}
-        >
-          新規掲載
-        </Button>
+        {isDeActive ? (
+          <Button size="lg" disabled>
+            <Spinner
+              as="span"
+              animation="grow"
+              size="sm"
+              role="status"
+              aria-hidden="true"
+            />
+          </Button>
+        ) : (
+          <Button
+            variant="primary"
+            size="lg"
+            className={styles.create_button}
+            onClick={toCreatePage}
+          >
+            新規掲載
+          </Button>
+        )}
       </div>
       {loading && <Spinner />}
       {showVolunteers.map((volunteer) => (

@@ -77,6 +77,8 @@ const GetFavFromSearchedPageQuery = gql(/* GraphQL */ `
 export const SearchedVolunteer = ({ params }: Props) => {
   const router = useRouter();
 
+  const [isDeActive, setIsDeActive] = useState(false);
+
   const [showOnePageItems, setShowOnePageItems] = useState(
     DEFAULT_SHOW_ONE_PAGE_ITEMS
   );
@@ -125,11 +127,13 @@ export const SearchedVolunteer = ({ params }: Props) => {
   });
 
   const reSearch = () => {
+    setIsDeActive(true);
     const values = getValues();
     const searchWord = searchWordRef.current;
     const query = objectToUrlSearch({ ...values, word: searchWord });
     const url = `${URL_PATH_PARTICIPANT.VOLUNTEER}?${query}`;
     router.push(url);
+    setIsDeActive(false);
   };
 
   const { user } = useAuthContext();
@@ -217,22 +221,39 @@ export const SearchedVolunteer = ({ params }: Props) => {
     <Container>
       <Row className="my-3">
         <Col>
-          <SearchBar initValue={word} onChange={handleChange} />
+          <SearchBar
+            initValue={word}
+            onChange={handleChange}
+            placeholder="ボランティアを検索"
+          />
         </Col>
         <Col sm="2">
-          <Button onClick={reSearch}>再検索</Button>
+          {isDeActive ? (
+            <Button disabled>
+              <Spinner
+                as="span"
+                animation="grow"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+              />
+              検索中...
+            </Button>
+          ) : (
+            <Button onClick={reSearch}>再検索</Button>
+          )}
         </Col>
       </Row>
       <Row className="mb-3">
         <Col>{InputForm}</Col>
       </Row>
-      {data.result.length === 0 &&
+      {data.result.length === 0 && (
         <Row className="text-center">
           <Col>
             <h2>該当するボランティアはありません</h2>
           </Col>
         </Row>
-      }
+      )}
       <Row className="mb-1">
         <Col />
         <Col sm="2">
@@ -252,40 +273,40 @@ export const SearchedVolunteer = ({ params }: Props) => {
           </select>
         </Col>
       </Row>
-      {showVolunteers.map((volunteer) =>
+      {showVolunteers.map((volunteer) => (
         <VolunteerItem
           key={volunteer.vid}
           volunteer={volunteer}
           initIsFav={favSet.has(volunteer.vid)}
         />
-      )}
+      ))}
 
       <Row className="justify-content-md-center mt-5">
         <Col md="auto">
           <Pagination>
             <Pagination.First onClick={() => handlePageChange(MIN_PAGE)} />
             <Pagination.Prev onClick={() => handlePageChange(page - 1)} />
-            {page === MAX_PAGE && page > MIN_PAGE + 1 &&
+            {page === MAX_PAGE && page > MIN_PAGE + 1 && (
               <Pagination.Item onClick={() => handlePageChange(page - 2)}>
                 {page - 2}
               </Pagination.Item>
-            }
-            {page > MIN_PAGE &&
+            )}
+            {page > MIN_PAGE && (
               <Pagination.Item onClick={() => handlePageChange(page - 1)}>
                 {page - 1}
               </Pagination.Item>
-            }
+            )}
             <Pagination.Item active>{page}</Pagination.Item>
-            {page < MAX_PAGE &&
+            {page < MAX_PAGE && (
               <Pagination.Item onClick={() => handlePageChange(page + 1)}>
                 {page + 1}
               </Pagination.Item>
-            }
-            {page === MIN_PAGE && page < MAX_PAGE - 1 &&
+            )}
+            {page === MIN_PAGE && page < MAX_PAGE - 1 && (
               <Pagination.Item onClick={() => handlePageChange(page + 2)}>
                 {page + 2}
               </Pagination.Item>
-            }
+            )}
             <Pagination.Next onClick={() => handlePageChange(page + 1)} />
             <Pagination.Last onClick={() => handlePageChange(MAX_PAGE)} />
           </Pagination>
