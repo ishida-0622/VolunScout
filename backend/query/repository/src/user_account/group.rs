@@ -5,11 +5,9 @@ use chrono::NaiveDateTime;
 
 use domain::model::user_account::user_id::UserId;
 
-use crate::MySqlBool;
-
 // Read server で返す型. GraphQLのスキーマに対応する
 /// 団体アカウントリードモデル
-#[derive(SimpleObject)]
+#[derive(SimpleObject, sqlx::Type)]
 pub struct GroupAccount {
     /// 団体アカウントid
     pub gid: String,
@@ -23,10 +21,14 @@ pub struct GroupAccount {
     pub address: String,
     /// 団体紹介
     pub contents: String,
+    // 代表者氏名
+    pub representative_name: String,
+    // 代表者氏名(フリガナ)
+    pub representative_furigana: String,
     /// 有料会員
-    pub is_paid: MySqlBool,
+    pub is_paid: bool,
     /// 削除フラグ
-    pub is_deleted: MySqlBool,
+    pub is_deleted: bool,
     /// 削除日時
     pub deleted_at: Option<NaiveDateTime>,
 }
@@ -39,8 +41,10 @@ impl GroupAccount {
         phone: String,
         address: String,
         contents: String,
-        is_paid: MySqlBool,
-        is_deleted: MySqlBool,
+        representative_name: String,
+        representative_furigana: String,
+        is_paid: bool,
+        is_deleted: bool,
         deleted_at: Option<NaiveDateTime>,
     ) -> GroupAccount {
         GroupAccount {
@@ -50,6 +54,8 @@ impl GroupAccount {
             phone,
             address,
             contents,
+            representative_name,
+            representative_furigana,
             is_paid,
             is_deleted,
             deleted_at,
@@ -67,4 +73,7 @@ pub trait GroupUserRepository: Send + Sync {
 
     /// 団体アカウントを全て取得する
     async fn find_all(&self) -> Result<Vec<GroupAccount>>;
+
+    /// 団体アカウントが存在するか確認する
+    async fn exists(&self, gid: &UserId) -> Result<bool>;
 }

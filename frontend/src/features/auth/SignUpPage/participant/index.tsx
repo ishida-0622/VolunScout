@@ -1,10 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Badge, Col, Container, ProgressBar, Row } from "react-bootstrap";
 
 import { Confirmation } from "./Confirmation";
 import { PersonalRegistration } from "./PersonalRegistration";
 import { VolunteerRegistration } from "./VolunteerRegistration";
+
+import { auth } from "@/firebaseConfig";
 
 export type FormValues = {
   pid: string;
@@ -14,11 +17,12 @@ export type FormValues = {
   gender: string;
   birthday: string;
   profile: string;
-  regions: string[];
-  themes: string[];
-  themesRequired: string[];
-  conditions: string[];
-  conditionsRequired: string[];
+  region: string[];
+  theme: string[];
+  required_theme: string[];
+  condition: string[];
+  required_condition: string[];
+  targetStatuses: string;
 };
 
 export const SignUpPage = () => {
@@ -26,15 +30,16 @@ export const SignUpPage = () => {
     pid: "",
     name: "",
     furigana: "",
-    gender: "0",
+    gender: "",
     phone: "",
     birthday: "",
     profile: "",
-    regions: [],
-    themes: [],
-    themesRequired: [],
-    conditions: [],
-    conditionsRequired: [],
+    region: [],
+    theme: [],
+    required_theme: [],
+    condition: [],
+    required_condition: [],
+    targetStatuses: "",
   });
 
   const [pageCounter, setPageCounter] = useState(0);
@@ -51,8 +56,39 @@ export const SignUpPage = () => {
     prevPage();
   };
 
+  useEffect(() => {
+    return () => {
+      auth.signOut().catch(() => {});
+    };
+  }, []);
+
   return (
-    <main>
+    <Container>
+      <Row>
+        <Col className="text-center my-3">
+          <h1>新規会員登録</h1>
+        </Col>
+      </Row>
+      <Row className="mb-1">
+        <Col sm={{ span: 8, offset: 2 }}>
+          <ProgressBar variant="success" now={(100 / 2) * pageCounter} />
+        </Col>
+      </Row>
+      <Row className="mb-5 text-center">
+        <Col>
+          <Badge bg="success">個人情報登録</Badge>
+        </Col>
+        <Col>
+          <Badge bg={pageCounter > 0 ? "success" : "secondary"}>
+            ボランティア情報登録
+          </Badge>
+        </Col>
+        <Col>
+          <Badge bg={pageCounter > 1 ? "success" : "secondary"}>
+            入力内容確認
+          </Badge>
+        </Col>
+      </Row>
       {pageCounter === 0 && (
         <PersonalRegistration onNextPage={handleNextPage} values={formValues} />
       )}
@@ -66,6 +102,6 @@ export const SignUpPage = () => {
       {pageCounter === 2 && (
         <Confirmation values={formValues} prevPage={prevPage} />
       )}
-    </main>
+    </Container>
   );
 };

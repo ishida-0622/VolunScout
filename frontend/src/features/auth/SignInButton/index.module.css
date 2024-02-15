@@ -1,31 +1,66 @@
+/* index.module.css */
+
 .sign_in_modal {
-  width: 50%;
-  height: 50%;
+  width: 80%;
+  max-width: 640px;
+  height: 70%;
   text-align: center;
-  margin: 0 auto;
-  border: 2px solid #4285f4;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 2px solid var(--color-gray);
   border-radius: 8px;
+  background-color: var(--color-white);
 }
 
-.google_auth_logo {
-  object-fit: contain;
-  position: relative !important;
-  width: 480px !important;
-  max-width: 50% !important;
-  height: fit-content !important;
+.modal_overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.centered {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.google_auth_logo_container {
+  display: flex;
+  width: 100%;
+  max-width: 640px;
+  height: 20%;
+  align-items: center;
+  position: relative;
+  margin: 32px 0;
   cursor: pointer;
 }
 
-/* 追加：閉じるボタンのスタイル（疑似要素を使用し、赤色に設定） */
+.google_auth_logo {
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.checkbox_container {
+  text-align: center;
+  margin-top: 20px;
+}
+
 .close_sign_in_modal_button {
-  position: relative;
-  float: right;
-  margin: 8px;
+  position: absolute;
+  top: 8px;
+  right: 8px;
   width: 32px;
   height: 32px;
-  border: 2px solid #f00; /* 枠の調整 */
-  border-radius: 50%; /* 丸みの度合い */
-  background: #fff; /* ボタンの背景色 */
+  border: 2px solid #f00;
+  border-radius: 50%;
+  background: #fff;
   cursor: pointer;
 }
 
@@ -35,9 +70,9 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 3px; /* 棒の幅（太さ） */
-  height: 18px; /* 棒の高さ（長さ） */
-  background: #f00; /* バツ印の色 */
+  width: 3px;
+  height: 18px;
+  background: #f00;
 }
 
 .close_sign_in_modal_button::before {
@@ -47,3 +82,5 @@
 .close_sign_in_modal_button::after {
   transform: translate(-50%, -50%) rotate(-45deg);
 }
+
+/* index.module.css */

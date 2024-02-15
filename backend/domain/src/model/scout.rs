@@ -1,3 +1,5 @@
+use std::str::FromStr;
+
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use ulid_generator_rs::{ULIDGenerator, ULID};
@@ -11,7 +13,7 @@ pub struct Scout {
     pub sender: VolunteerId,
     pub message: String,
     pub send_at: DateTime<Utc>,
-    pub is_send: bool,
+    pub is_sent: bool,
     pub is_read: bool,
 }
 
@@ -23,6 +25,11 @@ impl ScoutId {
         let mut generator: ULIDGenerator = ULIDGenerator::new();
         let value: ulid_generator_rs::ULID = generator.generate().unwrap();
         ScoutId(value)
+    }
+
+    pub fn from_str(value: &str) -> ScoutId {
+        let sid = ULID::from_str(&value).unwrap();
+        ScoutId(sid)
     }
 }
 
@@ -36,8 +43,15 @@ impl Scout {
             sender,
             message,
             send_at,
-            is_send: false,
+            is_sent: false,
             is_read: false,
         }
+    }
+}
+
+// Displayを実装することで, to_string()で文字列に変換できるようになる
+impl std::fmt::Display for ScoutId {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "{}", self.0.to_string())
     }
 }

@@ -1,0 +1,55 @@
+.main_contents {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 720px;
+  text-align: center;
+}
+
+.main {
+  font-size: 1.5em;
+  margin-right: 30px;
+  margin-left: 70px;
+  justify-content: right;
+}
+
+.select {
+  display: flex;
+  margin: 10px;
+}
+
+.name {
+  font-size: 2.5em;
+}
+
+.profile {
+  font-size: var(--fontsize-large);
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.asterisk {
+  color: var(--color-red);
+}
+
+.profile_contents_wrapper {
+  display: flex;
+}
+
+.profile_contents_wrapper .content_title {
+  width: 7rem;
+  min-width: 7rem;
+}
+
+.profile_contents_wrapper .colon {
+  margin: 0 0.5rem;
+}
+
+.profile_contents_wrapper .contents {
+  overflow-wrap: anywhere;
+}
+
+.button {
+  margin-left: 40px;
+}

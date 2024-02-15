@@ -3,19 +3,13 @@
 import { useLazyQuery } from "@apollo/client";
 import { FirebaseError } from "firebase/app";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
-import Modal from "react-modal";
-
-import styles from "./index.module.css";
+import { Button, Col, Form, Image, Modal, Row } from "react-bootstrap";
 
 import { gql } from "@/__generated__/query";
-import { CheckBox } from "@/components/ui-parts/CheckBox";
-import { URL_PATH_PARTICIPANT } from "@/consts";
+import { URL_PATH_GROUP, URL_PATH_PARTICIPANT } from "@/consts";
 import { auth } from "@/firebaseConfig";
-
-Modal.setAppElement(document.querySelector("body")!);
 
 const ExistsParticipantAccountQuery = gql(/* GraphQL */ `
   query ExistsParticipantAccount($uid: String!) {
@@ -23,12 +17,11 @@ const ExistsParticipantAccountQuery = gql(/* GraphQL */ `
   }
 `);
 
-// TODO: バックエンド未完成
-// const ExistsGroupAccountQuery = gql(/* GraphQL */ `
-//   query ExistsGroupAccount($uid: String!) {
-//     result: existsGroupAccount(uid: $uid)
-//   }
-// `);
+const ExistsGroupAccountQuery = gql(/* GraphQL */ `
+  query ExistsGroupAccount($gid: String!) {
+    result: existsGroupAccount(gid: $gid)
+  }
+`);
 
 export const SignInButton = () => {
   const router = useRouter();
@@ -39,15 +32,20 @@ export const SignInButton = () => {
   const closeModal = () => setIsModalOpen(false);
 
   const isGroup = useRef(false);
-  const handleChangeIsGroup = (checked: boolean) => {
+  const handleChangeIsGroup = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const checked = e.target.checked;
     isGroup.current = checked;
   };
 
   const [existsParticipantAccount] = useLazyQuery(
-    ExistsParticipantAccountQuery
+    ExistsParticipantAccountQuery,
+    {
+      fetchPolicy: "network-only",
+    }
   );
-  // TODO: バックエンド未完成
-  // const [existsGroupAccount] = useLazyQuery(ExistsGroupAccountQuery);
+  const [existsGroupAccount] = useLazyQuery(ExistsGroupAccountQuery, {
+    fetchPolicy: "network-only",
+  });
 
   const handleGoogleSignIn = async () => {
     try {
@@ -66,24 +64,25 @@ export const SignInButton = () => {
 
       const uid = user.uid;
 
-      if (isGroup.current) {
-        console.log("団体");
-        // TODO: バックエンド未完成
-        // const { data } = await existsGroupAccount({
-        //   variables: { uid },
-        // });
+      const { data } = isGroup.current
+        ? await existsGroupAccount({ variables: { gid: uid } })
+        : await existsParticipantAccount({ variables: { uid } });
+
+      if (data === undefined) {
+        throw new Error("data is undefined");
+      }
+
+      // 会員登録がされていない場合はサインアップページに遷移
+      if (data.result === false) {
+        router.push(
+          isGroup.current
+            ? URL_PATH_GROUP.SIGN_UP
+            : URL_PATH_PARTICIPANT.SIGN_UP
+        );
       } else {
-        const { data } = await existsParticipantAccount({
-          variables: { uid },
-        });
-
-        if (data === undefined) {
-          throw new Error("data is undefined");
-        }
-
-        if (data.result === false) {
-          router.push(URL_PATH_PARTICIPANT.SIGN_UP);
-        }
+        router.push(
+          isGroup.current ? URL_PATH_GROUP.HOME : URL_PATH_PARTICIPANT.HOME
+        );
       }
     } catch (error) {
       if (error instanceof FirebaseError) {
@@ -92,47 +91,54 @@ export const SignInButton = () => {
         }
       } else {
         alert("ログインに失敗しました");
-        console.error(error);
       }
     }
   };
 
   return (
     <>
-      <div>
-        <button type="button" onClick={openModal}>
-          ログイン/会員登録
-        </button>
-      </div>
+      <Button variant="none" onClick={openModal}>
+        ログイン/会員登録
+      </Button>
       <Modal
-        isOpen={isModalOpen}
-        onRequestClose={closeModal}
-        className={styles.sign_in_modal}
+        show={isModalOpen}
+        onHide={closeModal}
+        size="lg"
+        aria-labelledby="login-modal"
+        className="m-auto"
+        centered
       >
-        <button
-          type="button"
-          onClick={closeModal}
-          className={styles.close_sign_in_modal_button}
-        >
-          ×
-        </button>
-        <h1>Sign up / Log in</h1>
-        <Image
-          src="/auth/web_neutral_sq_SI.svg"
-          alt="Google Auth Logo"
-          fill
-          className={styles.google_auth_logo}
-          onClick={() => {
-            handleGoogleSignIn()
-              .then(() => closeModal())
-              .catch(() => {});
-          }}
-        />
-        <CheckBox
-          label="ボランティアを募集する「団体」としてログイン・会員登録する"
-          onChange={handleChangeIsGroup}
-          initialState={isGroup.current}
-        />
+        <Modal.Header closeButton>
+          <Modal.Title id="login-modal" className="px-3">
+            <h1>Sign up / Log in</h1>
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Row className="mb-3 w-50 m-auto">
+            <Col>
+              <Image
+                src="/auth/web_neutral_sq_SI.svg"
+                alt="Google Auth Logo"
+                className="w-100"
+                role="button"
+                onClick={() => {
+                  handleGoogleSignIn()
+                    .then(() => closeModal())
+                    .catch(() => {});
+                }}
+              />
+            </Col>
+          </Row>
+          <Row className="w-75 m-auto">
+            <Col>
+              <Form.Switch
+                label="ボランティアを募集する「団体」としてログイン・会員登録する"
+                onChange={handleChangeIsGroup}
+                initialState={isGroup.current}
+              />
+            </Col>
+          </Row>
+        </Modal.Body>
       </Modal>
     </>
   );

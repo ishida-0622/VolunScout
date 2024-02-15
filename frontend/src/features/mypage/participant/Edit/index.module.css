@@ -1,0 +1,9 @@
+.button {
+  margin: 1rem;
+  width: 12rem;
+}
+
+.button_wrapper {
+  width: fit-content;
+  margin: 0 auto;
+}

@@ -9,6 +9,7 @@ use domain::model::{
     condition::Condition,
     gender::Gender,
     region::Region,
+    terms::Terms,
     theme::Theme,
     user_account::{
         user_id::UserId, user_name::UserName, user_name_furigana::UserNameFurigana,
@@ -36,12 +37,8 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
         phone: UserPhone,
         gender: Gender,
         birthday: NaiveDate,
-        regions: Vec<Region>,
         profile: String,
-        themes: Vec<Theme>,
-        themes_required: Vec<Theme>,
-        conditions: Vec<Condition>,
-        conditions_required: Vec<Condition>,
+        terms: Terms,
     ) -> Result<()> {
         let id: String = pid.to_string();
 
@@ -55,7 +52,16 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
             profile
         ).execute(&self.pool).await?;
 
-        let insert_region_query: Vec<_> = regions
+        sqlx::query!(
+            "INSERT INTO participant_element (uid, eid) VALUES (?, ?)",
+            id,
+            terms.target_status[0].to_id()
+        )
+        .execute(&self.pool)
+        .await?;
+
+        let insert_region_query: Vec<_> = terms
+            .regions
             .iter()
             .map(|r: &Region| {
                 sqlx::query!(
@@ -67,7 +73,8 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
             })
             .collect::<Vec<_>>();
 
-        let insert_theme_query: Vec<_> = themes
+        let insert_theme_query: Vec<_> = terms
+            .themes
             .iter()
             .map(|t: &Theme| {
                 sqlx::query!(
@@ -79,7 +86,8 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
             })
             .collect::<Vec<_>>();
 
-        let insert_theme_required_query: Vec<_> = themes_required
+        let insert_theme_required_query: Vec<_> = terms
+            .required_themes
             .iter()
             .map(|t: &Theme| {
                 sqlx::query!(
@@ -92,7 +100,8 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
             })
             .collect::<Vec<_>>();
 
-        let insert_condition_query: Vec<_> = conditions
+        let insert_condition_query: Vec<_> = terms
+            .conditions
             .iter()
             .map(|c: &Condition| {
                 sqlx::query!(
@@ -104,7 +113,8 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
             })
             .collect::<Vec<_>>();
 
-        let insert_condition_required_query: Vec<_> = conditions_required
+        let insert_condition_required_query: Vec<_> = terms
+            .required_conditions
             .iter()
             .map(|c: &Condition| {
                 sqlx::query!(
@@ -138,12 +148,8 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
         phone: UserPhone,
         gender: Gender,
         birthday: NaiveDate,
-        regions: Vec<Region>,
         profile: String,
-        themes: Vec<Theme>,
-        themes_required: Vec<Theme>,
-        conditions: Vec<Condition>,
-        conditions_required: Vec<Condition>,
+        terms: Terms,
     ) -> Result<()> {
         let update_query = sqlx::query!(
             "UPDATE participant_account SET name = ?,furigana = ?, phone = ?, gender = ?, birthday = ?, profile = ? WHERE uid = ?",
@@ -173,7 +179,16 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
 
         let id: String = pid.to_string();
 
-        let insert_region_query: Vec<_> = regions
+        sqlx::query!(
+            "INSERT INTO participant_element (uid, eid) VALUES (?, ?)",
+            id,
+            terms.target_status[0].to_id()
+        )
+        .execute(&self.pool)
+        .await?;
+
+        let insert_region_query: Vec<_> = terms
+            .regions
             .iter()
             .map(|r: &Region| {
                 sqlx::query!(
@@ -185,7 +200,8 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
             })
             .collect::<Vec<_>>();
 
-        let insert_theme_query: Vec<_> = themes
+        let insert_theme_query: Vec<_> = terms
+            .themes
             .iter()
             .map(|t: &Theme| {
                 sqlx::query!(
@@ -197,7 +213,8 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
             })
             .collect::<Vec<_>>();
 
-        let insert_theme_required_query: Vec<_> = themes_required
+        let insert_theme_required_query: Vec<_> = terms
+            .required_themes
             .iter()
             .map(|t: &Theme| {
                 sqlx::query!(
@@ -210,7 +227,8 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
             })
             .collect::<Vec<_>>();
 
-        let insert_condition_query: Vec<_> = conditions
+        let insert_condition_query: Vec<_> = terms
+            .conditions
             .iter()
             .map(|c: &Condition| {
                 sqlx::query!(
@@ -222,7 +240,8 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
             })
             .collect::<Vec<_>>();
 
-        let insert_condition_required_query: Vec<_> = conditions_required
+        let insert_condition_required_query: Vec<_> = terms
+            .required_conditions
             .iter()
             .map(|c: &Condition| {
                 sqlx::query!(
@@ -249,13 +268,32 @@ impl ParticipantUserRepository for ParticipantAccountImpl {
     }
 
     async fn delete(&self, pid: UserId) -> Result<()> {
-        sqlx::query!(
-            "UPDATE participant_account SET is_deleted = true, deleted_at = ? WHERE uid = ?",
-            Utc::now(),
-            pid.to_string()
+        let id: String = pid.to_string();
+        struct IsExists {
+            is_deleted: bool
+        }
+
+        let is_deleted = sqlx::query_as!(
+            IsExists,
+            r#"
+            SELECT is_deleted as "is_deleted: bool" FROM participant_account WHERE uid = ?
+            "#,
+            id
         )
-        .execute(&self.pool)
+        .fetch_one(&self.pool)
         .await?;
-        Ok(())
+
+        if is_deleted.is_deleted {
+            Err(anyhow::anyhow!("This participant_account is already deleted".to_string()))
+        } else {
+            sqlx::query!(
+                "UPDATE participant_account SET is_deleted = true, deleted_at = ? WHERE uid = ?",
+                Utc::now(),
+                pid.to_string()
+            )
+            .execute(&self.pool)
+            .await?;
+            Ok(())
+        }
     }
 }

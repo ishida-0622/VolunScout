@@ -1,13 +1,16 @@
 use serde::{Deserialize, Serialize};
 
-use crate::model::{region::Region, target_status::TargetStatus, theme::Theme};
+use crate::model::{
+    condition::Condition, region::Region, target_status::TargetStatus, theme::Theme,
+};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Terms {
     pub regions: Vec<Region>,
     pub themes: Vec<Theme>,
-    pub transportation_expenses: bool,
-    pub reward: Option<String>,
+    pub required_themes: Vec<Theme>,
+    pub conditions: Vec<Condition>,
+    pub required_conditions: Vec<Condition>,
     pub target_status: Vec<TargetStatus>,
 }
 
@@ -15,15 +18,17 @@ impl Terms {
     pub fn new(
         regions: Vec<Region>,
         themes: Vec<Theme>,
-        transportation_expenses: bool,
-        reward: Option<String>,
+        required_themes: Vec<Theme>,
+        conditions: Vec<Condition>,
+        required_conditions: Vec<Condition>,
         target_status: Vec<TargetStatus>,
     ) -> Terms {
         Terms {
             regions,
             themes,
-            transportation_expenses,
-            reward,
+            required_themes,
+            conditions,
+            required_conditions,
             target_status,
         }
     }

@@ -12,10 +12,13 @@ async-graphql-axum = { workspace = true }
 async-trait = { workspace = true }
 axum = { workspace = true }
 chrono = { workspace = true }
-# futures = { workspace = true }
+futures = { workspace = true }
 redis = { workspace = true, features = ["tokio-comp"] }
-sqlx = { workspace = true }
+sqlx = { workspace = true, features = ["bigdecimal", "json"] }
 tower-http = { workspace = true, features = ["fs"] }
 
 domain = { path = "../../domain" }
 query-repository = { path = "../repository" }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+rust_decimal = "1.5.0"

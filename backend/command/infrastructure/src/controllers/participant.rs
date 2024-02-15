@@ -10,6 +10,8 @@ use domain::model::{
     condition::Condition,
     gender::{gender_from_i8, Gender},
     region::Region,
+    target_status::TargetStatus,
+    terms::Terms,
     theme::Theme,
     user_account::{
         user_id::UserId, user_name::UserName, user_name_furigana::UserNameFurigana,
@@ -35,17 +37,19 @@ pub struct CreateParticipantAccountRequestBody {
     #[schema(required = true, value_type = String, example = "2002-06-22")]
     pub birthday: NaiveDate,
     #[schema(required = true)]
-    pub regions: Vec<String>,
-    #[schema(required = true)]
     pub profile: String,
     #[schema(required = true)]
-    pub themes: Vec<String>,
+    pub region: Vec<String>,
     #[schema(required = true)]
-    pub themes_required: Vec<String>,
+    pub theme: Vec<String>,
     #[schema(required = true)]
-    pub conditions: Vec<String>,
+    pub required_theme: Vec<String>,
     #[schema(required = true)]
-    pub conditions_required: Vec<String>,
+    pub condition: Vec<String>,
+    #[schema(required = true)]
+    pub required_condition: Vec<String>,
+    #[schema(required = true)]
+    pub target_status: String,
 }
 
 /// 参加者アカウントの更新時のリクエストボディを表す構造体
@@ -64,17 +68,19 @@ pub struct UpdateParticipantAccountRequestBody {
     #[schema(required = true, value_type = String, example = "2002-06-22")]
     pub birthday: NaiveDate,
     #[schema(required = true)]
-    pub regions: Vec<String>,
-    #[schema(required = true)]
     pub profile: String,
     #[schema(required = true)]
-    pub themes: Vec<String>,
+    pub region: Vec<String>,
     #[schema(required = true)]
-    pub themes_required: Vec<String>,
+    pub theme: Vec<String>,
     #[schema(required = true)]
-    pub conditions: Vec<String>,
+    pub required_theme: Vec<String>,
     #[schema(required = true)]
-    pub conditions_required: Vec<String>,
+    pub condition: Vec<String>,
+    #[schema(required = true)]
+    pub required_condition: Vec<String>,
+    #[schema(required = true)]
+    pub target_status: String,
 }
 
 /// 参加者アカウントの削除時のリクエストボディを表す構造体
@@ -170,53 +176,62 @@ pub async fn create_participant_account(
         }
     };
 
+    let profile: String = body.profile;
+
     let birthday: NaiveDate = body.birthday;
 
-    let regions: Vec<Region> = body
-        .regions
+    let region: Vec<Region> = body
+        .region
         .iter()
         .map(|r: &String| Region::from_str(r).unwrap())
         .collect::<Vec<Region>>();
 
-    let profile: String = body.profile;
-
-    let themes: Vec<Theme> = body
-        .themes
+    let theme: Vec<Theme> = body
+        .theme
         .iter()
         .map(|t: &String| Theme::from_str(t).unwrap())
         .collect::<Vec<Theme>>();
-    let themes_required: Vec<Theme> = body
-        .themes_required
+    let required_theme: Vec<Theme> = body
+        .required_theme
         .iter()
         .map(|t: &String| Theme::from_str(t).unwrap())
         .collect::<Vec<Theme>>();
 
-    let conditions: Vec<Condition> = body
-        .conditions
+    let condition: Vec<Condition> = body
+        .condition
         .iter()
         .map(|c: &String| Condition::from_str(c).unwrap())
         .collect::<Vec<Condition>>();
-    let conditions_required: Vec<Condition> = body
-        .conditions_required
+    let required_condition: Vec<Condition> = body
+        .required_condition
         .iter()
         .map(|c: &String| Condition::from_str(c).unwrap())
         .collect::<Vec<Condition>>();
+    let target_status: TargetStatus = match TargetStatus::from_str(&body.target_status) {
+        Ok(target_status) => target_status,
+        Err(error) => {
+            log::warn!("error = {}", error);
+            return (
+                StatusCode::BAD_REQUEST,
+                Json(WriteApiResponseFailureBody {
+                    message: error.to_string(),
+                }),
+            )
+                .into_response();
+        }
+    };
+
+    let terms: Terms = Terms::new(
+        region,
+        theme,
+        required_theme,
+        condition,
+        required_condition,
+        vec![target_status],
+    );
 
     match repository
-        .create(
-            pid,
-            name,
-            furigana,
-            phone,
-            gender,
-            birthday,
-            regions,
-            profile,
-            themes,
-            themes_required,
-            conditions,
-            conditions_required,
-        )
+        .create(pid, name, furigana, phone, gender, birthday, profile, terms)
         .await
     {
         Ok(_) => (
@@ -327,51 +342,59 @@ pub async fn update_participant_account(
 
     let birthday: NaiveDate = body.birthday;
 
-    let regions: Vec<Region> = body
-        .regions
+    let profile: String = body.profile;
+    let region: Vec<Region> = body
+        .region
         .iter()
         .map(|r: &String| Region::from_str(r).unwrap())
         .collect::<Vec<Region>>();
 
-    let profile: String = body.profile;
-
-    let themes: Vec<Theme> = body
-        .themes
+    let theme: Vec<Theme> = body
+        .theme
         .iter()
         .map(|t: &String| Theme::from_str(t).unwrap())
         .collect::<Vec<Theme>>();
-    let themes_required: Vec<Theme> = body
-        .themes_required
+    let required_theme: Vec<Theme> = body
+        .required_theme
         .iter()
         .map(|t: &String| Theme::from_str(t).unwrap())
         .collect::<Vec<Theme>>();
 
-    let conditions: Vec<Condition> = body
-        .conditions
+    let condition: Vec<Condition> = body
+        .condition
         .iter()
         .map(|c: &String| Condition::from_str(c).unwrap())
         .collect::<Vec<Condition>>();
-    let conditions_required: Vec<Condition> = body
-        .conditions_required
+    let required_condition: Vec<Condition> = body
+        .required_condition
         .iter()
         .map(|c: &String| Condition::from_str(c).unwrap())
         .collect::<Vec<Condition>>();
+    let target_status: TargetStatus = match TargetStatus::from_str(&body.target_status) {
+        Ok(target_status) => target_status,
+        Err(error) => {
+            log::warn!("error = {}", error);
+            return (
+                StatusCode::BAD_REQUEST,
+                Json(WriteApiResponseFailureBody {
+                    message: error.to_string(),
+                }),
+            )
+                .into_response();
+        }
+    };
+
+    let terms: Terms = Terms::new(
+        region,
+        theme,
+        required_theme,
+        condition,
+        required_condition,
+        vec![target_status],
+    );
 
     match repository
-        .update(
-            pid,
-            name,
-            furigana,
-            phone,
-            gender,
-            birthday,
-            regions,
-            profile,
-            themes,
-            themes_required,
-            conditions,
-            conditions_required,
-        )
+        .update(pid, name, furigana, phone, gender, birthday, profile, terms)
         .await
     {
         Ok(_) => (

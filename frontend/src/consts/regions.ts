@@ -1,4 +1,4 @@
-export const REGIONS: string[] = [
+export const REGIONS = [
   "オンライン",
   "海外",
   "道北",
@@ -52,4 +52,4 @@ export const REGIONS: string[] = [
   "宮崎県",
   "鹿児島県",
   "沖縄県",
-];
+] as const;

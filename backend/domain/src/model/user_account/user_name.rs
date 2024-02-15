@@ -17,7 +17,7 @@ impl UserName {
     pub fn new(name: &str) -> Result<UserName> {
         if name.is_empty() {
             Err(UserNameError::Empty.into())
-        } else if name.len() > 50 {
+        } else if name.chars().count() > 50 {
             Err(UserNameError::TooLong.into())
         } else {
             Ok(UserName(name.to_string()))
@@ -41,8 +41,37 @@ impl std::str::FromStr for UserName {
     }
 }
 
-#[test]
-fn test_user_name() {
-    let name = UserName::new("石田健太郎").unwrap();
-    assert_eq!(name.to_string(), "石田健太郎");
+#[cfg(test)]
+mod test_user_name {
+    use super::*;
+
+    #[test]
+    fn ok() {
+        let name = UserName::new("石田健太郎").unwrap();
+        assert_eq!(name.to_string(), "石田健太郎");
+    }
+
+    #[test]
+    fn empty() {
+        let name = UserName::new("");
+        assert_eq!(name.is_err(), true);
+    }
+
+    #[test]
+    fn too_long() {
+        let name = UserName::new("寿限無寿限無五劫の擦り切れ海砂利水魚の水行末雲来末風来末食う寝る処に住む処やぶら小路の藪柑子パイポパイポパイポのシューリンガンシューリンガンのグーリンダイグーリンダイのポンポコピーのポンポコナーの長久命の長助");
+        assert_eq!(name.is_err(), true);
+    }
+
+    #[test]
+    fn length_50() {
+        let name = UserName::new("寿限無寿限無五劫の擦り切れ海砂利水魚の水行末雲来末風来末食う寝る処に住む処やぶら小路の藪柑子パイポパ");
+        assert_eq!(name.is_ok(), true);
+    }
+
+    #[test]
+    fn length_51() {
+        let name = UserName::new("寿限無寿限無五劫の擦り切れ海砂利水魚の水行末雲来末風来末食う寝る処に住む処やぶら小路の藪柑子パイポパイ");
+        assert_eq!(name.is_err(), true);
+    }
 }

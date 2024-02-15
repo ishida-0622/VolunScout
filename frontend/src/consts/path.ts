@@ -15,7 +15,7 @@ export const URL_PATH_PARTICIPANT = {
   HOME: "/",
   SIGN_UP: "/signup",
   ACCOUNT: "/account",
-  ACCOUNT_DETAIL: (id: string) => `/account/${id}`,
+  GROUP_ACCOUNT_DETAIL: (id: string) => `/group/account/${id}`,
   ACCOUNT_EDIT: "/account/edit",
   ACCOUNT_DELETE: "/account/delete",
   FAVORITE: "/favorite",
@@ -34,7 +34,6 @@ export const URL_PATH_GROUP = {
   HOME: "/group",
   SIGN_UP: "/group/signup",
   ACCOUNT: "/group/account",
-  ACCOUNT_DETAIL: (id: string) => `/group/account/${id}`,
   ACCOUNT_EDIT: "/group/account/edit",
   ACCOUNT_DELETE: "/group/account/delete",
   VOLUNTEER: "/group/volunteer",
@@ -54,7 +53,7 @@ export const isParticipantPath = (path: string) => {
   const paths = Object.values(URL_PATH_PARTICIPANT).map((p) => {
     if (typeof p === "function") {
       switch (p) {
-        case URL_PATH_PARTICIPANT.ACCOUNT_DETAIL:
+        case URL_PATH_PARTICIPANT.GROUP_ACCOUNT_DETAIL:
           // uid(Firebase Auth)は28桁
           return new RegExp(`^${p(".{28}")}$`);
         case URL_PATH_PARTICIPANT.SCOUT_DETAIL:
@@ -82,9 +81,6 @@ export const isGroupPath = (path: string) => {
   const paths = Object.values(URL_PATH_GROUP).map((p) => {
     if (typeof p === "function") {
       switch (p) {
-        case URL_PATH_GROUP.ACCOUNT_DETAIL:
-          // uid(Firebase Auth)は28桁
-          return new RegExp(`^${p(".{28}")}$`);
         case URL_PATH_GROUP.VOLUNTEER_DETAIL:
         case URL_PATH_GROUP.VOLUNTEER_EDIT:
           // ulidは26桁
@@ -118,6 +114,21 @@ export const isCommonPath = (path: string) => {
  * @returns ヘッダーのリンクが非表示のものであればtrue
  */
 export const isNoHeaderLink = (path: string) => {
+  switch (path) {
+    case URL_PATH_PARTICIPANT.SIGN_UP:
+    case URL_PATH_GROUP.SIGN_UP:
+      return true;
+    default:
+      return false;
+  }
+};
+
+/**
+ * URLパスがヘッダーのアイコンが非表示のものかどうかを判定する
+ * @param path URLパス
+ * @returns ヘッダーのアイコンが非表示のものであればtrue
+ */
+export const isNoHeaderIcon = (path: string) => {
   switch (path) {
     case URL_PATH_PARTICIPANT.SIGN_UP:
     case URL_PATH_GROUP.SIGN_UP:
