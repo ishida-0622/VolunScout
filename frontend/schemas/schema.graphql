@@ -705,7 +705,7 @@ type ScoutFromGroup {
 	name: String!
 	gender: Int!
 	birthday: NaiveDate!
-	point: Float!
+	point: Float
 }
 
 """
