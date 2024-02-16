@@ -151,9 +151,8 @@ export const UpdateVolunteer = ({ vid, gid }: Props) => {
       ...getValues(),
       ...getTermsValues(),
       recruited_num: Number(infoValues.recruited_num),
-      // MEMO: UTC を明示的に指定する
-      start_at: new Date(`${infoValues.start_at}Z`).toISOString(),
-      finish_at: new Date(`${infoValues.finish_at}Z`).toISOString(),
+      start_at: new Date(infoValues.start_at).toISOString(),
+      finish_at: new Date(infoValues.finish_at).toISOString(),
       theme: termsValues.theme.flatMap((theme) =>
         termsValues.required_theme.includes(theme) ? [] : [theme]
       ),
