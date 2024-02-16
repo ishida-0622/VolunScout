@@ -114,6 +114,9 @@ export const useInfoForm = ({
               required
               min={new Date("2000-01-01").toISOString()}
               onChange={(e) => {
+                register("start_at")
+                  .onChange(e)
+                  .catch(() => {});
                 setFinishAtValidation(e.target.value);
               }}
             />
@@ -126,6 +129,9 @@ export const useInfoForm = ({
               required
               min={finishAtValidation}
               onChange={(e) => {
+                register("finish_at")
+                  .onChange(e)
+                  .catch(() => {});
                 const date = new Date(e.target.value || "2000-01-01");
                 setDeadlineValidation(date.toISOString().split("T")[0]);
               }}
