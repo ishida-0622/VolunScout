@@ -193,6 +193,22 @@ export const Scout = ({ vid }: Props) => {
 
   return (
     <>
+      <Row className="mb-3">
+        <Col />
+        <Col sm="2">
+          <Form.Check
+            id="all-check"
+            label="全選択"
+            onChange={(e) => {
+              if (e.target.checked) {
+                setSelected(participants.map((p) => p.uid));
+              } else {
+                setSelected([]);
+              }
+            }}
+          ></Form.Check>
+        </Col>
+      </Row>
       {participants.map((p) => (
         <Row
           key={p.uid}
@@ -213,7 +229,7 @@ export const Scout = ({ vid }: Props) => {
           </Col>
           <Col>
             <Form.Check
-              aria-label="option 1"
+              checked={selected.includes(p.uid)}
               onChange={(e) => {
                 if (e.target.checked) {
                   setSelected((prev) => [...prev, p.uid]);
