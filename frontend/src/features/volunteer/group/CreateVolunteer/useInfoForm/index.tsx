@@ -177,7 +177,6 @@ export const useInfoForm = ({
                 value={status}
                 label={status}
                 {...register("target_status")}
-                required
               />
             ))}
             <Form.Control.Feedback type="invalid">
