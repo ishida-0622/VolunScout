@@ -252,6 +252,9 @@ impl VolunteerQueryRepository for VolunteerQueryRepositoryImpl {
         if or_regions.len() == 0 {
             or_regions.push(100 as u8)
         }
+
+        let search_words = search_words.replace("\\", "\\\\").replace("\"", "\\\"").replace("\'", "\\\'").replace("%", "\\%").replace("_", "\\_");
+
         let query_str = format!(
             r#"
                 SELECT
