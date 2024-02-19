@@ -85,6 +85,7 @@ export const Apply = ({ vid }: Props) => {
     fetchPolicy: "cache-and-network",
   });
 
+  // 承認処理
   const accept = async (aid: string) => {
     if (!confirm("承認しますか？")) return;
 
@@ -102,6 +103,7 @@ export const Apply = ({ vid }: Props) => {
     }
   };
 
+  // 棄却処理
   const reject = async (aid: string) => {
     if (!confirm("棄却しますか？")) return;
 
@@ -173,7 +175,7 @@ export const Apply = ({ vid }: Props) => {
   }
 
   if (applyData === undefined) {
-    return notFound();
+    notFound();
   }
 
   return (

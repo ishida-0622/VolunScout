@@ -12,6 +12,7 @@ import { useAuthContext } from "@/contexts/AuthContext";
 import { formatPhone } from "@/utils/formatPhone";
 import { formatReview } from "@/utils/formatReview";
 
+// グループアカウントを取得するクエリ
 export const GetGroupAccountQuery = gql(/* GraphQL */ `
   query GetGroupAccountAndReview($gid: String!) {
     user: getGroupAccount(gid: $gid) {
@@ -29,13 +30,19 @@ export const GetGroupAccountQuery = gql(/* GraphQL */ `
   }
 `);
 
+// マイページコンポーネント
 export const MyPage = () => {
   const router = useRouter();
+
+  // 編集ページへ遷移する関数
   const toEditPage = () => {
     router.push(URL_PATH_GROUP.ACCOUNT_EDIT);
   };
 
+  // 認証情報の取得
   const { user } = useAuthContext();
+
+  // グループアカウントの取得クエリの実行
   const [getGroupAccount, { data, loading, error }] = useLazyQuery(
     GetGroupAccountQuery,
     {
@@ -43,21 +50,27 @@ export const MyPage = () => {
     }
   );
 
+  // 認証情報が変更された際に再取得を行う
   useEffect(() => {
     if (typeof user?.uid === "string") {
       getGroupAccount({ variables: { gid: user.uid } }).catch(() => {});
     }
   }, [getGroupAccount, user?.uid]);
 
+  // ローディング中またはデータが未定義の場合はnullを返す
   if (loading || data === undefined) {
     return null;
   }
 
+  // エラーが発生した場合は404ページを表示
   if (error) {
     notFound();
   }
 
+  // ユーザー情報とレビュー情報を取得
   const { user: userInfo, reviews } = data;
+
+  // レビューの平均点を計算
   const point =
     reviews.length > 0
       ? Math.round(
@@ -66,6 +79,7 @@ export const MyPage = () => {
         ) / 10
       : undefined;
 
+  // マイページの表示
   return (
     <Container className="my-3">
       <Row className="mb-3">

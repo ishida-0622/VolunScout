@@ -20,7 +20,9 @@ type Props = {
 export const UserIconOrSignInButton = ({ accountType }: Props) => {
   const { user, initializing } = useAuthContext();
 
-  if (initializing) return null;
+  if (initializing) {
+    return null;
+  }
 
   return user ? <UserIcon accountType={accountType} /> : <SignInButton />;
 };

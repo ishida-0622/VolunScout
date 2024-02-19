@@ -42,28 +42,34 @@ const GetVolunteerFromUpdatePageQuery = gql(/* GraphQL */ `
   }
 `);
 
+// ボランティアの更新ページコンポーネント
 export const UpdateVolunteer = ({ vid, gid }: Props) => {
   const router = useRouter();
 
+  // ボランティア情報のクエリを実行
   const { data, loading, error } = useQuery(GetVolunteerFromUpdatePageQuery, {
     variables: { vid },
     fetchPolicy: "cache-and-network",
   });
 
-  const imageRef = useRef<HTMLInputElement>(null);
+  const imageRef = useRef<HTMLInputElement>(null); // 画像の参照を作成
 
+  // 情報フォームのカスタムフックを使用
   const { InputForm, setValue, getValues, validation } = useInfoForm({
     imageRef,
   });
 
+  // テーマフォームのカスタムフックを使用
   const {
     InputForm: TermsForm,
     getValues: getTermsValues,
     setFormValues,
   } = useTermsForm({ isOpen: true });
 
+  // ボランティア情報をフォームにセットする副作用を処理
   useEffect(() => {
     if (data) {
+      // フォームにボランティア情報をセット
       setFormValues({
         theme: data.volunteer.themes,
         required_theme: data.volunteer.requiredThemes,
@@ -71,6 +77,8 @@ export const UpdateVolunteer = ({ vid, gid }: Props) => {
         required_condition: data.volunteer.requiredConditions,
         region: data.volunteer.regions,
       });
+
+      // キーのスネークケースをキャメルケースに変換して値をセット
       const f = (s: string) => {
         return s
           .split("")
@@ -79,6 +87,7 @@ export const UpdateVolunteer = ({ vid, gid }: Props) => {
           .replace(/^_/, "");
       };
 
+      // 日時情報をJSTに変換してセット
       const volunteer: typeof data.volunteer = {
         ...data.volunteer,
         startAt: utcToJst(data.volunteer.startAt),
@@ -91,6 +100,7 @@ export const UpdateVolunteer = ({ vid, gid }: Props) => {
     }
   }, [data, setFormValues, setValue]);
 
+  // フォームの送信処理
   const handleSubmit = async () => {
     if (!validation()) {
       return;
@@ -98,11 +108,13 @@ export const UpdateVolunteer = ({ vid, gid }: Props) => {
 
     const photos = imageRef.current?.files;
 
+    // 写真が4枚以上の場合はアラートを表示して処理を中断
     if (photos && photos.length > 4) {
       alert("写真は4枚までです");
       return;
     }
 
+    // 写真のアップロード処理
     if (photos) {
       const requests = [];
       const urls = [];
@@ -128,8 +140,11 @@ export const UpdateVolunteer = ({ vid, gid }: Props) => {
       setValue("photos", urls);
     }
 
+    // フォームの値を取得
     const infoValues = getValues();
     const termsValues = getTermsValues();
+
+    // 必須項目のチェック
     if (infoValues.target_status.length === 0) {
       alert("募集対象を選択してください");
       return;
@@ -145,6 +160,7 @@ export const UpdateVolunteer = ({ vid, gid }: Props) => {
       return;
     }
 
+    // ボランティア情報のリクエストボディを作成
     const values: UpdateVolunteerRequestBody = {
       vid,
       gid,
@@ -161,6 +177,7 @@ export const UpdateVolunteer = ({ vid, gid }: Props) => {
       ),
     };
     try {
+      // ボランティア情報を更新
       await apiClientVolunteer.updateVolunteer(values);
       alert("更新しました");
       router.back();
@@ -170,16 +187,20 @@ export const UpdateVolunteer = ({ vid, gid }: Props) => {
     }
   };
 
+  // ローディング中はスピナーを表示
   if (loading) {
     return <Spinner />;
   }
+  // エラーがある場合はnullを返す
   if (error) {
     return null;
   }
+  // データが未定義の場合や取得したデータのグループIDが異なる場合は404エラーを表示
   if (data === undefined || data.volunteer.gid !== gid) {
     notFound();
   }
 
+  // 更新フォームをレンダリング
   return (
     <Container>
       {InputForm}

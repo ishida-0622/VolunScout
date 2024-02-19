@@ -16,6 +16,8 @@ type Props = {
 
 export const VolunteerItem = ({ volunteer }: Props) => {
   const router = useRouter();
+
+  // ボランティア詳細画面に遷移
   const toVolunteer = () => {
     router.push(URL_PATH_GROUP.VOLUNTEER_DETAIL(volunteer.vid));
   };

@@ -30,6 +30,7 @@ type Props = {
   vid: string;
 };
 
+// ボランティア詳細を取得するクエリ
 const GetVolunTeerDetailsQuery = gql(/* GraphQL */ `
   query GetVolunteerDetails($vid: String!) {
     volunteer: getVolunteerById(vid: $vid) {
@@ -47,10 +48,12 @@ const GetVolunTeerDetailsQuery = gql(/* GraphQL */ `
 export const VolunteerDetails = ({ vid }: Props) => {
   const router = useRouter();
 
+  // 編集画面に遷移
   const toEdit = () => {
     router.push(URL_PATH_GROUP.VOLUNTEER_EDIT(vid));
   };
 
+  // 応募者確認, スカウト, 送信済みスカウトの表示切り替え
   const [page, setPage] = useState<"apply" | "scout" | "sentScout">("apply");
 
   const showApply = () => {
@@ -68,6 +71,7 @@ export const VolunteerDetails = ({ vid }: Props) => {
     fetchPolicy: "cache-and-network",
   });
 
+  // ボランティア削除
   const deleteVolunteer = async () => {
     if (!confirm("本当に削除しますか？")) return;
 

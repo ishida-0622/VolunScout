@@ -14,6 +14,7 @@ type Props = {
   vid: string;
 };
 
+// 送信済みスカウト一覧を取得するクエリ
 const GetScoutByVidQuery = gql(/* GraphQL */ `
   query getScoutByVid($vid: String!) {
     scouts: getScoutByVid(vid: $vid) {
@@ -37,6 +38,7 @@ export const SentScout = ({ vid }: Props) => {
     fetchPolicy: "cache-and-network",
   });
 
+  // スカウト詳細モーダル
   const [show, setShow] = useState(false);
   const [selectedScout, setSelectedScout] = useState<ST["scouts"][number]>({
     sid: "",

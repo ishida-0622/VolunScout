@@ -12,6 +12,7 @@ type Props = {
   vid: string;
 };
 
+// 参加者一覧を取得する
 const GetParticipantsQuery = gql(/* GraphQL */ `
   query GetParticipants($vid: String!) {
     participants: getPastVolunteerParticipantsByVid(vid: $vid) {
@@ -28,6 +29,7 @@ export const Review = ({ vid }: Props) => {
     variables: { vid },
   });
 
+  // レビューモーダルの表示制御
   const [show, setShow] = useState(false);
   const [uid, setUid] = useState("");
 

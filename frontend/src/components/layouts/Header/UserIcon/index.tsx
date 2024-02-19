@@ -27,10 +27,12 @@ export const UserIcon = ({ accountType }: Props) => {
   const [show, setShow] = useState(false);
   const pathname = usePathname();
 
+  // パスが変更された時にポップオーバーを閉じる
   useEffect(() => {
     setShow(false);
   }, [pathname]);
 
+  // マイページへのリンクを返す関数
   const toMyPage = () => {
     if (accountType === "group") {
       return URL_PATH_GROUP.ACCOUNT;
@@ -41,15 +43,20 @@ export const UserIcon = ({ accountType }: Props) => {
     }
   };
 
-  if (initializing) return null;
+  // 初期化中はnullを返す
+  if (initializing) {
+    return null;
+  }
 
   return (
+    // オーバーレイトリガー（ポップオーバーを表示するトリガー）
     <OverlayTrigger
       trigger={"click"}
       placement="bottom"
       show={show}
       onToggle={setShow}
       overlay={
+        // ポップオーバー
         <Popover>
           <ListGroup>
             <ListGroup.Item>
@@ -71,6 +78,7 @@ export const UserIcon = ({ accountType }: Props) => {
               </Link>
             </ListGroup.Item>
             <ListGroup.Item>
+              {/* ログアウトボタン */}
               <span onClick={logout} className={styles.logout} role="button">
                 <IoLogOutOutline />
                 ログアウト
@@ -80,6 +88,7 @@ export const UserIcon = ({ accountType }: Props) => {
         </Popover>
       }
     >
+      {/* ユーザーアイコン */}
       <Image
         src={user?.photoURL ?? "/icon.svg"}
         alt="user icon"

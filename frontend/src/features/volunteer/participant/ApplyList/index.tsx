@@ -19,6 +19,7 @@ import { gql } from "@/__generated__/query";
 import { SearchBar } from "@/components/ui-parts/SearchBar/index";
 import { useAuthContext } from "@/contexts/AuthContext";
 
+// 応募済みボランティア一覧取得
 const GetApplyFromApplyListQuery = gql(/* GraphQL */ `
   query getApplyFromApplyList($uid: String!) {
     activities: getActivitiesByUid(uid: $uid) {
@@ -64,6 +65,7 @@ export const ApplyList = () => {
     }
   );
 
+  // お気に入りボランティア
   const [favs, setFavs] = useState<Set<string>>(new Set());
 
   const [searchedActivities, setSearchedActivities] = useState(
@@ -75,6 +77,7 @@ export const ApplyList = () => {
     data?.notAllowed ?? []
   );
 
+  // 検索
   const search = useCallback(
     (s: string) => {
       if (data === undefined) {
@@ -100,6 +103,7 @@ export const ApplyList = () => {
     [data]
   );
 
+  // uidが変更されたら取得
   useEffect(() => {
     if (user) {
       (async () => {
