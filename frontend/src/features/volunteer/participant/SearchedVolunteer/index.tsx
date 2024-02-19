@@ -25,8 +25,10 @@ type Props = {
   params: ReadonlyURLSearchParams;
 };
 
+// 1ページに表示する件数
 const DEFAULT_SHOW_ONE_PAGE_ITEMS = 20;
 
+// 参加者の区分を取得するクエリ
 const GetTargetStatus = gql(/* GraphQL */ `
   query GetTargetStatus($uid: String!) {
     targetStatus: getParticipantTargetStatus(uid: $uid) {
@@ -35,6 +37,7 @@ const GetTargetStatus = gql(/* GraphQL */ `
   }
 `);
 
+// ボランティアを検索するクエリ
 const SearchVolunteerQuery = gql(/* GraphQL */ `
   query SearchVolunteer(
     $word: String!
@@ -66,6 +69,7 @@ const SearchVolunteerQuery = gql(/* GraphQL */ `
   }
 `);
 
+// お気に入りを取得するクエリ
 const GetFavFromSearchedPageQuery = gql(/* GraphQL */ `
   query getFavFromSearchedPage($uid: String!) {
     fav: getFavoriteByUid(uid: $uid) {
@@ -79,10 +83,12 @@ export const SearchedVolunteer = ({ params }: Props) => {
 
   const [isDeActive, setIsDeActive] = useState(false);
 
+  // 1ページに表示する件数
   const [showOnePageItems, setShowOnePageItems] = useState(
     DEFAULT_SHOW_ONE_PAGE_ITEMS
   );
 
+  // URLパラメータから検索条件を取得
   const word = params.get("word") ?? "";
   const region =
     params
@@ -110,11 +116,13 @@ export const SearchedVolunteer = ({ params }: Props) => {
       ?.split(",")
       .filter((v) => v !== "") ?? [];
 
+  // 検索ワード
   const searchWordRef = useRef(word);
   const handleChange = (value: string) => {
     searchWordRef.current = value;
   };
 
+  // 検索フォーム
   const { InputForm, getValues } = useTermsForm({
     defaultValues: {
       region,
@@ -125,6 +133,7 @@ export const SearchedVolunteer = ({ params }: Props) => {
     },
   });
 
+  // 再検索
   const reSearch = () => {
     setIsDeActive(true);
     const values = getValues();
@@ -154,6 +163,7 @@ export const SearchedVolunteer = ({ params }: Props) => {
   const [getFav] = useLazyQuery(GetFavFromSearchedPageQuery);
   const [favSet, setFavSet] = useState(new Set<string>());
 
+  // uid が変わったらお気に入りを取得
   useEffect(() => {
     if (user) {
       getFav({ variables: { uid: user.uid } })
@@ -165,6 +175,7 @@ export const SearchedVolunteer = ({ params }: Props) => {
     }
   }, [getFav, user]);
 
+  // uid が変わったら区分を取得
   useEffect(() => {
     if (user) {
       getTargetStatus({ variables: { uid: user.uid } })
@@ -185,6 +196,7 @@ export const SearchedVolunteer = ({ params }: Props) => {
     }
   }, [getTargetStatus, refetch, user]);
 
+  // ページネーション
   const MIN_PAGE = 1;
   const MAX_PAGE =
     Math.floor((data?.result.length ?? 1) / showOnePageItems) + 1;
@@ -215,6 +227,7 @@ export const SearchedVolunteer = ({ params }: Props) => {
     return null;
   }
 
+  // 表示するボランティア
   const start = (page - 1) * showOnePageItems;
   const end = Math.min(page * showOnePageItems, data.result.length);
   const showVolunteers = data.result.slice(start, end);

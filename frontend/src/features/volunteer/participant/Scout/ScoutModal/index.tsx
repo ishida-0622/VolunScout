@@ -14,6 +14,7 @@ type Props = {
   onHide: () => void;
 };
 
+// ボランティアの詳細を取得するクエリ
 const GetVolunteerFromScoutPageQuery = gql(/* GraphQL */ `
   query GetVolunteerFromScoutPage($vid: String!) {
     volunteer: getVolunteerById(vid: $vid) {
@@ -30,6 +31,8 @@ const GetVolunteerFromScoutPageQuery = gql(/* GraphQL */ `
 
 export const ScoutModal = ({ vid, show, onHide }: Props) => {
   const router = useRouter();
+
+  // ボランティア詳細画面に遷移
   const toVolunteerDetail = () => {
     router.push(URL_PATH_PARTICIPANT.VOLUNTEER_DETAIL(vid));
   };

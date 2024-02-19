@@ -31,10 +31,13 @@ export const VolunteerItem = ({
   onReviewClick,
 }: Props) => {
   const router = useRouter();
+
+  // ボランティア詳細画面に遷移
   const toVolunteer = () => {
     router.push(URL_PATH_PARTICIPANT.VOLUNTEER_DETAIL(volunteer.vid));
   };
 
+  // Googleカレンダーに追加
   const addGoogleCalendar = () => {
     // 別タブでGoogleカレンダーに追加する
     const url = `https://www.google.com/calendar/render?action=TEMPLATE&text=${

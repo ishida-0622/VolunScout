@@ -22,14 +22,18 @@ type Props = {
 export const Footer = ({ className }: Props) => {
   const pathname = usePathname();
 
+  // パスからアカウントの種類を取得
   const accountType: AccountType = getAccountTypeFromPath(pathname);
 
+  // ホームページへのリンク
   const homeHref =
     accountType === "group" ? URL_PATH_GROUP.HOME : URL_PATH_PARTICIPANT.HOME;
 
   return (
     <>
+      {/* フッター上の余白 */}
       <div style={{ minHeight: "8vh" }} />
+      {/* フッター */}
       <footer
         className={joinClassnames(
           "fixed-bottom",
@@ -37,12 +41,15 @@ export const Footer = ({ className }: Props) => {
           className
         )}
       >
+        {/* コンテナ */}
         <Container className="d-flex align-items-center p-1">
+          {/* VolunScoutへのリンク */}
           <div>
             <Link href={homeHref} className="text-decoration-none text-dark">
               <h2>VolunScout</h2>
             </Link>
           </div>
+          {/* リンク一覧 */}
           <div className="w-75 d-flex justify-content-end">
             <Link href={URL_PATH.TERMS_OF_SERVICE} className="mx-4">
               利用規約

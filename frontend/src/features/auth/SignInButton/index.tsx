@@ -11,18 +11,21 @@ import { gql } from "@/__generated__/query";
 import { URL_PATH_GROUP, URL_PATH_PARTICIPANT } from "@/consts";
 import { auth } from "@/firebaseConfig";
 
+// 参加者アカウントが存在するか確認するクエリ
 const ExistsParticipantAccountQuery = gql(/* GraphQL */ `
   query ExistsParticipantAccount($uid: String!) {
     result: existsParticipantAccount(uid: $uid)
   }
 `);
 
+// 団体アカウントが存在するか確認するクエリ
 const ExistsGroupAccountQuery = gql(/* GraphQL */ `
   query ExistsGroupAccount($gid: String!) {
     result: existsGroupAccount(gid: $gid)
   }
 `);
 
+// サインインボタンコンポーネント
 export const SignInButton = () => {
   const router = useRouter();
   const provider = new GoogleAuthProvider();
@@ -37,19 +40,25 @@ export const SignInButton = () => {
     isGroup.current = checked;
   };
 
+  // 参加者アカウントが存在するかを確認するクエリの実行フック
   const [existsParticipantAccount] = useLazyQuery(
     ExistsParticipantAccountQuery,
     {
       fetchPolicy: "network-only",
     }
   );
+
+  // 団体アカウントが存在するかを確認するクエリの実行フック
   const [existsGroupAccount] = useLazyQuery(ExistsGroupAccountQuery, {
     fetchPolicy: "network-only",
   });
 
+  // Googleサインイン処理
   const handleGoogleSignIn = async () => {
     try {
+      // Googleサインインを実行
       const result = await signInWithPopup(auth, provider);
+      // サインイン結果からクレデンシャルを取得
       const credential = GoogleAuthProvider.credentialFromResult(result);
 
       if (credential === null) {
@@ -72,7 +81,7 @@ export const SignInButton = () => {
         throw new Error("data is undefined");
       }
 
-      // 会員登録がされていない場合はサインアップページに遷移
+      // アカウントが存在しない場合はサインアップページに遷移
       if (data.result === false) {
         router.push(
           isGroup.current
@@ -80,6 +89,7 @@ export const SignInButton = () => {
             : URL_PATH_PARTICIPANT.SIGN_UP
         );
       } else {
+        // アカウントが存在する場合はホームページに遷移
         router.push(
           isGroup.current ? URL_PATH_GROUP.HOME : URL_PATH_PARTICIPANT.HOME
         );
@@ -87,6 +97,7 @@ export const SignInButton = () => {
     } catch (error) {
       if (error instanceof FirebaseError) {
         if (!(error.code === "auth/popup-closed-by-user")) {
+          // サインインエラーが発生した場合はアラートを表示
           alert("ログインに失敗しました");
         }
       } else {
@@ -97,9 +108,11 @@ export const SignInButton = () => {
 
   return (
     <>
+      {/* ログイン/会員登録ボタン */}
       <Button variant="none" onClick={openModal}>
         ログイン/会員登録
       </Button>
+      {/* ログイン/会員登録モーダル */}
       <Modal
         show={isModalOpen}
         onHide={closeModal}
@@ -114,6 +127,7 @@ export const SignInButton = () => {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          {/* Googleサインインボタン */}
           <Row className="mb-3 w-50 m-auto">
             <Col>
               <Image
@@ -129,6 +143,7 @@ export const SignInButton = () => {
               />
             </Col>
           </Row>
+          {/* 団体アカウントかどうかを選択するスイッチ */}
           <Row className="w-75 m-auto">
             <Col>
               <Form.Switch

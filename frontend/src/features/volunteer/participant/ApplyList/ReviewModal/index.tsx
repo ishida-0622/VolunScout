@@ -16,6 +16,7 @@ export const ReviewModal = ({ vid, uid, show, onHide }: Props) => {
   const [review, setReview] = useState<number>();
   const [comment, setComment] = useState("");
 
+  // レビュー送信
   const sendReview = async () => {
     if (review === undefined) {
       alert("評価してください");
@@ -34,6 +35,7 @@ export const ReviewModal = ({ vid, uid, show, onHide }: Props) => {
       alert("エラーが発生しました");
     } finally {
       onHide();
+      // リセット
       setReview(undefined);
       setComment("");
     }

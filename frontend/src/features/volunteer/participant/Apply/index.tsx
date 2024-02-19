@@ -25,6 +25,7 @@ type Props = {
   vid: string;
 };
 
+// 応募情報取得
 const GetVolunteerFromApplyPageQuery = gql(/* GraphQL */ `
   query getVolunteerFromApplyPage($vid: String!) {
     volunteer: getVolunteerById(vid: $vid) {
@@ -39,6 +40,7 @@ const GetVolunteerFromApplyPageQuery = gql(/* GraphQL */ `
   }
 `);
 
+// 参加者情報取得
 const GetParticipantAccountFromApplyPageQuery = gql(/* GraphQL */ `
   query getParticipantAccountFromApplyPage($uid: String!) {
     participant: getParticipantAccount(uid: $uid) {
@@ -55,6 +57,7 @@ export const Apply = ({ vid }: Props) => {
 
   const router = useRouter();
 
+  // 応募済みかどうか
   const { existsApply, loading: existsApplyLoading } = useExistsApply(vid);
 
   const { data, loading, error } = useQuery(GetVolunteerFromApplyPageQuery, {
@@ -97,6 +100,7 @@ export const Apply = ({ vid }: Props) => {
     },
   ]);
 
+  // 団体応募のメンバー追加
   const addMember = () => {
     if (members.length < (data?.volunteer.recruitedNum ?? Infinity)) {
       setMembers((prev) => [
@@ -112,12 +116,15 @@ export const Apply = ({ vid }: Props) => {
       alert("応募人数が上限に達しています");
     }
   };
+
+  // 団体応募のメンバー削除
   const removeMember = (index: number) => {
     if (members.length > 1) {
       setMembers((prev) => prev.filter((_, i) => i !== index));
     }
   };
 
+  // 応募
   const submit = async () => {
     if (existsApply) {
       alert("すでに応募済みです");

@@ -13,6 +13,7 @@ import { URL_PATH_PARTICIPANT } from "@/consts";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { objectToUrlSearch } from "@/utils/objectToUrlSearch";
 
+// 参加者の地域, テーマ, 条件を取得するクエリ
 const GetParticipantElementsQuery = gql(/* GraphQL */ `
   query GetParticipantElements($uid: String!) {
     regions: getParticipantRegions(uid: $uid) {
@@ -42,11 +43,13 @@ export const SearchVolunteer = () => {
     isOpen: true,
   });
 
+  // 検索ワード
   const searchWord = useRef("");
   const handleChange = (value: string) => {
     searchWord.current = value;
   };
 
+  // 検索ボタンを押したときの処理
   const handleSubmit = () => {
     const values = getValues();
     const query = objectToUrlSearch({ ...values, word: searchWord.current });
@@ -55,6 +58,7 @@ export const SearchVolunteer = () => {
     setIsLoading(true);
   };
 
+  // 参加者の地域, テーマ, 条件を取得して初期値に設定
   useEffect(() => {
     if (user) {
       getParticipantElements({ variables: { uid: user.uid } })

@@ -17,6 +17,7 @@ type Props = {
 };
 
 export const ScoutItem = ({ scout, onPreview, refetch }: Props) => {
+  // スカウトを既読にする
   const read = async () => {
     const body: UpdateScoutIsReadRequestBody = {
       sid: scout.sid,
@@ -24,6 +25,7 @@ export const ScoutItem = ({ scout, onPreview, refetch }: Props) => {
     await apiClientScout.updateScoutIsRead(body);
   };
 
+  // スカウトを辞退する
   const refusal = async () => {
     if (!confirm("本当に辞退しますか？")) {
       return;

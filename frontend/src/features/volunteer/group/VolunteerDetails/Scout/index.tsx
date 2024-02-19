@@ -18,6 +18,7 @@ type Props = {
   vid: string;
 };
 
+// ボランティアの要素を取得するクエリ
 const GetVolunteerElementQuery = gql(/* GraphQL */ `
   query getVolunteerElement($vid: String!) {
     elements: getVolunteerElementsById(vid: $vid) {
@@ -31,6 +32,7 @@ const GetVolunteerElementQuery = gql(/* GraphQL */ `
   }
 `);
 
+// 参加者の詳細を取得するクエリ
 const GetParticipantFromScoutQuery = gql(/* GraphQL */ `
   query getParticipantFromScout($uid: String!) {
     participant: getParticipantAccount(uid: $uid) {
@@ -43,6 +45,7 @@ const GetParticipantFromScoutQuery = gql(/* GraphQL */ `
   }
 `);
 
+// 条件に合う参加者を検索するクエリ
 const SearchParticipantQuery = gql(/* GraphQL */ `
   query searchParticipant(
     $vid: String!
@@ -85,6 +88,7 @@ export const Scout = ({ vid }: Props) => {
     fetchPolicy: "cache-and-network",
   });
 
+  // 参加者の詳細モーダルの表示制御
   const [show, setShow] = useState(false);
   const [uid, setUid] = useState("");
   const [participant, setParticipant] = useState<
@@ -113,13 +117,16 @@ export const Scout = ({ vid }: Props) => {
     setShow(true);
   };
 
+  // 一斉スカウト送信のチェックボックスの選択状態
   const [selected, setSelected] = useState<string[]>([]);
   const messageRef = useRef<HTMLTextAreaElement>(null);
 
+  // 一斉スカウト送信モーダルの表示制御
   const [showMessage, setShowMessage] = useState(false);
   const handleShowMessage = () => setShowMessage(true);
   const handleCloseMessage = () => setShowMessage(false);
 
+  // 一斉スカウト送信
   const handleScout = async () => {
     const message = messageRef.current?.value ?? "";
 

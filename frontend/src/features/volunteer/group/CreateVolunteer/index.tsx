@@ -39,6 +39,7 @@ export const CreateVolunteer = () => {
     setFormValues: setTermsValue,
   } = useTermsForm({ isOpen: true });
 
+  // ローカルストレージへの書き込み
   const writeLocalStorage = () => {
     const infoValues = getInfoValues();
     const termsValues = getTermsValues();
@@ -48,6 +49,7 @@ export const CreateVolunteer = () => {
     set(storageTermsKey, termsValues).catch(() => {});
   };
 
+  // ローカルストレージのクリア
   const clearLocalStorage = () => {
     const storageInfoKey = "create-volunteer-info";
     const storageTermsKey = "create-volunteer-terms";
@@ -55,6 +57,7 @@ export const CreateVolunteer = () => {
     set(storageTermsKey, undefined).catch(() => {});
   };
 
+  // ローカルストレージからの読み込み
   const readLocalStorage = useCallback(() => {
     get("create-volunteer-info")
       .then((value: FormValues | undefined) => {
@@ -76,11 +79,13 @@ export const CreateVolunteer = () => {
       .catch(() => {});
   }, [setInfoValue, setTermsValue]);
 
+  // 一時保存ボタンの処理
   const handleOnSave = () => {
     writeLocalStorage();
     alert("保存しました");
   };
 
+  // 作成ボタンの処理
   const handleOnSubmit = async () => {
     const gid = authContext.user?.uid;
     if (gid === undefined) {
@@ -175,6 +180,7 @@ export const CreateVolunteer = () => {
     }
   };
 
+  // ローカルストレージからの読み込み
   useEffect(() => {
     readLocalStorage();
   }, [readLocalStorage]);

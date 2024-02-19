@@ -17,6 +17,7 @@ import { joinClassnames } from "@/components/@joinClassnames";
 import { URL_PATH_GROUP } from "@/consts";
 import { useAuthContext } from "@/contexts/AuthContext";
 
+// グループアカウント取得のクエリ
 const GetGroupAccountQuery = gql(/* GraphQL */ `
   query GetGroupAccount($gid: String!) {
     user: getGroupAccount(gid: $gid) {
@@ -31,14 +32,19 @@ const GetGroupAccountQuery = gql(/* GraphQL */ `
   }
 `);
 
+// マイページ編集コンポーネント
 export const EditMyPage = () => {
   const router = useRouter();
+
+  // 戻るボタンがクリックされた時の処理
   const back = () => {
     router.back();
   };
 
+  // 認証情報の取得
   const { user } = useAuthContext();
 
+  // グループアカウント取得クエリの実行
   const [getGroupAccount, { data, loading, error }] = useLazyQuery(
     GetGroupAccountQuery,
     {
@@ -46,6 +52,7 @@ export const EditMyPage = () => {
     }
   );
 
+  // フォームの初期値の設定
   const { register, getValues, handleSubmit, setValue } =
     useForm<UpdateGroupAccountRequestBody>({
       defaultValues: {
@@ -55,12 +62,14 @@ export const EditMyPage = () => {
       },
     });
 
+  // 認証情報が変更された際に再取得を行う
   useEffect(() => {
     if (typeof user?.uid === "string") {
       getGroupAccount({ variables: { gid: user.uid } }).catch(() => {});
     }
   }, [getGroupAccount, user?.uid]);
 
+  // ユーザー情報が取得された際にフォームに値を設定
   useEffect(() => {
     if (data?.user) {
       setValue("name", data.user.name);
@@ -73,6 +82,7 @@ export const EditMyPage = () => {
     }
   }, [data?.user, setValue]);
 
+  // フォームの送信処理
   const submit = async () => {
     if (user === null) {
       return;
@@ -93,10 +103,12 @@ export const EditMyPage = () => {
     router.push(URL_PATH_GROUP.ACCOUNT);
   };
 
+  // ローディング中またはデータが未定義の場合はnullを返す
   if (loading || data === undefined) {
     return null;
   }
 
+  // エラーが発生した場合はnullを返す
   if (error) {
     return null;
   }

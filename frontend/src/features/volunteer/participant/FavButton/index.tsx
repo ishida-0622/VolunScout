@@ -24,6 +24,7 @@ export const FavButton = ({
 }: Props) => {
   const [isFav, setIsFav] = useState(initIsFav);
 
+  // 連打防止
   const isFavButtonDisabled = useRef(false);
 
   const { user } = useAuthContext();
@@ -32,6 +33,7 @@ export const FavButton = ({
     return null;
   }
 
+  // お気に入り登録
   const fav = async () => {
     if (isFavButtonDisabled.current) return;
     isFavButtonDisabled.current = true;
@@ -51,6 +53,7 @@ export const FavButton = ({
     isFavButtonDisabled.current = false;
   };
 
+  // お気に入り解除
   const unFav = async () => {
     if (isFavButtonDisabled.current) return;
     isFavButtonDisabled.current = true;

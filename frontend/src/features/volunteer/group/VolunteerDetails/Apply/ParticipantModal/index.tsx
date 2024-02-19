@@ -14,6 +14,7 @@ type Props = {
   aid: string;
 };
 
+// 参加者情報を取得するGraphQLクエリ
 const GetParticipantQuery = gql(/* GraphQL */ `
   query getParticipantForApplyModal($uid: String!) {
     info: getParticipantAccount(uid: $uid) {
@@ -31,6 +32,7 @@ const GetParticipantQuery = gql(/* GraphQL */ `
   }
 `);
 
+// 団体メンバーを取得するGraphQLクエリ
 const GetMembersQuery = gql(/* GraphQL */ `
   query getMembers($aid: String!) {
     members: getGroupParticipants(aid: $aid) {
@@ -42,6 +44,7 @@ const GetMembersQuery = gql(/* GraphQL */ `
   }
 `);
 
+// 参加者情報モーダルコンポーネント
 export const ParticipantModal = ({
   uid,
   show,
@@ -49,24 +52,29 @@ export const ParticipantModal = ({
   asGroup,
   aid,
 }: Props) => {
+  // 参加者情報のクエリを実行
   const { data, loading, error } = useQuery(GetParticipantQuery, {
     variables: { uid },
     skip: !show,
   });
 
+  // 団体メンバーのクエリを実行
   const { data: membersData } = useQuery(GetMembersQuery, {
     variables: { aid },
-    skip: !show || !asGroup,
+    skip: !(show && asGroup),
   });
 
+  // ローディング中はスピナーを表示
   if (loading) return <Spinner />;
 
+  // データがない場合やエラーがある場合はnullを返す
   if (!data || error) {
     return null;
   }
 
   const { info, review } = data;
 
+  // 参加者情報またはレビュー情報がない場合はnullを返す
   if (!info || !review) {
     return null;
   }

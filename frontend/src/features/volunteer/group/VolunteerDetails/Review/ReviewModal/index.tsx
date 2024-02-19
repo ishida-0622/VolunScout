@@ -16,6 +16,7 @@ export const ReviewModal = ({ vid, uid, show, onHide }: Props) => {
   const [review, setReview] = useState<number>();
   const [comment, setComment] = useState("");
 
+  // 参加者に対して評価を送信する
   const sendReview = async () => {
     if (review === undefined) {
       alert("評価してください");

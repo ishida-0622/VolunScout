@@ -10,6 +10,7 @@ import { ScoutModal } from "./ScoutModal";
 import { gql } from "@/__generated__/query";
 import { useAuthContext } from "@/contexts/AuthContext";
 
+// スカウトを取得するクエリ
 const GetScoutQuery = gql(/* GraphQL */ `
   query GetScoutByUid($uid: String!) {
     scouts: getScoutByUid(uid: $uid) {
@@ -29,6 +30,7 @@ export const Scout = () => {
     }
   );
 
+  // モーダルの表示状態
   const [showModal, setShowModal] = useState(false);
   const [vid, setVid] = useState("");
 

@@ -13,6 +13,7 @@ import { gql } from "@/__generated__/query";
 import { SearchBar } from "@/components/ui-parts/SearchBar/index";
 import { useAuthContext } from "@/contexts/AuthContext";
 
+// お気に入りを取得するクエリ
 const GetFavsQuery = gql(/* GraphQL */ `
   query getFav($uid: String!) {
     volunteers: getFavoriteByUid(uid: $uid) {
@@ -35,9 +36,13 @@ export const FavList = () => {
   });
 
   const volunteers = data?.volunteers ?? [];
+
+  // 表示するお気に入り
   const [showVolunteers, setShowVolunteers] = useState<
     GetFavQuery["volunteers"]
   >([]);
+
+  // お気に入りのvidをセットに変換
   const [favSet, setFavSet] = useState(
     new Set(volunteers.map((volunteer) => volunteer.vid))
   );

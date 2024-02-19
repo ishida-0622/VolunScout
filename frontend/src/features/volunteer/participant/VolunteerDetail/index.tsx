@@ -26,6 +26,7 @@ type Props = {
   vid: string;
 };
 
+// ボランティア詳細を取得するクエリ
 const GetVolunteerDetailQuery = gql(/* GraphQL */ `
   query getVolunteerDetail($vid: String!) {
     volunteer: getVolunteerById(vid: $vid) {
@@ -50,6 +51,7 @@ const GetVolunteerDetailQuery = gql(/* GraphQL */ `
   }
 `);
 
+// 団体名を取得するクエリ
 export const GetGroupNameQuery = gql(/* GraphQL */ `
   query getGroupName($gid: String!) {
     group: getGroupAccount(gid: $gid) {
@@ -60,10 +62,13 @@ export const GetGroupNameQuery = gql(/* GraphQL */ `
 
 export const VolunteerDetail = ({ vid }: Props) => {
   const router = useRouter();
+
+  // 応募画面に遷移
   const toApply = () => {
     router.push(URL_PATH_PARTICIPANT.APPLY(vid));
   };
 
+  // 応募済みかどうかを取得
   const { existsApply, loading: existsApplyLoading } = useExistsApply(vid);
 
   const { data, loading, error } = useQuery(GetVolunteerDetailQuery, {
